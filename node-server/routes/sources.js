@@ -90,24 +90,20 @@ router.delete("/", async (req, res) => {
   let source = null;
   try {
     source = await Source.findOne({ name: req.query.name });
-  } catch (e) {
-    console.log(e);
-  }
-  if (source) {
-    try {
+    if (source) {
       await source.remove();
       res.send({
         data: true,
         error: null
       });
-    } catch (e) {
-      console.log(e);
+    } else {
+      res.send({
+        data: null,
+        error: "Invalid name"
+      });
     }
-  } else {
-    res.send({
-      data: null,
-      error: "Invalid name"
-    });
+  } catch (e) {
+    console.log(e);
   }
 });
 
