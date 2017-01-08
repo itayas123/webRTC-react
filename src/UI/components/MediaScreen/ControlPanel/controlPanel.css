@@ -2,7 +2,7 @@
   height: 90%;
   margin: auto 0;
   width: 30%;
-  border: 2px solid #247516;
+  border: 2px solid #292525;
 }
 .video-buttons {
   height: 60px;
@@ -39,7 +39,7 @@
   cursor: not-allowed;
 }
 .add-btn {
-  background-color: #247516;
+  background-color: #292525;
   color: white;
   width: 50%;
   height: 50px;
@@ -65,10 +65,10 @@
   cursor: pointer;
 }
 .border {
-  border: 1px solid #247516;
+  border: 1px solid #292525;
 }
 .border-2p {
-  border: 2px solid #247516;
+  border: 2px solid #292525;
 }
 .flex {
   display: flex;

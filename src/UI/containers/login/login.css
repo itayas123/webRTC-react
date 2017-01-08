@@ -13,7 +13,7 @@
   height: 30px;
   background-color: transparent;
   color: black;
-  border: 1px solid #247516;
+  border: 1px solid #292525;
   border-radius: 10px;
   padding: 10px;
   outline: none;
@@ -37,19 +37,19 @@
 }
 .main button,
 .add-source-submit {
-  background-color: #247516;
+  background-color: #292525;
   color: white;
   padding: 5px;
   font-size: 1rem;
   border-radius: 15px;
   min-width: 200px;
   max-height: 50px;
-  border: 1px solid #247516;
+  border: 1px solid #292525;
 }
 button:focus {
   outline: none;
 }
 .un-active {
   background-color: white !important;
-  color: #247516 !important;
+  color: #292525 !important;
 }

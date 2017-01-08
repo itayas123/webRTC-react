@@ -37,7 +37,7 @@
   height: 200px;
   width: 90%;
   margin: 15px auto 25px;
-  border: 1px solid #247516;
+  border: 1px solid #292525;
 }
 .users-list .list {
   max-height: 75%;
@@ -52,7 +52,7 @@
   padding: 0 5px;
 }
 .search {
-  border: 1px solid #247516;
+  border: 1px solid #292525;
   border-radius: 5px;
   padding: 5px;
 }
@@ -65,5 +65,5 @@
   display: flex;
   padding: 10px;
   justify-content: center;
-  border-bottom: 1px solid #247516;
+  border-bottom: 1px solid #292525;
 }

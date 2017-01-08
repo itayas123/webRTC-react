@@ -11,5 +11,6 @@ API.interceptors.response.use(response => {
   } else if (response.data.data) {
     return response.data.data;
   }
+  return response;
 });
 export default API;
