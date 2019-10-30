@@ -12,13 +12,13 @@
   height: 30px;
   background-color: transparent;
   color: black;
-  border: 1px solid gray;
+  border: 1px solid #4415b7;
   border-radius: 10px;
   padding: 10px;
   outline: none;
 }
 .form > input::placeholder {
-  color: black;
+  color: gray;
 }
 .hide {
   display: none;
