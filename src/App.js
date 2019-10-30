@@ -2,7 +2,9 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import Navbar from "./UI/components/navbar";
-import Login from "./UI/containers/login/login";
+import Login from "./UI/containers/Login/login";
+import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
+import Welcome from "./UI/containers/Welcome/welcome";
 
 export default class App extends React.Component {
   render() {
@@ -10,7 +12,15 @@ export default class App extends React.Component {
       <div className="App">
         <Navbar />
         <Switch>
-          <Route path="/login-register" component={Login} />
+          <Route exact path="/">
+            <Welcome />
+          </Route>
+          <Route path="/media-screen">
+            <MediaScreen />
+          </Route>
+          <Route path="/login-register">
+            <Login />
+          </Route>
         </Switch>
       </div>
     );
