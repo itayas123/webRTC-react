@@ -1,10 +1,22 @@
 import React from "react";
 import "./App.css";
-import Main from "./UI/containers/main/main";
+import Login from "./UI/containers/login/login";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function App() {
   return (
     <div className="App">
-      <Main />
+      <Router>
+        <div>
+          <ul>
+            <li>
+              <Link to="/login-register">Login/Register</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route path="/login-register" component={Login} />
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 }

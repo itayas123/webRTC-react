@@ -1,11 +1,35 @@
-import "./main.css";
+import "./login.css";
 import React from "react";
+import API from "../../../utils/API";
 
-export default class Main extends React.Component {
+export default class Login extends React.Component {
   state = {
     email: "",
     password: "",
     name: ""
+  };
+
+  onSubmit = () => {
+    const { name, email, password, age } = this.state;
+    if (this.state.register) {
+      API.post("/users", { name, email, password, age })
+        .then(res => {
+          this.setState({ isConnected: true });
+          console.log(res.headers + " " + res.data);
+        })
+        .catch(res => {
+          console.log(res);
+        });
+    } else {
+      API.post("/auth", { email, password })
+        .then(res => {
+          this.setState({ isConnected: true });
+          console.log(res.data);
+        })
+        .catch(res => {
+          console.log(res);
+        });
+    }
   };
 
   render() {
