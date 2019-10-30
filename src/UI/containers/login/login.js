@@ -6,13 +6,14 @@ export default class Login extends React.Component {
   state = {
     email: "",
     password: "",
-    name: ""
+    name: "",
+    register: true,
+    isConnected: false
   };
-
   onSubmit = () => {
-    const { name, email, password, age } = this.state;
+    const { name, email, password } = this.state;
     if (this.state.register) {
-      API.post("/users", { name, email, password, age })
+      API.post("/users", { name, email, password })
         .then(res => {
           this.setState({ isConnected: true });
           console.log(res.headers + " " + res.data);
@@ -37,6 +38,7 @@ export default class Login extends React.Component {
       <div className="main">
         <div className="buttons">
           <button
+            className={this.state.register ? "" : "un-active"}
             onClick={() => {
               this.setState({ register: true });
             }}
@@ -44,6 +46,7 @@ export default class Login extends React.Component {
             Register
           </button>
           <button
+            className={this.state.register ? "un-active" : ""}
             onClick={() => {
               this.setState({ register: false });
             }}

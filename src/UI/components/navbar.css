@@ -1,0 +1,7 @@
+.navbar {
+  background-color: #4415b7;
+  height: 10vh;
+}
+.navbar > a {
+  color: white;
+}
