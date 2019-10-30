@@ -1,6 +1,7 @@
 .navbar {
   background-color: #4415b7;
   height: 10vh;
+  box-shadow: 0px -5px 75px #4415b7;
 }
 .navbar > a {
   color: white;

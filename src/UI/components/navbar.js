@@ -6,7 +6,7 @@ export default class Navbar extends React.Component {
   render() {
     return (
       <div className="navbar">
-        <Link to="/login-register">Login/Register</Link>
+        <Link to="/login-register">Login/ Register</Link>
       </div>
     );
   }

@@ -10,7 +10,8 @@ export default class Login extends React.Component {
     register: true,
     isConnected: false
   };
-  onSubmit = () => {
+  onSubmit = e => {
+    e.preventDefault();
     const { name, email, password } = this.state;
     if (this.state.register) {
       API.post("/users", { name, email, password })
@@ -54,7 +55,7 @@ export default class Login extends React.Component {
             Login
           </button>
         </div>
-        <div className="form">
+        <form onSubmit={this.onSubmit} className="form">
           <input
             type="text"
             className={this.state.register ? "" : "hide"}
@@ -83,8 +84,8 @@ export default class Login extends React.Component {
               this.setState({ password: e.target.value });
             }}
           />
-          <button onClick={this.onSubmit}>Submit</button>
-        </div>
+          <button type="submit">Submit</button>
+        </form>
       </div>
     );
   }

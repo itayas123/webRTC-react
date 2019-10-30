@@ -1,5 +1,6 @@
 .main {
   display: flex;
+  margin-top: 100px;
 }
 .form {
   display: flex;
@@ -43,6 +44,9 @@ button {
   min-width: 200px;
   max-height: 50px;
   border: 1px solid #4415b7;
+}
+button:focus {
+  outline: none;
 }
 .un-active {
   background-color: white !important;
