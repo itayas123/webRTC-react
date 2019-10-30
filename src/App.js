@@ -1,24 +1,18 @@
 import React from "react";
+import { Route, Switch } from "react-router-dom";
 import "./App.css";
+import Navbar from "./UI/components/navbar";
 import Login from "./UI/containers/login/login";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-function App() {
-  return (
-    <div className="App">
-      <Router>
-        <div>
-          <ul>
-            <li>
-              <Link to="/login-register">Login/Register</Link>
-            </li>
-          </ul>
-          <Switch>
-            <Route path="/login-register" component={Login} />
-          </Switch>
-        </div>
-      </Router>
-    </div>
-  );
-}
 
-export default App;
+export default class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+        <Navbar />
+        <Switch>
+          <Route path="/login-register" component={Login} />
+        </Switch>
+      </div>
+    );
+  }
+}
