@@ -13,7 +13,7 @@
   height: 30px;
   background-color: transparent;
   color: black;
-  border: 1px solid #4415b7;
+  border: 1px solid #247516;
   border-radius: 10px;
   padding: 10px;
   outline: none;
@@ -36,19 +36,19 @@
   margin: 15px;
 }
 button {
-  background-color: #4415b7;
+  background-color: #247516;
   color: white;
   padding: 5px;
   font-size: 1rem;
   border-radius: 15px;
   min-width: 200px;
   max-height: 50px;
-  border: 1px solid #4415b7;
+  border: 1px solid #247516;
 }
 button:focus {
   outline: none;
 }
 .un-active {
   background-color: white !important;
-  color: #4415b7;
+  color: #247516;
 }
