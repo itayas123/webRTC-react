@@ -1,9 +1,22 @@
 import React from "react";
 
 export default class SourceList extends React.Component {
-  item(text) {
+  state = {
+    arr: []
+  };
+  componentDidMount = () => {
+    const temp = [...this.state.arr];
+    for (let i = 1; i <= 50; i++) {
+      temp.push(i);
+    }
+    this.setState({ arr: temp });
+  };
+  item = (text, index) => {
     return (
-      <div className="item-list border">
+      <div className="item-list border" key={index}>
+        <div className="remove pointer" onClick={() => this.removeItem(text)}>
+          x
+        </div>
         <div>{text}</div>
         <div>
           <button
@@ -27,13 +40,17 @@ export default class SourceList extends React.Component {
         </div>
       </div>
     );
-  }
-  renderItems() {
-    const arr = [];
-    for (let i = 1; i <= 50; i++) {
-      arr.push(i);
+  };
+  removeItem = num => {
+    const temp = [...this.state.arr];
+    const index = temp.indexOf(num);
+    if (index > -1) {
+      temp.splice(index, 1);
     }
-    return arr.map(num => this.item(num));
+    this.setState({ arr: temp });
+  };
+  renderItems() {
+    return this.state.arr.map((num, index) => this.item(num, index));
   }
   render() {
     return (

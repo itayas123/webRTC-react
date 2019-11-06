@@ -24,7 +24,11 @@
 }
 .item-list {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+.item-list .remove {
+  color: red;
 }
 .item-list button {
   width: 25px;

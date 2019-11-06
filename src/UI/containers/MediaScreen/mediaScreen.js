@@ -26,9 +26,7 @@ export default class MediaScreen extends React.Component {
     if (index > -1) {
       arr.splice(index, 1);
     }
-    this.setState({ videoArray: arr }, () => {
-      console.log(this.state.videoArray);
-    });
+    this.setState({ videoArray: arr });
   };
   render() {
     return (
