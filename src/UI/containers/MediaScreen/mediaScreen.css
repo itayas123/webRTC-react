@@ -10,7 +10,11 @@
   width: 50%;
   height: 100%;
 }
-.height-50p {
+.height-48p {
   height: 48%;
+  width: 100%;
+}
+.height-50p {
+  height: 49.8%;
   width: 100%;
 }
