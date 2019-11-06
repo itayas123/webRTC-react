@@ -35,7 +35,7 @@
 .buttons > button {
   margin: 15px;
 }
-button {
+.main button {
   background-color: #247516;
   color: white;
   padding: 5px;
@@ -50,5 +50,5 @@ button:focus {
 }
 .un-active {
   background-color: white !important;
-  color: #247516;
+  color: #247516 !important;
 }

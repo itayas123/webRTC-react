@@ -1,0 +1,56 @@
+.control-panel {
+  height: 90%;
+  margin: auto 0;
+  width: 30%;
+  border: 2px solid #247516;
+}
+.video-buttons {
+  height: 60px;
+  width: 90%;
+  margin: 50px auto 0;
+  display: flex;
+  justify-content: space-between;
+}
+.source-list {
+  height: 250px;
+  width: 90%;
+  margin: 50px auto 0;
+}
+.source-list .list {
+  max-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.item-list {
+  display: flex;
+  justify-content: space-around;
+}
+.record {
+  height: 25px;
+  width: 90%;
+  display: flex;
+  margin: 50px auto 0;
+  justify-content: space-around;
+}
+.record-button {
+  background-color: red;
+  border: 5px solid black;
+  border-radius: 50%;
+  width: 25px;
+}
+.butoon-width {
+  width: 20%;
+}
+.pointer {
+  cursor: pointer;
+}
+.border {
+  border: 1px solid #247516;
+}
+.border-2p {
+  border: 2px solid #247516;
+}
+.flex {
+  display: flex;
+}
