@@ -35,7 +35,8 @@
 .buttons > button {
   margin: 15px;
 }
-.main button {
+.main button,
+.add-item-submit {
   background-color: #247516;
   color: white;
   padding: 5px;

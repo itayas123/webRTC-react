@@ -1,4 +1,5 @@
 import React from "react";
+import AddItem from "./addItem";
 
 export default class SourceList extends React.Component {
   state = {
@@ -48,14 +49,23 @@ export default class SourceList extends React.Component {
       temp.splice(index, 1);
     }
     this.setState({ arr: temp });
+    this.props.popArray(num);
+  };
+  pushItem = num => {
+    const temp = [...this.state.arr];
+    temp.push(num);
+    this.setState({ arr: temp });
   };
   renderItems() {
     return this.state.arr.map((num, index) => this.item(num, index));
   }
   render() {
     return (
-      <div className="source-list border">
-        <div className="list">{this.renderItems()}</div>
+      <div>
+        <div className="source-list border">
+          <div className="list">{this.renderItems()}</div>
+        </div>
+        <AddItem pushItem={this.pushItem} />
       </div>
     );
   }
