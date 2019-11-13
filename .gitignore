@@ -4,6 +4,10 @@
 /node_modules
 /.pnp
 .pnp.js
+/auth-node/node_modules
+/auth-node/logfile.log
+/auth-node/uncaughtExceptions.log
+/auth-node/yarn-error.log
 
 # testing
 /coverage
