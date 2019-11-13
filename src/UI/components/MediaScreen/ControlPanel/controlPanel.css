@@ -36,6 +36,7 @@
 .item-list button:disabled {
   width: 25px;
   opacity: 0.5;
+  cursor: not-allowed;
 }
 .add-btn {
   background-color: #247516;
