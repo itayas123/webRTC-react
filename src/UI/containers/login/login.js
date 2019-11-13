@@ -16,14 +16,14 @@ export default class Login extends React.Component {
     if (this.state.register) {
       API.post("/users", { name, email, password })
         .then(res => {
+          console.log(res.data);
           this.setState({ isConnected: true });
-          console.log(res.headers + " " + res.data);
         })
         .catch(res => {
-          console.log(res);
+          console.log(JSON.stringify(res));
         });
     } else {
-      API.post("/auth", { email, password })
+      API.get(`/auth?email=${email}&password=${password}`)
         .then(res => {
           this.setState({ isConnected: true });
           console.log(res.data);

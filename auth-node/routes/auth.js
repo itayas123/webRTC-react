@@ -5,7 +5,6 @@ const { User } = require("../models/user");
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-const _ = require("lodash");
 
 router.get("/", async (req, res) => {
   const { error } = validate(req.query);
