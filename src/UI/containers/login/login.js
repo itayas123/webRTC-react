@@ -3,13 +3,15 @@ import React from "react";
 import API from "../../../utils/API";
 import { connect } from "react-redux";
 import * as actionTypes from "../../../store/actions";
+import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
   state = {
     email: "",
     password: "",
     name: "",
-    register: true
+    register: false,
+    Redirect: false
   };
   onSubmit = e => {
     e.preventDefault();
@@ -22,6 +24,7 @@ class Login extends React.Component {
           } else if (res.data.data) {
             this.props.onRegister(res.data.data);
             console.log(this.props.user);
+            this.setState({ Redirect: true });
           }
         })
         .catch(res => {
@@ -35,6 +38,7 @@ class Login extends React.Component {
           } else if (res.data.data) {
             this.props.onLogin(res.data.data);
             console.log(this.props.user);
+            this.setState({ Redirect: true });
           }
         })
         .catch(res => {
@@ -46,6 +50,7 @@ class Login extends React.Component {
   render() {
     return (
       <div className="main">
+        {this.state.Redirect && <Redirect to="/" />}
         <div className="buttons">
           <button
             className={this.state.register ? "" : "un-active"}

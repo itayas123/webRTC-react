@@ -8,11 +8,10 @@ class Navbar extends React.Component {
   render = () => {
     return (
       <div className="navbar">
-        <Link to="/">Home</Link>
-        <Link to="/media-screen">Media Screen</Link>
+        <Link to="/">Media Screen</Link>
         {this.props.isConnected ? (
           <div className="hello-div">
-            {`Hello ${this.props.user.name}\n`}
+            {`Hello ${this.props.user.name} -`}
             <p onClick={this.props.onLogout}>Logout</p>
           </div>
         ) : (

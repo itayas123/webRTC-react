@@ -1,22 +1,26 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Link } from "react-router-dom";
 import "./App.css";
 import Navbar from "./UI/components/Navbar/navbar";
 import Login from "./UI/containers/Login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
-import Welcome from "./UI/containers/Welcome/welcome";
+import { connect } from "react-redux";
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
       <div className="App">
         <Navbar />
         <Switch>
           <Route exact path="/">
-            <Welcome />
-          </Route>
-          <Route path="/media-screen">
-            <MediaScreen />
+            {this.props.isConnected ? (
+              <MediaScreen />
+            ) : (
+              <div>
+                <h1>You need to connect to see this page</h1>
+                <Link to="/login-register">Login/ Register</Link>
+              </div>
+            )}
           </Route>
           <Route path="/login-register">
             <Login />
@@ -26,3 +30,10 @@ export default class App extends React.Component {
     );
   }
 }
+const mapStateToProp = state => {
+  return {
+    isConnected: state.isConnected
+  };
+};
+
+export default connect(mapStateToProp)(App);
