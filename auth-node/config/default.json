@@ -1,4 +1,4 @@
 {
   "jwtPrivateKey": "d_myJwtSecret",
-  "db": "mongodb://192.168.20.101:27017/Itay"
+  "db": "mongodb://192.168.20.100:27017/Itay"
 }

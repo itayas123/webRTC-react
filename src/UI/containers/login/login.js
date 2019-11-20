@@ -16,8 +16,12 @@ export default class Login extends React.Component {
     if (this.state.register) {
       API.post("/users", { name, email, password })
         .then(res => {
-          console.log(res.data);
-          this.setState({ isConnected: true });
+          if (res.data.error) {
+            alert(res.data.error);
+          } else if (res.data.data) {
+            this.setState({ isConnected: true });
+            console.log(res.data.data);
+          }
         })
         .catch(res => {
           console.log(JSON.stringify(res));
@@ -25,11 +29,15 @@ export default class Login extends React.Component {
     } else {
       API.get(`/auth?email=${email}&password=${password}`)
         .then(res => {
-          this.setState({ isConnected: true });
-          console.log(res.data);
+          if (res.data.error) {
+            alert(res.data.error);
+          } else if (res.data.data) {
+            this.setState({ isConnected: true });
+            console.log(res.data.data);
+          }
         })
         .catch(res => {
-          console.log(res);
+          console.log(JSON.stringify(res));
         });
     }
   };

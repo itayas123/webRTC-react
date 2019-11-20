@@ -6,16 +6,24 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res
+      .status(200)
+      .send({ data: null, error: error.details[0].message });
 
   let user = null;
   try {
     user = await User.findOne({ email: req.body.email });
   } catch (e) {
-    console.log(e);
+    return res
+      .status(200)
+      .send({ data: null, error: error.details[0].message });
   }
 
-  if (user) return res.status(400).send("User already registered.");
+  if (user)
+    return res
+      .status(200)
+      .send({ data: null, error: "User already registered." });
 
   user = new User(_.pick(req.body, ["name", "email", "password"]));
   user.admin = false;
@@ -25,13 +33,19 @@ router.post("/", async (req, res) => {
   try {
     await user.save();
   } catch (e) {
-    console.log(e);
+    return res
+      .status(200)
+      .send({ data: null, error: error.details[0].message });
   }
 
   const token = user.generateAuthToken();
   res
+    .status(200)
     .header("x-auth-token", token)
-    .send(_.pick(user, ["_id", "name", "email", "admin"]));
+    .send({
+      data: _.pick(user, ["_id", "name", "email", "admin"]),
+      error: null
+    });
 });
 
 module.exports = router;
