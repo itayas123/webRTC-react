@@ -1,7 +1,8 @@
 import React from "react";
 import AddItem from "./addItem";
+import { connect } from "react-redux";
 
-export default class SourceList extends React.Component {
+class SourceList extends React.Component {
   state = {
     arr: []
   };
@@ -15,9 +16,11 @@ export default class SourceList extends React.Component {
   item = (text, index) => {
     return (
       <div className="item-list border" key={index}>
-        <div className="remove pointer" onClick={() => this.removeItem(text)}>
-          x
-        </div>
+        {this.props.user.admin && (
+          <div className="remove pointer" onClick={() => this.removeItem(text)}>
+            x
+          </div>
+        )}
         <div>{text}</div>
         <div>
           <button
@@ -65,8 +68,15 @@ export default class SourceList extends React.Component {
         <div className="source-list border">
           <div className="list">{this.renderItems()}</div>
         </div>
-        <AddItem pushItem={this.pushItem} />
+        {this.props.user.admin && <AddItem pushItem={this.pushItem} />}
       </div>
     );
   }
 }
+const mapStateToProp = state => {
+  return {
+    user: state.user
+  };
+};
+
+export default connect(mapStateToProp)(SourceList);

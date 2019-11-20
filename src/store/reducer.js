@@ -5,7 +5,7 @@ const initialState = {
   user: {
     name: null,
     email: null,
-    isAdmin: false
+    admin: false
   }
 };
 
@@ -30,7 +30,7 @@ const reducer = (state = initialState, action) => {
         user: {
           name: null,
           email: null,
-          isAdmin: false
+          admin: false
         }
       };
     default:
