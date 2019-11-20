@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
   admin: {
     type: Boolean,
     required: false
+  },
+  sources: {
+    type: Array,
+    required: false
   }
 });
 
