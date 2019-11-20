@@ -4,6 +4,18 @@ const { User, validate } = require("../models/user");
 const express = require("express");
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  User.find({}, (err, users) => {
+    let allUsers = [];
+
+    users.forEach(user => {
+      allUsers.push(user);
+    });
+
+    return res.status(200).send({ data: allUsers, error: null });
+  });
+});
+
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error)
@@ -27,6 +39,7 @@ router.post("/", async (req, res) => {
 
   user = new User(_.pick(req.body, ["name", "email", "password"]));
   user.admin = false;
+  user.sources = [];
   // const salt = await bcrypt.genSalt(10);
   // user.password = await bcrypt.hash(user.password, salt);
 
@@ -43,7 +56,7 @@ router.post("/", async (req, res) => {
     .status(200)
     .header("x-auth-token", token)
     .send({
-      data: _.pick(user, ["_id", "name", "email", "admin"]),
+      data: _.pick(user, ["_id", "name", "email", "admin", "sources"]),
       error: null
     });
 });

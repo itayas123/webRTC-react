@@ -33,3 +33,20 @@
   text-decoration: none;
   cursor: pointer;
 }
+.users-list {
+  height: 200px;
+  width: 90%;
+  margin: 50px auto 0;
+}
+.users-list .list {
+  max-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.item-list {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: gray solid 1px;
+  padding: 0 5px;
+}
