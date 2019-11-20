@@ -1,14 +1,15 @@
 import "./login.css";
 import React from "react";
 import API from "../../../utils/API";
+import { connect } from "react-redux";
+import * as actionTypes from "../../../store/actions";
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   state = {
     email: "",
     password: "",
     name: "",
-    register: true,
-    isConnected: false
+    register: true
   };
   onSubmit = e => {
     e.preventDefault();
@@ -19,8 +20,8 @@ export default class Login extends React.Component {
           if (res.data.error) {
             alert(res.data.error);
           } else if (res.data.data) {
-            this.setState({ isConnected: true });
-            console.log(res.data.data);
+            this.props.onRegister(res.data.data);
+            console.log(this.props.user);
           }
         })
         .catch(res => {
@@ -32,8 +33,8 @@ export default class Login extends React.Component {
           if (res.data.error) {
             alert(res.data.error);
           } else if (res.data.data) {
-            this.setState({ isConnected: true });
-            console.log(res.data.data);
+            this.props.onLogin(res.data.data);
+            console.log(this.props.user);
           }
         })
         .catch(res => {
@@ -98,3 +99,21 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const mapStateToProp = state => {
+  return {
+    user: state.user
+  };
+};
+
+const mapDispatch = dispatch => {
+  return {
+    onRegister: user => dispatch({ type: actionTypes.REGISTER, user: user }),
+    onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
+  };
+};
+
+export default connect(
+  mapStateToProp,
+  mapDispatch
+)(Login);
