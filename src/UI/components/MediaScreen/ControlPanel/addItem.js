@@ -71,7 +71,7 @@ class AddItem extends React.Component {
         if (res.data.error) {
           alert(res.data.error);
         } else if (res.data.data) {
-          this.props.onPushItem(res.data.data);
+          this.props.onPushSource(res.data.data);
           this.setState({ Redirect: true, displayModal: false });
         }
       })
@@ -139,9 +139,15 @@ class AddItem extends React.Component {
     );
   }
 }
+const mapStateToProp = state => {
+  return {};
+};
 const mapDispatch = dispatch => {
   return {
-    onPushItem: item => dispatch({ type: actionTypes.PUSH_ARRAY, item })
+    onPushSource: source => dispatch({ type: actionTypes.PUSH_SOURCE, source })
   };
 };
-export default connect(mapDispatch)(AddItem);
+export default connect(
+  mapStateToProp,
+  mapDispatch
+)(AddItem);

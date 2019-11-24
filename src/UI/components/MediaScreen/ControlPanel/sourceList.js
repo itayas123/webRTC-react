@@ -19,6 +19,14 @@ class SourceList extends React.Component {
       });
   };
 
+  spaceInVideoArray = () => {
+    return (
+      (this.props.videoSplit === 3
+        ? this.props.videoSplit - 1 - this.props.videoArray.length
+        : this.props.videoSplit - this.props.videoArray.length) !== 0
+    );
+  };
+
   renderSource = (source, index) => {
     return (
       <div className="item-list border" key={index}>
@@ -34,11 +42,11 @@ class SourceList extends React.Component {
         <div>
           <button
             disabled={
-              this.props.space === 0 ||
+              !this.spaceInVideoArray() ||
               this.props.videoArray.includes(source.name)
             }
             onClick={() => {
-              this.props.pushArray(source.name);
+              this.props.onPushVideo(source.name);
             }}
           >
             +
@@ -46,7 +54,7 @@ class SourceList extends React.Component {
           <button
             disabled={!this.props.videoArray.includes(source.name)}
             onClick={() => {
-              this.props.popArray(source.name);
+              this.props.onPopVideo(source.name);
             }}
           >
             -
@@ -61,8 +69,8 @@ class SourceList extends React.Component {
         if (res.data.error) {
           alert(res.data.error);
         } else if (res.data.data) {
-          this.props.onPopItem(source);
-          this.props.popArray(source);
+          this.props.onPopSource(source);
+          this.props.onPopVideo(source.name);
         }
       })
       .catch(res => {
@@ -91,13 +99,17 @@ class SourceList extends React.Component {
 const mapStateToProp = state => {
   return {
     user: state.userReducer.user,
-    sourceList: state.sourceReducer.sourceArray
+    sourceList: state.sourceReducer.sourceArray,
+    videoArray: state.videoReducer.videoArray,
+    videoSplit: state.videoReducer.videoSplit
   };
 };
 const mapDispatch = dispatch => {
   return {
-    onPopItem: item => dispatch({ type: actionTypes.POP_ITEM, item }),
-    onInit: array => dispatch({ type: actionTypes.INIT_SOURCE_ARRAY, array })
+    onPopSource: source => dispatch({ type: actionTypes.POP_SOURCE, source }),
+    onInit: array => dispatch({ type: actionTypes.INIT_SOURCE_ARRAY, array }),
+    onPushVideo: video => dispatch({ type: actionTypes.PUSH_VIDEO, video }),
+    onPopVideo: video => dispatch({ type: actionTypes.POP_VIDEO, video })
   };
 };
 export default connect(

@@ -2,11 +2,11 @@ import "./videoPanel.css";
 import React from "react";
 import videoSrc from "./videos/Welcome.mp4";
 import videoSrc2 from "./videos/2.mp4";
+import { connect } from "react-redux";
 
-export default class VideoPanel extends React.Component {
+class VideoPanel extends React.Component {
   renderVideos() {
-    console.log(this.state);
-    switch (this.props.split) {
+    switch (this.props.videoSplit) {
       case 1:
         return (
           <div className="wh100p border-2p pointer">
@@ -101,3 +101,11 @@ export default class VideoPanel extends React.Component {
     return <div className="video-panel">{this.renderVideos()}</div>;
   }
 }
+
+const mapStateToProp = state => {
+  return {
+    videoArray: state.videoReducer.videoArray,
+    videoSplit: state.videoReducer.videoSplit
+  };
+};
+export default connect(mapStateToProp)(VideoPanel);

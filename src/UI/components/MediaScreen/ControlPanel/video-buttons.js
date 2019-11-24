@@ -1,19 +1,20 @@
 import React from "react";
-
-export default class VideoButtons extends React.Component {
+import { connect } from "react-redux";
+import * as actionTypes from "../../../../store/actions";
+class VideoButtons extends React.Component {
   render() {
     return (
       <div className="video-buttons">
         <div
           className="butoon-width border-2p pointer"
           onClick={() => {
-            this.props.onClickButoon(1);
+            this.props.onChangeSplit(1);
           }}
         />
         <div
           className="butoon-width border flex pointer"
           onClick={() => {
-            this.props.onClickButoon(2);
+            this.props.onChangeSplit(2);
           }}
         >
           <div className="width-50p border" />
@@ -22,7 +23,7 @@ export default class VideoButtons extends React.Component {
         <div
           className="butoon-width border pointer"
           onClick={() => {
-            this.props.onClickButoon(3);
+            this.props.onChangeSplit(2);
           }}
         >
           <div className="height-48p border" />
@@ -31,7 +32,7 @@ export default class VideoButtons extends React.Component {
         <div
           className="butoon-width border pointer"
           onClick={() => {
-            this.props.onClickButoon(4);
+            this.props.onChangeSplit(4);
           }}
         >
           <div className="height-48p flex">
@@ -47,3 +48,16 @@ export default class VideoButtons extends React.Component {
     );
   }
 }
+
+const mapStateToProp = state => {
+  return {};
+};
+const mapDispatch = dispatch => {
+  return {
+    onChangeSplit: split => dispatch({ type: actionTypes.CHANGE_SPLIT, split })
+  };
+};
+export default connect(
+  mapStateToProp,
+  mapDispatch
+)(VideoButtons);

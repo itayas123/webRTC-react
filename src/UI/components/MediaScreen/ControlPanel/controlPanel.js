@@ -7,13 +7,8 @@ export default class ControlPanel extends React.Component {
   render() {
     return (
       <div className="control-panel">
-        <VideoButtons onClickButoon={this.props.changeSplit} />
-        <SourceList
-          pushArray={this.props.pushArray}
-          popArray={this.props.popArray}
-          space={this.props.space}
-          videoArray={this.props.videoArray}
-        />
+        <VideoButtons />
+        <SourceList />
         <div className="record">
           <button className="record-button" />
           <div>record</div>
