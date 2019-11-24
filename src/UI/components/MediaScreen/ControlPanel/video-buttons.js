@@ -49,15 +49,12 @@ class VideoButtons extends React.Component {
   }
 }
 
-const mapStateToProp = state => {
-  return {};
-};
 const mapDispatch = dispatch => {
   return {
     onChangeSplit: split => dispatch({ type: actionTypes.CHANGE_SPLIT, split })
   };
 };
 export default connect(
-  mapStateToProp,
+  null,
   mapDispatch
 )(VideoButtons);

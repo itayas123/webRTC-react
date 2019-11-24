@@ -139,15 +139,13 @@ class AddItem extends React.Component {
     );
   }
 }
-const mapStateToProp = state => {
-  return {};
-};
+
 const mapDispatch = dispatch => {
   return {
     onPushSource: source => dispatch({ type: actionTypes.PUSH_SOURCE, source })
   };
 };
 export default connect(
-  mapStateToProp,
+  null,
   mapDispatch
 )(AddItem);
