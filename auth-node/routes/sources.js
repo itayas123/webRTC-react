@@ -5,6 +5,29 @@ const { User } = require("../models/user");
 const express = require("express");
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  let user = null;
+  try {
+    user = await User.findOne({ email: req.query.email });
+  } catch (e) {
+    console.log(e);
+  }
+  Source.find({}, (err, sources) => {
+    let userSourcees = [];
+    if (user) {
+      sources.forEach(source => {
+        if (
+          user.admin ||
+          (user.sources && user.sources.includes(source.name))
+        ) {
+          userSourcees.push(source);
+        }
+      });
+    }
+    return res.status(200).send({ data: userSourcees, error: null });
+  });
+});
+
 router.post("/", async (req, res) => {
   const bodySource = req.body.source;
   const { error } = validate(bodySource);
@@ -51,7 +74,7 @@ router.post("/", async (req, res) => {
   }
 
   res.status(200).send({
-    data: _.pick(source, ["_id", "name", "src"]),
+    data: _.pick(source, ["name", "src"]),
     error: null
   });
 });

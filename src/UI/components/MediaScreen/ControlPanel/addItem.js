@@ -1,7 +1,10 @@
 import React from "react";
 import "./addItem.css";
 import API from "../../../../utils/API";
-export default class AddItem extends React.Component {
+import { connect } from "react-redux";
+import * as actionTypes from "../../../../store/actions";
+
+class AddItem extends React.Component {
   state = {
     displayModal: false,
     name: "",
@@ -17,7 +20,6 @@ export default class AddItem extends React.Component {
       }
     };
   };
-
   renderUserItem = (value, key) => {
     return (
       <div className="item-list" key={key}>
@@ -47,10 +49,14 @@ export default class AddItem extends React.Component {
           onClick={() => {
             API.get("/users")
               .then(res => {
-                this.setState({
-                  usersToDisplay: res.data.data,
-                  displayModal: true
-                });
+                if (res.data.error) {
+                  alert(res.data.error);
+                } else if (res.data.data) {
+                  this.setState({
+                    usersToDisplay: res.data.data,
+                    displayModal: true
+                  });
+                }
               })
               .catch(res => {
                 console.log(res);
@@ -85,8 +91,7 @@ export default class AddItem extends React.Component {
                     if (res.data.error) {
                       alert(res.data.error);
                     } else if (res.data.data) {
-                      this.props.pushItem(this.state.name);
-                      console.log(res.data.data);
+                      this.props.onPushItem(res.data.data);
                       this.setState({ Redirect: true, displayModal: false });
                     }
                   })
@@ -133,3 +138,9 @@ export default class AddItem extends React.Component {
     );
   }
 }
+const mapDispatch = dispatch => {
+  return {
+    onPushItem: item => dispatch({ type: actionTypes.PUSH_ARRAY, item })
+  };
+};
+export default connect(mapDispatch)(AddItem);

@@ -3,8 +3,8 @@ import * as actionTypes from "../actions";
 const initialState = {
   isConnected: true,
   user: {
-    name: null,
-    email: null,
+    name: "itay",
+    email: "itay1@gmail.com",
     admin: true
   }
 };

@@ -2,39 +2,50 @@ import React from "react";
 import AddItem from "./addItem";
 import { connect } from "react-redux";
 import * as actionTypes from "../../../../store/actions";
+import API from "../../../../utils/API";
 
 class SourceList extends React.Component {
   componentDidMount = () => {
-    const temp = [];
-    for (let i = 1; i <= 50; i++) {
-      temp.push(i);
-    }
-    this.props.onInit(temp);
+    API.get(`/sources?email=${this.props.user.email}`)
+      .then(res => {
+        if (res.data.error) {
+          alert(res.data.error);
+        } else if (res.data.data) {
+          this.props.onInit(res.data.data);
+        }
+      })
+      .catch(res => {
+        console.log(res);
+      });
   };
-  item = (text, index) => {
+  item = (source, index) => {
     return (
       <div className="item-list border" key={index}>
         {this.props.user.admin && (
-          <div className="remove pointer" onClick={() => this.removeItem(text)}>
+          <div
+            className="remove pointer"
+            onClick={() => this.removeItem(source)}
+          >
             x
           </div>
         )}
-        <div>{text}</div>
+        <div>{source.name}</div>
         <div>
           <button
             disabled={
-              this.props.space === 0 || this.props.videoArray.includes(text)
+              this.props.space === 0 ||
+              this.props.videoArray.includes(source.name)
             }
             onClick={() => {
-              this.props.pushArray(text);
+              this.props.pushArray(source.name);
             }}
           >
             +
           </button>
           <button
-            disabled={!this.props.videoArray.includes(text)}
+            disabled={!this.props.videoArray.includes(source.name)}
             onClick={() => {
-              this.props.popArray(text);
+              this.props.popArray(source.name);
             }}
           >
             -
@@ -47,22 +58,19 @@ class SourceList extends React.Component {
     this.props.onPopItem(num);
     this.props.popArray(num);
   };
-  pushItem = num => {
-    this.props.onPushItem(num);
-  };
-  renderItems() {
+  renderSoures() {
     return (
       this.props.sourceList &&
-      this.props.sourceList.map((num, index) => this.item(num, index))
+      this.props.sourceList.map((source, index) => this.item(source, index))
     );
   }
   render() {
     return (
       <div>
         <div className="source-list border">
-          <div className="list">{this.renderItems()}</div>
+          <div className="list">{this.renderSoures()}</div>
         </div>
-        {this.props.user.admin && <AddItem pushItem={this.pushItem} />}
+        {this.props.user.admin && <AddItem />}
       </div>
     );
   }
@@ -76,7 +84,6 @@ const mapStateToProp = state => {
 const mapDispatch = dispatch => {
   return {
     onPopItem: item => dispatch({ type: actionTypes.POP_ITEM, item }),
-    onPushItem: item => dispatch({ type: actionTypes.PUSH_ARRAY, item }),
     onInit: array => dispatch({ type: actionTypes.INIT_ARRAY, array })
   };
 };
