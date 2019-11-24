@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const videoReducer = (state = initialState, action) => {
-  const temp = [...state.videoArray];
+  const temp = state.videoArray ? [...state.videoArray] : [];
   switch (action.type) {
     case actionTypes.PUSH_VIDEO:
       temp.push(action.video);

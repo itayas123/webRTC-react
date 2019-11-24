@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const sourceReducer = (state = initialState, action) => {
-  const temp = [...state.sourceArray];
+  const temp = state.sourceArray ? [...state.sourceArray] : [];
   switch (action.type) {
     case actionTypes.PUSH_SOURCE:
       temp.push(action.source);

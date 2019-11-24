@@ -1,11 +1,11 @@
 import * as actionTypes from "../actions";
 
 const initialState = {
-  isConnected: true,
+  isConnected: false,
   user: {
-    name: "itay",
-    email: "itay@gmail.com",
-    admin: true
+    name: null,
+    email: null,
+    admin: null
   }
 };
 
