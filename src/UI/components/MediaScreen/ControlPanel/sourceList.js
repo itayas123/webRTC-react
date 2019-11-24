@@ -8,14 +8,10 @@ class SourceList extends React.Component {
   componentDidMount = () => {
     API.get(`/sources?email=${this.props.user.email}`)
       .then(res => {
-        if (res.data.error) {
-          alert(res.data.error);
-        } else if (res.data.data) {
-          this.props.onInit(res.data.data);
-        }
+        this.props.onInit(res);
       })
-      .catch(res => {
-        console.log(res);
+      .catch(e => {
+        alert(e);
       });
   };
 
@@ -66,15 +62,13 @@ class SourceList extends React.Component {
   removeSource = source => {
     API.delete(`/sources?name=${source.name}`)
       .then(res => {
-        if (res.data.error) {
-          alert(res.data.error);
-        } else if (res.data.data) {
+        if (res) {
           this.props.onPopSource(source);
           this.props.onPopVideo(source.name);
         }
       })
-      .catch(res => {
-        console.error(JSON.stringify(res));
+      .catch(e => {
+        alert(e);
       });
   };
   renderSouresList() {

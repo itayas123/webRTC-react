@@ -21,28 +21,20 @@ class Login extends React.Component {
     if (this.state.register) {
       API.post("/users", { name, email, password })
         .then(res => {
-          if (res.data.error) {
-            alert(res.data.error);
-          } else if (res.data.data) {
-            this.props.onRegister(res.data.data);
-            this.setState({ Redirect: true });
-          }
+          this.props.onRegister(res);
+          this.setState({ Redirect: true });
         })
-        .catch(res => {
-          console.error(JSON.stringify(res));
+        .catch(e => {
+          alert(e);
         });
     } else {
       API.get(`/auth?email=${email}&password=${password}`)
         .then(res => {
-          if (res.data.error) {
-            alert(res.data.error);
-          } else if (res.data.data) {
-            this.props.onLogin(res.data.data);
-            this.setState({ Redirect: true });
-          }
+          this.props.onLogin(res);
+          this.setState({ Redirect: true });
         })
-        .catch(res => {
-          console.error(JSON.stringify(res));
+        .catch(e => {
+          alert(e);
         });
     }
   };

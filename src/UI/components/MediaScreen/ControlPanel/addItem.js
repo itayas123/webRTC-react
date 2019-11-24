@@ -47,17 +47,13 @@ class AddItem extends React.Component {
   openModal = () => {
     API.get("/users")
       .then(res => {
-        if (res.data.error) {
-          alert(res.data.error);
-        } else if (res.data.data) {
-          this.setState({
-            usersToDisplay: res.data.data,
-            displayModal: true
-          });
-        }
+        this.setState({
+          usersToDisplay: res,
+          displayModal: true
+        });
       })
-      .catch(res => {
-        console.error(JSON.stringify(res));
+      .catch(e => {
+        alert(e);
       });
   };
 
@@ -68,15 +64,11 @@ class AddItem extends React.Component {
       users: this.state.usersToSend
     })
       .then(res => {
-        if (res.data.error) {
-          alert(res.data.error);
-        } else if (res.data.data) {
-          this.props.onPushSource(res.data.data);
-          this.setState({ Redirect: true, displayModal: false });
-        }
+        this.props.onPushSource(res);
+        this.setState({ Redirect: true, displayModal: false });
       })
       .catch(res => {
-        console.error(JSON.stringify(res));
+        alert(e);
       });
   };
 
