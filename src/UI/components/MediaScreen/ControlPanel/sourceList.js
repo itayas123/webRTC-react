@@ -54,9 +54,19 @@ class SourceList extends React.Component {
       </div>
     );
   };
-  removeItem = num => {
-    this.props.onPopItem(num);
-    this.props.popArray(num);
+  removeItem = source => {
+    API.delete(`/sources?name=${source.name}`)
+      .then(res => {
+        if (res.data.error) {
+          alert(res.data.error);
+        } else if (res.data.data) {
+          this.props.onPopItem(source);
+          this.props.popArray(source);
+        }
+      })
+      .catch(res => {
+        console.log(res);
+      });
   };
   renderSoures() {
     return (

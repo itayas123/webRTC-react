@@ -12,20 +12,55 @@ router.get("/", async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-  Source.find({}, (err, sources) => {
+  if (user && user.admin) {
+    Source.find({}, (err, sources) => {
+      return res.status(200).send({ data: sources, error: null });
+    });
+  } else if (user) {
     let userSourcees = [];
-    if (user) {
-      sources.forEach(source => {
-        if (
-          user.admin ||
-          (user.sources && user.sources.includes(source.name))
-        ) {
-          userSourcees.push(source);
+    for (let i = 0; i < user.sources.length; i++) {
+      let source = null;
+      source = await Source.findOne({ name: user.sources[i] });
+      if (source) {
+        userSourcees.push(source);
+      } else {
+        try {
+          user.sources.splice(i, 1);
+          await user.save();
+        } catch (e) {
+          console.log(e);
         }
-      });
+      }
     }
     return res.status(200).send({ data: userSourcees, error: null });
-  });
+  } else {
+    return res.status(200).send({ data: null, error: "Invalid email" });
+  }
+});
+
+router.delete("/", async (req, res) => {
+  let source = null;
+  try {
+    source = await Source.findOne({ name: req.query.name });
+  } catch (e) {
+    console.log(e);
+  }
+  if (source) {
+    try {
+      await source.remove();
+      res.status(200).send({
+        data: true,
+        error: null
+      });
+    } catch (e) {
+      return res.status(200).send({ data: null, error: e.details[0].message });
+    }
+  } else {
+    res.status(200).send({
+      data: null,
+      error: "Invalid name"
+    });
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -40,9 +75,7 @@ router.post("/", async (req, res) => {
   try {
     source = await Source.findOne({ name: bodySource.name });
   } catch (e) {
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+    return res.status(200).send({ data: null, error: e.details[0].message });
   }
 
   if (source)
@@ -55,9 +88,7 @@ router.post("/", async (req, res) => {
   try {
     await source.save();
   } catch (e) {
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+    return res.status(200).send({ data: null, error: e.details[0].message });
   }
   const users = req.body.users;
   for (let i = 0; i < users.length; i++) {
