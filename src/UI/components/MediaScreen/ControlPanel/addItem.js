@@ -12,6 +12,7 @@ class AddItem extends React.Component {
     usersToDisplay: [],
     usersToSend: []
   };
+
   componentDidMount = () => {
     const modal = document.getElementById("addModal");
     window.onclick = e => {
@@ -20,6 +21,7 @@ class AddItem extends React.Component {
       }
     };
   };
+
   renderUserItem = (value, key) => {
     return (
       <div className="item-list" key={key}>
@@ -41,28 +43,47 @@ class AddItem extends React.Component {
       </div>
     );
   };
+
+  openModal = () => {
+    API.get("/users")
+      .then(res => {
+        if (res.data.error) {
+          alert(res.data.error);
+        } else if (res.data.data) {
+          this.setState({
+            usersToDisplay: res.data.data,
+            displayModal: true
+          });
+        }
+      })
+      .catch(res => {
+        console.error(JSON.stringify(res));
+      });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    API.post("/sources", {
+      source: { name: this.state.name, src: this.state.src },
+      users: this.state.usersToSend
+    })
+      .then(res => {
+        if (res.data.error) {
+          alert(res.data.error);
+        } else if (res.data.data) {
+          this.props.onPushItem(res.data.data);
+          this.setState({ Redirect: true, displayModal: false });
+        }
+      })
+      .catch(res => {
+        console.error(JSON.stringify(res));
+      });
+  };
+
   render() {
     return (
       <div>
-        <button
-          className="add-btn"
-          onClick={() => {
-            API.get("/users")
-              .then(res => {
-                if (res.data.error) {
-                  alert(res.data.error);
-                } else if (res.data.data) {
-                  this.setState({
-                    usersToDisplay: res.data.data,
-                    displayModal: true
-                  });
-                }
-              })
-              .catch(res => {
-                console.log(res);
-              });
-          }}
-        >
+        <button className="add-btn" onClick={this.openModal}>
           Add
         </button>
         <div
@@ -80,27 +101,7 @@ class AddItem extends React.Component {
             >
               x
             </span>
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                API.post("/sources", {
-                  source: { name: this.state.name, src: this.state.src },
-                  users: this.state.usersToSend
-                })
-                  .then(res => {
-                    if (res.data.error) {
-                      alert(res.data.error);
-                    } else if (res.data.data) {
-                      this.props.onPushItem(res.data.data);
-                      this.setState({ Redirect: true, displayModal: false });
-                    }
-                  })
-                  .catch(res => {
-                    console.log(JSON.stringify(res));
-                  });
-              }}
-              className="form"
-            >
+            <form onSubmit={this.handleSubmit} className="form">
               <input
                 type="text"
                 required

@@ -18,13 +18,14 @@ class SourceList extends React.Component {
         console.log(res);
       });
   };
-  item = (source, index) => {
+
+  renderSource = (source, index) => {
     return (
       <div className="item-list border" key={index}>
         {this.props.user.admin && (
           <div
             className="remove pointer"
-            onClick={() => this.removeItem(source)}
+            onClick={() => this.removeSource(source)}
           >
             x
           </div>
@@ -54,7 +55,7 @@ class SourceList extends React.Component {
       </div>
     );
   };
-  removeItem = source => {
+  removeSource = source => {
     API.delete(`/sources?name=${source.name}`)
       .then(res => {
         if (res.data.error) {
@@ -65,20 +66,22 @@ class SourceList extends React.Component {
         }
       })
       .catch(res => {
-        console.log(res);
+        console.error(JSON.stringify(res));
       });
   };
-  renderSoures() {
+  renderSouresList() {
     return (
       this.props.sourceList &&
-      this.props.sourceList.map((source, index) => this.item(source, index))
+      this.props.sourceList.map((source, index) =>
+        this.renderSource(source, index)
+      )
     );
   }
   render() {
     return (
       <div>
         <div className="source-list border">
-          <div className="list">{this.renderSoures()}</div>
+          <div className="list">{this.renderSouresList()}</div>
         </div>
         {this.props.user.admin && <AddItem />}
       </div>
@@ -94,7 +97,7 @@ const mapStateToProp = state => {
 const mapDispatch = dispatch => {
   return {
     onPopItem: item => dispatch({ type: actionTypes.POP_ITEM, item }),
-    onInit: array => dispatch({ type: actionTypes.INIT_ARRAY, array })
+    onInit: array => dispatch({ type: actionTypes.INIT_SOURCE_ARRAY, array })
   };
 };
 export default connect(

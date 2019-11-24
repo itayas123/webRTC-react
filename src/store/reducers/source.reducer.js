@@ -13,8 +13,9 @@ const sourceReducer = (state = initialState, action) => {
         sourceArray: temp
       };
     case actionTypes.POP_ARRAY:
+      temp.pop();
       return {
-        sourceArray: state.sourceArray.pop()
+        sourceArray: temp
       };
     case actionTypes.POP_ITEM:
       const index = temp.indexOf(action.item);
@@ -24,9 +25,9 @@ const sourceReducer = (state = initialState, action) => {
           sourceArray: temp
         };
       } else {
-        return { state };
+        return state;
       }
-    case actionTypes.INIT_ARRAY:
+    case actionTypes.INIT_SOURCE_ARRAY:
       return {
         sourceArray: action.array
       };

@@ -4,7 +4,7 @@ const initialState = {
   isConnected: true,
   user: {
     name: "itay",
-    email: "itay1@gmail.com",
+    email: "itay@gmail.com",
     admin: true
   }
 };
@@ -13,19 +13,16 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.LOGIN:
       return {
-        ...state,
         isConnected: true,
         user: action.user
       };
     case actionTypes.REGISTER:
       return {
-        ...state,
         isConnected: true,
         user: action.user
       };
     case actionTypes.LOGOUT:
       return {
-        ...state,
         isConnected: false,
         user: {
           name: null,

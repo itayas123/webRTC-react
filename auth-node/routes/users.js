@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validate(req.body, true);
   if (error)
     return res
       .status(200)
@@ -27,9 +27,7 @@ router.post("/", async (req, res) => {
   try {
     user = await User.findOne({ email: req.body.email });
   } catch (e) {
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+    console.log(e);
   }
 
   if (user)
@@ -46,9 +44,7 @@ router.post("/", async (req, res) => {
   try {
     await user.save();
   } catch (e) {
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+    console.log(e);
   }
 
   const token = user.generateAuthToken();

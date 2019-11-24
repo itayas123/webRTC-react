@@ -40,12 +40,14 @@ userSchema.methods.generateAuthToken = function() {
 
 const User = mongoose.model("User", userSchema);
 
-function validateUser(user) {
+function validateUser(user, isRegister) {
   const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50)
-      .required(),
+    name: isRegister
+      ? Joi.string()
+          .min(5)
+          .max(50)
+          .required()
+      : Joi.string().optional(),
     email: Joi.string()
       .min(5)
       .max(255)

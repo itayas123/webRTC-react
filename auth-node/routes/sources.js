@@ -13,8 +13,8 @@ router.get("/", async (req, res) => {
     console.log(e);
   }
   if (user && user.admin) {
-    Source.find({}, (err, sources) => {
-      return res.status(200).send({ data: sources, error: null });
+    Source.find({}, (err, allSources) => {
+      return res.status(200).send({ data: allSources, error: null });
     });
   } else if (user) {
     let userSourcees = [];
@@ -53,7 +53,7 @@ router.delete("/", async (req, res) => {
         error: null
       });
     } catch (e) {
-      return res.status(200).send({ data: null, error: e.details[0].message });
+      console.log(e);
     }
   } else {
     res.status(200).send({
@@ -75,7 +75,7 @@ router.post("/", async (req, res) => {
   try {
     source = await Source.findOne({ name: bodySource.name });
   } catch (e) {
-    return res.status(200).send({ data: null, error: e.details[0].message });
+    console.log(e);
   }
 
   if (source)
@@ -88,7 +88,7 @@ router.post("/", async (req, res) => {
   try {
     await source.save();
   } catch (e) {
-    return res.status(200).send({ data: null, error: e.details[0].message });
+    console.log(e);
   }
   const users = req.body.users;
   for (let i = 0; i < users.length; i++) {

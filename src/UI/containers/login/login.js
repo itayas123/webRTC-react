@@ -13,9 +13,11 @@ class Login extends React.Component {
     register: false,
     Redirect: false
   };
-  onSubmit = e => {
+  handleSubmit = e => {
     e.preventDefault();
+
     const { name, email, password } = this.state;
+
     if (this.state.register) {
       API.post("/users", { name, email, password })
         .then(res => {
@@ -23,12 +25,11 @@ class Login extends React.Component {
             alert(res.data.error);
           } else if (res.data.data) {
             this.props.onRegister(res.data.data);
-            console.log(this.props.user);
             this.setState({ Redirect: true });
           }
         })
         .catch(res => {
-          console.log(JSON.stringify(res));
+          console.error(JSON.stringify(res));
         });
     } else {
       API.get(`/auth?email=${email}&password=${password}`)
@@ -37,14 +38,17 @@ class Login extends React.Component {
             alert(res.data.error);
           } else if (res.data.data) {
             this.props.onLogin(res.data.data);
-            console.log(this.props.user);
             this.setState({ Redirect: true });
           }
         })
         .catch(res => {
-          console.log(JSON.stringify(res));
+          console.error(JSON.stringify(res));
         });
     }
+  };
+
+  handleChange = (name, value) => {
+    this.setState({ [name]: value });
   };
 
   render() {
@@ -69,7 +73,7 @@ class Login extends React.Component {
             Login
           </button>
         </div>
-        <form onSubmit={this.onSubmit} className="form">
+        <form onSubmit={this.handleSubmit} className="form">
           <input
             type="text"
             className={this.state.register ? "" : "hide"}
@@ -77,7 +81,7 @@ class Login extends React.Component {
             placeholder="name"
             value={this.state.name}
             onChange={e => {
-              this.setState({ name: e.target.value });
+              this.handleChange("name", e.target.value);
             }}
           />
           <input
@@ -86,7 +90,7 @@ class Login extends React.Component {
             placeholder="email"
             value={this.state.email}
             onChange={e => {
-              this.setState({ email: e.target.value });
+              this.handleChange("email", e.target.value);
             }}
           />
           <input
@@ -95,7 +99,7 @@ class Login extends React.Component {
             placeholder="password"
             value={this.state.password}
             onChange={e => {
-              this.setState({ password: e.target.value });
+              this.handleChange("password", e.target.value);
             }}
           />
           <button type="submit">Submit</button>
