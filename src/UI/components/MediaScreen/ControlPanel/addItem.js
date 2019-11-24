@@ -47,12 +47,14 @@ export default class AddItem extends React.Component {
           onClick={() => {
             API.get("/users")
               .then(res => {
-                this.setState({ usersToDisplay: res.data.data });
+                this.setState({
+                  usersToDisplay: res.data.data,
+                  displayModal: true
+                });
               })
               .catch(res => {
                 console.log(res);
               });
-            this.setState({ displayModal: true });
           }}
         >
           Add
@@ -85,14 +87,11 @@ export default class AddItem extends React.Component {
                     } else if (res.data.data) {
                       this.props.pushItem(this.state.name);
                       console.log(res.data.data);
-                      this.setState({ Redirect: true });
+                      this.setState({ Redirect: true, displayModal: false });
                     }
                   })
                   .catch(res => {
                     console.log(JSON.stringify(res));
-                  })
-                  .finally(() => {
-                    this.setState({ displayModal: false });
                   });
               }}
               className="form"

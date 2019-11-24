@@ -32,7 +32,7 @@ class App extends React.Component {
 }
 const mapStateToProp = state => {
   return {
-    isConnected: state.isConnected
+    isConnected: state.userReducer.isConnected
   };
 };
 

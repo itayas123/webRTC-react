@@ -1,17 +1,15 @@
 import React from "react";
 import AddItem from "./addItem";
 import { connect } from "react-redux";
+import * as actionTypes from "../../../../store/actions";
 
 class SourceList extends React.Component {
-  state = {
-    arr: []
-  };
   componentDidMount = () => {
-    const temp = [...this.state.arr];
+    const temp = [];
     for (let i = 1; i <= 50; i++) {
       temp.push(i);
     }
-    this.setState({ arr: temp });
+    this.props.onInit(temp);
   };
   item = (text, index) => {
     return (
@@ -46,21 +44,17 @@ class SourceList extends React.Component {
     );
   };
   removeItem = num => {
-    const temp = [...this.state.arr];
-    const index = temp.indexOf(num);
-    if (index > -1) {
-      temp.splice(index, 1);
-    }
-    this.setState({ arr: temp });
+    this.props.onPopItem(num);
     this.props.popArray(num);
   };
   pushItem = num => {
-    const temp = [...this.state.arr];
-    temp.push(num);
-    this.setState({ arr: temp });
+    this.props.onPushItem(num);
   };
   renderItems() {
-    return this.state.arr.map((num, index) => this.item(num, index));
+    return (
+      this.props.sourceList &&
+      this.props.sourceList.map((num, index) => this.item(num, index))
+    );
   }
   render() {
     return (
@@ -75,8 +69,18 @@ class SourceList extends React.Component {
 }
 const mapStateToProp = state => {
   return {
-    user: state.user
+    user: state.userReducer.user,
+    sourceList: state.sourceReducer.sourceArray
   };
 };
-
-export default connect(mapStateToProp)(SourceList);
+const mapDispatch = dispatch => {
+  return {
+    onPopItem: item => dispatch({ type: actionTypes.POP_ITEM, item }),
+    onPushItem: item => dispatch({ type: actionTypes.PUSH_ARRAY, item }),
+    onInit: array => dispatch({ type: actionTypes.INIT_ARRAY, array })
+  };
+};
+export default connect(
+  mapStateToProp,
+  mapDispatch
+)(SourceList);

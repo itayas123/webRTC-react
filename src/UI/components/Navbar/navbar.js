@@ -24,8 +24,8 @@ class Navbar extends React.Component {
 
 const mapStateToProp = state => {
   return {
-    isConnected: state.isConnected,
-    user: state.user
+    isConnected: state.userReducer.isConnected,
+    user: state.userReducer.user
   };
 };
 

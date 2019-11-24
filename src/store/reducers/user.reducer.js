@@ -1,15 +1,15 @@
-import * as actionTypes from "./actions";
+import * as actionTypes from "../actions";
 
 const initialState = {
-  isConnected: false,
+  isConnected: true,
   user: {
     name: null,
     email: null,
-    admin: false
+    admin: true
   }
 };
 
-const reducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.LOGIN:
       return {
@@ -38,4 +38,4 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export default reducer;
+export default userReducer;
