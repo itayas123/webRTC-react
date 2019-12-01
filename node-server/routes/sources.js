@@ -102,7 +102,7 @@ router.delete("/", async (req, res) => {
 router.post("/", async (req, res) => {
   let source = null;
   try {
-    source = checkSource(req.body.source);
+    source = await checkSource(req.body.source);
   } catch (error) {
     res.send({ data: null, error: error.message });
   }

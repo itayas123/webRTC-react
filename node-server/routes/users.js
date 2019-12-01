@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
     let allUsers = [];
 
     users.forEach(user => {
-      allUsers.push(user);
+      allUsers.push(user.email);
     });
 
     return res.send({ data: allUsers, error: null });

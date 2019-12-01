@@ -26,20 +26,21 @@ class AddSource extends React.Component {
     };
   };
 
-  renderUserItem = (value, key) => {
+  renderUserItem = (email, index) => {
     return (
-      <div className="item-list" key={key}>
-        {value}
+      <div className="item-list" key={`email${email}i${index}`}>
+        {email}
         <input
           type="checkbox"
-          value={this.state.usersToSend.includes(value)}
+          checked={this.state.usersToSend.includes(email)}
+          value={this.state.usersToSend.includes(email)}
           onChange={() => {
             const temp = [...this.state.usersToSend];
-            const index = temp.indexOf(value);
+            const index = temp.indexOf(email);
             if (index > -1) {
               temp.splice(index, 1);
             } else {
-              temp.push(value);
+              temp.push(email);
             }
             this.setState({ usersToSend: temp });
           }}
@@ -78,11 +79,24 @@ class AddSource extends React.Component {
   };
 
   handleAutoComplete = debounce(() => {
-    const filterUsers = this.state.usersToDisplay.filter(user =>
-      user.email.includes(this.state.search)
+    const filterUsers = this.state.usersToDisplay.filter(email =>
+      email.includes(this.state.search)
     );
     this.setState({ filterUsers });
   }, 350);
+
+  handleAllUsersCheckbox = () => {
+    if (
+      JSON.stringify(this.state.usersToSend) ===
+      JSON.stringify(this.state.filterUsers)
+    ) {
+      this.setState({ usersToSend: [] });
+    } else {
+      this.setState({
+        usersToSend: [...this.state.filterUsers]
+      });
+    }
+  };
 
   render() {
     return (
@@ -126,19 +140,41 @@ class AddSource extends React.Component {
               />
               {this.state.usersToDisplay.length > 0 && (
                 <div className="users-list">
-                  <input
-                    type="text"
-                    placeholder="email"
-                    className="search"
-                    value={this.state.search}
-                    onChange={e => {
-                      this.setState({ search: e.target.value });
-                      this.handleAutoComplete();
-                    }}
-                  />
+                  <div className="search-div">
+                    <input
+                      type="text"
+                      placeholder="email"
+                      className="search"
+                      value={this.state.search}
+                      onChange={e => {
+                        this.setState({ search: e.target.value });
+                        this.handleAutoComplete();
+                      }}
+                    />
+                    <div className="all-users-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={
+                          JSON.stringify(this.state.usersToSend) ===
+                          JSON.stringify(this.state.filterUsers)
+                        }
+                        value={
+                          JSON.stringify(this.state.usersToSend) ===
+                          JSON.stringify(this.state.filterUsers)
+                        }
+                        onChange={this.handleAllUsersCheckbox}
+                      />
+                      <div
+                        className="pointer"
+                        onClick={this.handleAllUsersCheckbox}
+                      >
+                        All
+                      </div>
+                    </div>
+                  </div>
                   <div className="list">
-                    {this.state.filterUsers.map(user =>
-                      this.renderUserItem(user.email, user._id)
+                    {this.state.filterUsers.map((email, index) =>
+                      this.renderUserItem(email, index)
                     )}
                   </div>
                 </div>

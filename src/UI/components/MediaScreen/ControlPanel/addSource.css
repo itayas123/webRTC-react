@@ -40,7 +40,7 @@
   border: 1px solid #247516;
 }
 .users-list .list {
-  max-height: 84%;
+  max-height: 80%;
   margin: 0;
   overflow: hidden;
   overflow-y: auto;
@@ -56,4 +56,16 @@
   border-radius: 5px;
   padding: 5px;
   margin-top: 5px;
+}
+.all-users-checkbox {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.search-div {
+  display: flex;
+  justify-content: center;
+}
+.search-div input {
+  margin-top: 10px;
 }
