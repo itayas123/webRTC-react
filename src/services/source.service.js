@@ -3,7 +3,7 @@ import { TOKEN } from "./user.service";
 
 class SourceService {
   addSource = async (name, src, usersToSend) => {
-    API.post("/sources", {
+    return await API.post("/sources", {
       source: { name: name, src: src },
       users: usersToSend
     });

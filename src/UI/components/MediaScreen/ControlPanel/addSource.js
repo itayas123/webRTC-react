@@ -4,9 +4,9 @@ import sourceService from "../../../../services/source.service";
 import userService from "../../../../services/user.service";
 import * as actionTypes from "../../../../store/actions";
 import { debounce } from "lodash";
-import "./addItem.css";
+import "./addSource.css";
 
-class AddItem extends React.Component {
+class AddSource extends React.Component {
   state = {
     displayModal: false,
     name: "",
@@ -143,7 +143,7 @@ class AddItem extends React.Component {
                   </div>
                 </div>
               )}
-              <button type="submit" className="add-item-submit">
+              <button type="submit" className="add-source-submit">
                 Submit
               </button>
             </form>
@@ -162,4 +162,4 @@ const mapDispatch = dispatch => {
 export default connect(
   null,
   mapDispatch
-)(AddItem);
+)(AddSource);

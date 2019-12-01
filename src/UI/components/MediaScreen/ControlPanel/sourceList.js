@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import sourceService from "../../../../services/source.service";
 import * as actionTypes from "../../../../store/actions";
-import AddItem from "./addItem";
+import AddSource from "./addSource";
 
 class SourceList extends React.Component {
   componentDidMount = () => {
@@ -87,7 +87,7 @@ class SourceList extends React.Component {
         <div className="source-list border">
           <div className="list">{this.renderSouresList()}</div>
         </div>
-        {this.props.user.admin && <AddItem />}
+        {this.props.user.admin && <AddSource />}
       </div>
     );
   }
