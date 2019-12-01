@@ -16,11 +16,6 @@ const userReducer = (state = initialState, action) => {
         isConnected: true,
         user: action.user
       };
-    case actionTypes.REGISTER:
-      return {
-        isConnected: true,
-        user: action.user
-      };
     case actionTypes.LOGOUT:
       return {
         isConnected: false,

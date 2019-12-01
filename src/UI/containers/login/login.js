@@ -1,9 +1,9 @@
-import "./login.css";
 import React from "react";
-import API from "../../../utils/API";
 import { connect } from "react-redux";
-import * as actionTypes from "../../../store/actions";
 import { Redirect } from "react-router-dom";
+import UserService from "../../../services/user.service";
+import * as actionTypes from "../../../store/actions";
+import "./login.css";
 
 class Login extends React.Component {
   state = {
@@ -19,16 +19,16 @@ class Login extends React.Component {
     const { name, email, password } = this.state;
 
     if (this.state.register) {
-      API.post("/users", { name, email, password })
-        .then(res => {
-          this.props.onRegister(res);
+      UserService.register(name, email, password)
+        .then(user => {
+          this.props.onLogin(user);
           this.setState({ Redirect: true });
         })
         .catch(e => {
           alert(e);
         });
     } else {
-      API.get(`/auth?email=${email}&password=${password}`)
+      UserService.login(email, password)
         .then(res => {
           this.props.onLogin(res);
           this.setState({ Redirect: true });
@@ -101,20 +101,13 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProp = state => {
-  return {
-    user: state.userReducer.user
-  };
-};
-
 const mapDispatch = dispatch => {
   return {
-    onRegister: user => dispatch({ type: actionTypes.REGISTER, user: user }),
     onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
   };
 };
 
 export default connect(
-  mapStateToProp,
+  null,
   mapDispatch
 )(Login);

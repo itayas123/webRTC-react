@@ -1,8 +1,9 @@
 import React from "react";
-import "./addItem.css";
-import API from "../../../../utils/API";
 import { connect } from "react-redux";
+import sourceService from "../../../../services/source.service";
+import userService from "../../../../services/user.service";
 import * as actionTypes from "../../../../store/actions";
+import "./addItem.css";
 
 class AddItem extends React.Component {
   state = {
@@ -45,7 +46,8 @@ class AddItem extends React.Component {
   };
 
   openModal = () => {
-    API.get("/users")
+    userService
+      .getAllUsers()
       .then(res => {
         this.setState({
           usersToDisplay: res,
@@ -59,10 +61,9 @@ class AddItem extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    API.post("/sources", {
-      source: { name: this.state.name, src: this.state.src },
-      users: this.state.usersToSend
-    })
+    const { name, src, usersToSend } = this.state;
+    sourceService
+      .addSource(name, src, usersToSend)
       .then(res => {
         this.props.onPushSource(res);
         this.setState({ Redirect: true, displayModal: false });

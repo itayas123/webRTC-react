@@ -1,8 +1,9 @@
-import "./navbar.css";
 import React from "react";
-import { Link } from "react-router-dom";
-import * as actionTypes from "../../../store/actions";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import userService from "../../../services/user.service";
+import * as actionTypes from "../../../store/actions";
+import "./navbar.css";
 
 class Navbar extends React.Component {
   render = () => {
@@ -12,7 +13,14 @@ class Navbar extends React.Component {
         {this.props.isConnected ? (
           <div className="hello-div">
             {`Hello ${this.props.user.name} -`}
-            <p onClick={this.props.onLogout}>Logout</p>
+            <p
+              onClick={() => {
+                userService.logout();
+                this.props.onLogout();
+              }}
+            >
+              Logout
+            </p>
           </div>
         ) : (
           <Link to="/login-register">Login/ Register</Link>

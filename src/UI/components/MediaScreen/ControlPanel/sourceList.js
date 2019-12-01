@@ -1,14 +1,15 @@
 import React from "react";
-import AddItem from "./addItem";
 import { connect } from "react-redux";
+import sourceService from "../../../../services/source.service";
 import * as actionTypes from "../../../../store/actions";
-import API from "../../../../utils/API";
+import AddItem from "./addItem";
 
 class SourceList extends React.Component {
   componentDidMount = () => {
-    API.get(`/sources?email=${this.props.user.email}`)
-      .then(res => {
-        this.props.onInit(res);
+    sourceService
+      .getUserSources()
+      .then(sources => {
+        this.props.onInit(sources);
       })
       .catch(e => {
         alert(e);
@@ -60,7 +61,8 @@ class SourceList extends React.Component {
     );
   };
   removeSource = source => {
-    API.delete(`/sources?name=${source.name}`)
+    sourceService
+      .deleteSource(source.name)
       .then(res => {
         if (res) {
           this.props.onPopSource(source);
