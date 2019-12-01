@@ -9,16 +9,16 @@ async function getUserSources(user) {
   let userSources = [];
   for (let i = 0; i < user.sources.length; i++) {
     let source = null;
-    source = await Source.findOne({ name: user.sources[i] });
-    if (source) {
-      userSources.push(source);
-    } else {
-      try {
+    try {
+      source = await Source.findOne({ name: user.sources[i] });
+      if (source) {
+        userSources.push(source);
+      } else {
         user.sources.splice(i, 1);
         await user.save();
-      } catch (e) {
-        console.log(e);
       }
+    } catch (e) {
+      console.log(e);
     }
   }
   return userSources;
@@ -113,7 +113,7 @@ router.post("/", async (req, res) => {
       console.log(e);
     }
 
-    await pushSourceToUsers(req.body.users);
+    await pushSourceToUsers(req.body.users, source);
 
     res.send({
       data: _.pick(source, ["name", "src"]),
