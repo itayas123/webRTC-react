@@ -26,7 +26,8 @@ const videoReducer = (state = initialState, action) => {
         return state;
       }
     case actionTypes.CHANGE_SPLIT:
-      for (let i = action.split; i < tempVideos.length; i++) {
+      const start = action.split === 3 ? action.split - 1 : action.split;
+      for (let i = start; i <= tempVideos.length; i++) {
         tempVideos.pop();
       }
       return {

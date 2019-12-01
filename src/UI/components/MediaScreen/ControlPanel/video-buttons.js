@@ -23,7 +23,7 @@ class VideoButtons extends React.Component {
         <div
           className="butoon-width border pointer"
           onClick={() => {
-            this.props.onChangeSplit(2);
+            this.props.onChangeSplit(3);
           }}
         >
           <div className="height-48p border" />
