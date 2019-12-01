@@ -5,8 +5,23 @@ import Navbar from "./UI/components/Navbar/navbar";
 import Login from "./UI/containers/Login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
 import { connect } from "react-redux";
+import userService from "./services/user.service";
+import * as actionTypes from "./store/actions";
 
 class App extends React.Component {
+  componentDidMount() {
+    userService
+      .getCurrentUser()
+      .then(user => {
+        if (user) {
+          this.props.onLogin(user);
+        }
+      })
+      .catch(e => {
+        alert(e);
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -35,5 +50,12 @@ const mapStateToProp = state => {
     isConnected: state.userReducer.isConnected
   };
 };
-
-export default connect(mapStateToProp)(App);
+const mapDispatch = dispatch => {
+  return {
+    onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
+  };
+};
+export default connect(
+  mapStateToProp,
+  mapDispatch
+)(App);

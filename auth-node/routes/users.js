@@ -16,6 +16,20 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/getCurrentUser", async (req, res) => {
+  let user = null;
+  try {
+    user = await User.findOne({ token: req.query.token });
+  } catch (e) {
+    console.log(e);
+  }
+  if (user) {
+    return res.status(200).send({ data: user, error: null });
+  } else {
+    return res.status(200).send({ data: null, error: "Invalid token." });
+  }
+});
+
 router.post("/", async (req, res) => {
   const { error } = validate(req.body, true);
   if (error)
@@ -36,6 +50,8 @@ router.post("/", async (req, res) => {
       .send({ data: null, error: "User already registered." });
 
   user = new User(_.pick(req.body, ["name", "email", "password"]));
+  const token = user.generateAuthToken();
+  user.token = token;
   user.admin = false;
   user.sources = [];
   // const salt = await bcrypt.genSalt(10);
@@ -47,14 +63,10 @@ router.post("/", async (req, res) => {
     console.log(e);
   }
 
-  const token = user.generateAuthToken();
-  res
-    .status(200)
-    .header("x-auth-token", token)
-    .send({
-      data: _.pick(user, ["_id", "name", "email", "admin", "sources"]),
-      error: null
-    });
+  res.status(200).send({
+    data: _.pick(user, ["_id", "name", "email", "admin", "token", "sources"]),
+    error: null
+  });
 });
 
 module.exports = router;

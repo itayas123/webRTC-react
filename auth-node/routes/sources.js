@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   let user = null;
   try {
-    user = await User.findOne({ email: req.query.email });
+    user = await User.findOne({ token: req.query.token });
   } catch (e) {
     console.log(e);
   }
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
     }
     return res.status(200).send({ data: userSourcees, error: null });
   } else {
-    return res.status(200).send({ data: null, error: "Invalid email" });
+    return res.status(200).send({ data: null, error: "Invalid token" });
   }
 });
 

@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
   sources: {
     type: Array,
     required: false
+  },
+  token: {
+    type: String,
+    required: false
   }
 });
 

@@ -26,13 +26,17 @@ router.get("/", async (req, res) => {
     return res.status(200).send({ data: null, error: "Invalid password." });
 
   const token = user.generateAuthToken();
-  res
-    .status(200)
-    .header("x-auth-token", token)
-    .send({
-      data: _.pick(user, ["_id", "name", "email", "admin"]),
-      error: null
-    });
+  user.token = token;
+
+  try {
+    await user.save();
+  } catch (e) {
+    console.log(e);
+  }
+  res.status(200).send({
+    data: _.pick(user, ["_id", "name", "email", "admin", "token"]),
+    error: null
+  });
 });
 
 module.exports = router;
