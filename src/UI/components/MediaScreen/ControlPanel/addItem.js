@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import sourceService from "../../../../services/source.service";
 import userService from "../../../../services/user.service";
 import * as actionTypes from "../../../../store/actions";
+import { debounce } from "lodash";
 import "./addItem.css";
 
 class AddItem extends React.Component {
@@ -10,7 +11,9 @@ class AddItem extends React.Component {
     displayModal: false,
     name: "",
     src: "",
+    search: "",
     usersToDisplay: [],
+    filterUsers: [],
     usersToSend: []
   };
 
@@ -51,6 +54,7 @@ class AddItem extends React.Component {
       .then(res => {
         this.setState({
           usersToDisplay: res,
+          filterUsers: res,
           displayModal: true
         });
       })
@@ -72,6 +76,13 @@ class AddItem extends React.Component {
         alert(e);
       });
   };
+
+  handleAutoComplete = debounce(() => {
+    const filterUsers = this.state.usersToDisplay.filter(user =>
+      user.email.includes(this.state.search)
+    );
+    this.setState({ filterUsers });
+  }, 350);
 
   render() {
     return (
@@ -115,8 +126,18 @@ class AddItem extends React.Component {
               />
               {this.state.usersToDisplay.length > 0 && (
                 <div className="users-list">
+                  <input
+                    type="text"
+                    placeholder="email"
+                    className="search"
+                    value={this.state.search}
+                    onChange={e => {
+                      this.setState({ search: e.target.value });
+                      this.handleAutoComplete();
+                    }}
+                  />
                   <div className="list">
-                    {this.state.usersToDisplay.map(user =>
+                    {this.state.filterUsers.map(user =>
                       this.renderUserItem(user.email, user._id)
                     )}
                   </div>
