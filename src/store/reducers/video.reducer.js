@@ -6,31 +6,31 @@ const initialState = {
 };
 
 const videoReducer = (state = initialState, action) => {
-  const temp = state.videoArray ? [...state.videoArray] : [];
+  const tempVideos = state.videoArray ? [...state.videoArray] : [];
   switch (action.type) {
     case actionTypes.PUSH_VIDEO:
-      temp.push(action.video);
+      tempVideos.push(action.video);
       return {
         ...state,
-        videoArray: temp
+        videoArray: tempVideos
       };
     case actionTypes.POP_VIDEO:
-      const index = temp.indexOf(action.video);
+      const index = tempVideos.indexOf(action.video);
       if (index > -1) {
-        temp.splice(index, 1);
+        tempVideos.splice(index, 1);
         return {
           ...state,
-          videoArray: temp
+          videoArray: tempVideos
         };
       } else {
         return state;
       }
     case actionTypes.CHANGE_SPLIT:
-      for (let i = action.split; i < temp.length; i++) {
-        temp.pop();
+      for (let i = action.split; i < tempVideos.length; i++) {
+        tempVideos.pop();
       }
       return {
-        videoArray: temp,
+        videoArray: tempVideos,
         videoSplit: action.split
       };
     default:

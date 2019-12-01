@@ -5,19 +5,19 @@ const initialState = {
 };
 
 const sourceReducer = (state = initialState, action) => {
-  const temp = state.sourceArray ? [...state.sourceArray] : [];
+  const tempSources = state.sourceArray ? [...state.sourceArray] : [];
   switch (action.type) {
     case actionTypes.PUSH_SOURCE:
-      temp.push(action.source);
+      tempSources.push(action.source);
       return {
-        sourceArray: temp
+        sourceArray: tempSources
       };
     case actionTypes.POP_SOURCE:
-      const index = temp.indexOf(action.source);
+      const index = tempSources.indexOf(action.source);
       if (index > -1) {
-        temp.splice(index, 1);
+        tempSources.splice(index, 1);
         return {
-          sourceArray: temp
+          sourceArray: tempSources
         };
       } else {
         return state;
