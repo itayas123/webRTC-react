@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
       allUsers.push(user);
     });
 
-    return res.status(200).send({ data: allUsers, error: null });
+    return res.send({ data: allUsers, error: null });
   });
 });
 
@@ -24,18 +24,15 @@ router.get("/getCurrentUser", async (req, res) => {
     console.log(e);
   }
   if (user) {
-    return res.status(200).send({ data: user, error: null });
+    return res.send({ data: user, error: null });
   } else {
-    return res.status(200).send({ data: null, error: "Invalid token." });
+    return res.send({ data: null, error: "Invalid token." });
   }
 });
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body, true);
-  if (error)
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+  if (error) return res.send({ data: null, error: error.details[0].message });
 
   let user = null;
   try {
@@ -44,10 +41,7 @@ router.post("/", async (req, res) => {
     console.log(e);
   }
 
-  if (user)
-    return res
-      .status(200)
-      .send({ data: null, error: "User already registered." });
+  if (user) return res.send({ data: null, error: "User already registered." });
 
   user = new User(_.pick(req.body, ["name", "email", "password"]));
   const token = user.generateAuthToken();
@@ -63,7 +57,7 @@ router.post("/", async (req, res) => {
     console.log(e);
   }
 
-  res.status(200).send({
+  res.send({
     data: _.pick(user, ["_id", "name", "email", "admin", "token", "sources"]),
     error: null
   });

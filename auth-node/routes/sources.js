@@ -5,6 +5,56 @@ const { User } = require("../models/user");
 const express = require("express");
 const router = express.Router();
 
+async function getUserSources(user) {
+  let userSources = [];
+  for (let i = 0; i < user.sources.length; i++) {
+    let source = null;
+    source = await Source.findOne({ name: user.sources[i] });
+    if (source) {
+      userSources.push(source);
+    } else {
+      try {
+        user.sources.splice(i, 1);
+        await user.save();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+  return userSources;
+}
+
+async function checkSource(source) {
+  const { error } = validate(source);
+  if (error) throw new Error(error.details[0].message);
+
+  let existSource = null;
+  try {
+    existSource = await Source.findOne({ name: source.name });
+  } catch (e) {
+    console.log(e);
+  }
+
+  if (existSource) throw new Error("Source's name already exist.");
+
+  return new Source(_.pick(source, ["name", "src"]));
+}
+
+async function pushSourceToUsers(users, source) {
+  for (let i = 0; i < users.length; i++) {
+    let user = null;
+    try {
+      user = await User.findOne({ email: users[i] });
+      if (user) {
+        user.sources.push(source.name);
+        await user.save();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 router.get("/", async (req, res) => {
   let user = null;
   try {
@@ -14,27 +64,13 @@ router.get("/", async (req, res) => {
   }
   if (user && user.admin) {
     Source.find({}, (err, allSources) => {
-      return res.status(200).send({ data: allSources, error: null });
+      return res.send({ data: allSources, error: null });
     });
   } else if (user) {
-    let userSourcees = [];
-    for (let i = 0; i < user.sources.length; i++) {
-      let source = null;
-      source = await Source.findOne({ name: user.sources[i] });
-      if (source) {
-        userSourcees.push(source);
-      } else {
-        try {
-          user.sources.splice(i, 1);
-          await user.save();
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    }
-    return res.status(200).send({ data: userSourcees, error: null });
+    const userSourcees = await getUserSources(user);
+    return res.send({ data: userSourcees, error: null });
   } else {
-    return res.status(200).send({ data: null, error: "Invalid token" });
+    return res.send({ data: null, error: "Invalid token" });
   }
 });
 
@@ -48,7 +84,7 @@ router.delete("/", async (req, res) => {
   if (source) {
     try {
       await source.remove();
-      res.status(200).send({
+      res.send({
         data: true,
         error: null
       });
@@ -56,7 +92,7 @@ router.delete("/", async (req, res) => {
       console.log(e);
     }
   } else {
-    res.status(200).send({
+    res.send({
       data: null,
       error: "Invalid name"
     });
@@ -64,50 +100,26 @@ router.delete("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const bodySource = req.body.source;
-  const { error } = validate(bodySource);
-  if (error)
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
-
   let source = null;
   try {
-    source = await Source.findOne({ name: bodySource.name });
-  } catch (e) {
-    console.log(e);
+    source = checkSource(req.body.source);
+  } catch (error) {
+    res.send({ data: null, error: error.message });
   }
-
-  if (source)
-    return res
-      .status(200)
-      .send({ data: null, error: "Source's name already registered." });
-
-  source = new Source(_.pick(bodySource, ["name", "src"]));
-
-  try {
-    await source.save();
-  } catch (e) {
-    console.log(e);
-  }
-  const users = req.body.users;
-  for (let i = 0; i < users.length; i++) {
-    let user = null;
+  if (source) {
     try {
-      user = await User.findOne({ email: users[i] });
-      if (user) {
-        user.sources.push(source.name);
-        await user.save();
-      }
+      await source.save();
     } catch (e) {
       console.log(e);
     }
-  }
 
-  res.status(200).send({
-    data: _.pick(source, ["name", "src"]),
-    error: null
-  });
+    await pushSourceToUsers(req.body.users);
+
+    res.send({
+      data: _.pick(source, ["name", "src"]),
+      error: null
+    });
+  }
 });
 
 module.exports = router;

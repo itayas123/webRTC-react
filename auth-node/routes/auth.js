@@ -4,39 +4,45 @@ const { User, validate } = require("../models/user");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const { error } = validate(req.query, false);
-  if (error)
-    return res
-      .status(200)
-      .send({ data: null, error: error.details[0].message });
+async function checkUser(user) {
+  const { error } = validate(user, false);
+  if (error) throw new Error(error.details[0].message);
 
+  let newUser = null;
+  try {
+    newUser = await User.findOne({ email: user.email });
+  } catch (e) {
+    console.log(e);
+  }
+  if (!newUser) throw new Error("Invalid email.");
+
+  if (newUser.password !== user.password) throw new Error("Invalid password.");
+
+  return newUser;
+}
+
+router.get("/", async (req, res) => {
   let user = null;
   try {
-    user = await User.findOne({ email: req.query.email });
-  } catch (e) {
-    console.log(e);
+    user = await checkUser(req.query, res);
+  } catch (error) {
+    res.send({ data: null, error: error.message });
   }
-  if (!user)
-    return res.status(200).send({ data: null, error: "Invalid email." });
 
-  //const validPassword = await bcrypt.compare(req.query.password, user.password);
-  const validPassword = req.query.password === user.password;
-  if (!validPassword)
-    return res.status(200).send({ data: null, error: "Invalid password." });
+  if (user) {
+    const token = user.generateAuthToken();
+    user.token = token;
 
-  const token = user.generateAuthToken();
-  user.token = token;
-
-  try {
-    await user.save();
-  } catch (e) {
-    console.log(e);
+    try {
+      await user.save();
+    } catch (e) {
+      console.log(e);
+    }
+    res.send({
+      data: _.pick(user, ["_id", "name", "email", "admin", "token"]),
+      error: null
+    });
   }
-  res.status(200).send({
-    data: _.pick(user, ["_id", "name", "email", "admin", "token"]),
-    error: null
-  });
 });
 
 module.exports = router;
