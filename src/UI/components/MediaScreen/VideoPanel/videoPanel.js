@@ -9,7 +9,7 @@ class VideoPanel extends React.Component {
     switch (this.props.videoSplit) {
       case 1:
         return (
-          <div className="wh100p border-2p pointer">
+          <div className="wh100p border-2p">
             {this.props.videoArray && this.props.videoArray[0] ? (
               <video autoPlay className="video" controls src={videoSrc} />
             ) : (
@@ -19,7 +19,7 @@ class VideoPanel extends React.Component {
         );
       case 2:
         return (
-          <div className="wh100p border flex pointer">
+          <div className="wh100p border flex">
             <div className="width-50p border">
               {this.props.videoArray && this.props.videoArray[0] ? (
                 <video autoPlay className="video" controls src={videoSrc} />
@@ -38,7 +38,7 @@ class VideoPanel extends React.Component {
         );
       case 3:
         return (
-          <div className="wh100p border pointer">
+          <div className="wh100p border">
             <div className="height-50p border">
               {this.props.videoArray && this.props.videoArray[0] ? (
                 <video autoPlay className="video" controls src={videoSrc} />
@@ -57,7 +57,7 @@ class VideoPanel extends React.Component {
         );
       case 4:
         return (
-          <div className="wh100p border pointer">
+          <div className="wh100p border">
             <div className="height-50p flex">
               <div className="width-50p border">
                 {this.props.videoArray && this.props.videoArray[0] ? (
@@ -93,7 +93,7 @@ class VideoPanel extends React.Component {
           </div>
         );
       default:
-        return <div className="wh100p border-2p pointer" />;
+        return <div className="wh100p border-2p" />;
     }
   }
 

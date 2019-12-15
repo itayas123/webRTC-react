@@ -24,7 +24,7 @@ async function getUserSources(user) {
   return userSources;
 }
 
-async function checkSource(source) {
+async function newSource(source) {
   const { error } = validate(source);
   if (error) throw new Error(error.details[0].message);
 
@@ -40,7 +40,7 @@ async function checkSource(source) {
   return new Source(_.pick(source, ["name", "src"]));
 }
 
-async function pushSourceToUsers(users, source) {
+async function addSourceToUsers(users, source) {
   for (let i = 0; i < users.length; i++) {
     let user = null;
     try {
@@ -102,7 +102,7 @@ router.delete("/", async (req, res) => {
 router.post("/", async (req, res) => {
   let source = null;
   try {
-    source = await checkSource(req.body.source);
+    source = await newSource(req.body.source);
   } catch (error) {
     res.send({ data: null, error: error.message });
   }
@@ -113,7 +113,7 @@ router.post("/", async (req, res) => {
       console.log(e);
     }
 
-    await pushSourceToUsers(req.body.users, source);
+    await addSourceToUsers(req.body.users, source);
 
     res.send({
       data: _.pick(source, ["name", "src"]),
