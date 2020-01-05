@@ -73,8 +73,8 @@ class AddSource extends React.Component {
         this.props.onPushSource(res);
         this.setState({ Redirect: true, displayModal: false });
       })
-      .catch(res => {
-        alert(e);
+      .catch(err => {
+        alert(err);
       });
   };
 

@@ -1,5 +1,5 @@
 .control-panel {
-  height: 90%;
+  height: 95%;
   margin: auto 0;
   width: 30%;
   border: 2px solid #292525;
@@ -49,7 +49,7 @@
   height: 25px;
   width: 90%;
   display: flex;
-  margin: 50px auto 0;
+  margin: 20px auto 0;
   justify-content: space-around;
 }
 .record-button {
