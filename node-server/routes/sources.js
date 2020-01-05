@@ -4,6 +4,7 @@ const { Source, validate } = require("../models/source");
 const { User } = require("../models/user");
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
 
 async function getUserSources(user) {
   let userSources = [];
@@ -54,6 +55,17 @@ async function addSourceToUsers(users, source) {
     }
   }
 }
+
+router.get("/video", async (req, res) => {
+  const path = "./Welcome.mp4";
+  const stat = fs.statSync(path);
+  const head = {
+    "Content-Length": stat.size,
+    "Content-Type": "video/mp4"
+  };
+  res.writeHead(200, head);
+  fs.createReadStream(path).pipe(res);
+});
 
 router.get("/", async (req, res) => {
   let user = null;

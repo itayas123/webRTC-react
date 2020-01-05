@@ -11,7 +11,12 @@ class VideoPanel extends React.Component {
         return (
           <div className="wh100p border-2p">
             {this.props.videoArray && this.props.videoArray[0] ? (
-              <video autoPlay className="video" controls src={videoSrc} />
+              <video
+                autoPlay
+                className="video"
+                controls
+                src="http://localhost:3001/api/sources/video"
+              />
             ) : (
               ""
             )}
