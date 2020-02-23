@@ -1,8 +1,7 @@
-import React from "react";
-import sourceService from "../../../../services/source.service";
-import AddSource from "./addSource";
 import { inject, observer } from "mobx-react";
+import React from "react";
 import { SOURCE_STORE, USER_STORE } from "../../../../stores";
+import AddSource from "./addSource";
 
 @inject(SOURCE_STORE, USER_STORE)
 @observer
@@ -31,8 +30,6 @@ class SourceList extends React.Component {
   };
 
   renderSource = (source, index) => {
-    console.log(this.userStore.getUser);
-
     return (
       <div className="item-list border" key={index}>
         {this.userStore.getUser && this.userStore.getUser.admin && (

@@ -12,16 +12,7 @@ class Navbar extends React.Component {
     this.userStore = this.props.userStore;
   }
 
-  componentDidUpdate() {
-    console.log(this.props.userStore);
-  }
-
-  componentWillReceiveProps(props) {
-    console.log(props);
-  }
-
   render = () => {
-    console.log(this.userStore.getUser);
     return (
       <div className="navbar">
         <Link to="/">Media Screen</Link>
