@@ -1,5 +1,5 @@
 import API from "./../utils/API";
-import { TOKEN } from "./user.service";
+import { TOKEN } from "../stores/userStore";
 
 class SourceService {
   addSource = async (name, src, usersToSend) => {

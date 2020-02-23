@@ -1,26 +1,22 @@
 import React from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import userService from "../../../services/user.service";
-import * as actionTypes from "../../../store/actions";
 import "./navbar.css";
+import stores from "../../../stores";
+import { observer } from "mobx-react";
 
+const { userStore } = stores;
+
+@observer
 class Navbar extends React.Component {
   render = () => {
+    console.log(userStore.currentUser.name);
     return (
       <div className="navbar">
         <Link to="/">Media Screen</Link>
-        {this.props.isConnected ? (
+        {userStore.currentUser.name ? (
           <div className="hello-div">
-            {`Hello ${this.props.user.name} -`}
-            <p
-              onClick={() => {
-                userService.logout();
-                this.props.onLogout();
-              }}
-            >
-              Logout
-            </p>
+            {`Hello ${userStore.currentUser.name} -`}
+            <p onClick={userStore.logout}>Logout</p>
           </div>
         ) : (
           <Link to="/login-register">Login/ Register</Link>
@@ -30,19 +26,4 @@ class Navbar extends React.Component {
   };
 }
 
-const mapStateToProp = state => {
-  return {
-    isConnected: state.userReducer.isConnected,
-    user: state.userReducer.user
-  };
-};
-
-const mapDispatch = dispatch => {
-  return {
-    onLogout: () => dispatch({ type: actionTypes.LOGOUT, user: null })
-  };
-};
-export default connect(
-  mapStateToProp,
-  mapDispatch
-)(Navbar);
+export default Navbar;

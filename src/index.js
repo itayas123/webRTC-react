@@ -2,15 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import reducer from "./store/reducers/index.reducer";
+import { Provider } from "mobx-react";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
+import stores from "./stores";
 
-const store = createStore(reducer);
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider {...stores}>
     <BrowserRouter>
       <App />
     </BrowserRouter>

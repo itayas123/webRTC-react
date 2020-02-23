@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import sourceService from "../../../../services/source.service";
-import userService from "../../../../services/user.service";
-import * as actionTypes from "../../../../store/actions";
+import * as actionTypes from "../../../../stores/actions";
 import { debounce } from "lodash";
 import "./addSource.css";
+import stores from "../../../../stores";
+
+const { userStore } = stores;
 
 class AddSource extends React.Component {
   state = {
@@ -50,7 +52,7 @@ class AddSource extends React.Component {
   };
 
   openModal = () => {
-    userService
+    userStore
       .getAllUsers()
       .then(res => {
         this.setState({

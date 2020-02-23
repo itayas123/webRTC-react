@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import sourceService from "../../../../services/source.service";
-import * as actionTypes from "../../../../store/actions";
+import * as actionTypes from "../../../../stores/actions";
 import AddSource from "./addSource";
 
 class SourceList extends React.Component {
