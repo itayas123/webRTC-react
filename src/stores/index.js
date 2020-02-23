@@ -1,13 +1,19 @@
 import UserStore from "./userStore";
+import SourceStore from "./sourceStore";
+
+export const USER_STORE = "userStore";
+export const SOURCE_STORE = "sourceStore";
 
 class Stores {
   constructor() {
     this.userStore = new UserStore();
+    this.sourceStore = new SourceStore();
   }
 
   getStores() {
     return {
-      userStore: this.userStore
+      [USER_STORE]: this.userStore,
+      [SOURCE_STORE]: this.sourceStore
     };
   }
 }

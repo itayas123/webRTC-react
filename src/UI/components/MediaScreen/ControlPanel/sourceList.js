@@ -1,23 +1,29 @@
 import React from "react";
-import { connect } from "react-redux";
 import sourceService from "../../../../services/source.service";
-import * as actionTypes from "../../../../stores/actions";
 import AddSource from "./addSource";
+import { inject, observer } from "mobx-react";
+import { SOURCE_STORE, USER_STORE } from "../../../../stores";
 
+@inject(SOURCE_STORE, USER_STORE)
+@observer
 class SourceList extends React.Component {
-  componentDidMount = () => {
-    sourceService
-      .getUserSources()
-      .then(sources => {
-        this.props.onInit(sources);
-      })
-      .catch(e => {
-        alert(e);
-      });
+  constructor(props) {
+    super(props);
+    this.sourceStore = this.props[SOURCE_STORE];
+    this.userStore = this.props[USER_STORE];
+  }
+
+  componentDidMount = async () => {
+    try {
+      await this.sourceStore.fetchUserSources();
+    } catch (e) {
+      alert(e);
+    }
   };
 
   spaceInVideoArray = () => {
     return (
+      true ||
       (this.props.videoSplit === 3
         ? this.props.videoSplit - 1 - this.props.videoArray.length
         : this.props.videoSplit - this.props.videoArray.length) !== 0
@@ -25,9 +31,11 @@ class SourceList extends React.Component {
   };
 
   renderSource = (source, index) => {
+    console.log(this.userStore.getUser);
+
     return (
       <div className="item-list border" key={index}>
-        {this.props.user.admin && (
+        {this.userStore.getUser && this.userStore.getUser.admin && (
           <div
             className="remove pointer"
             onClick={() => this.removeSource(source)}
@@ -39,19 +47,20 @@ class SourceList extends React.Component {
         <div>
           <button
             disabled={
+              true ||
               !this.spaceInVideoArray() ||
               this.props.videoArray.includes(source.name)
             }
             onClick={() => {
-              this.props.onPushVideo(source.name);
+              // this.props.onPushVideo(source.name);
             }}
           >
             +
           </button>
           <button
-            disabled={!this.props.videoArray.includes(source.name)}
+            disabled={true || !this.props.videoArray.includes(source.name)}
             onClick={() => {
-              this.props.onPopVideo(source.name);
+              // this.props.onPopVideo(source.name);
             }}
           >
             -
@@ -60,23 +69,18 @@ class SourceList extends React.Component {
       </div>
     );
   };
-  removeSource = source => {
-    sourceService
-      .deleteSource(source.name)
-      .then(res => {
-        if (res) {
-          this.props.onPopSource(source);
-          this.props.onPopVideo(source.name);
-        }
-      })
-      .catch(e => {
-        alert(e);
-      });
+  removeSource = async source => {
+    try {
+      await this.sourceStore.deleteSource(source.name);
+    } catch (e) {
+      alert(e);
+    }
+    // this.props.onPopVideo(source.name);
   };
   renderSouresList() {
     return (
-      this.props.sourceList &&
-      this.props.sourceList.map((source, index) =>
+      this.sourceStore.sources &&
+      this.sourceStore.sources.map((source, index) =>
         this.renderSource(source, index)
       )
     );
@@ -87,28 +91,10 @@ class SourceList extends React.Component {
         <div className="source-list border">
           <div className="list">{this.renderSouresList()}</div>
         </div>
-        {this.props.user.admin && <AddSource />}
+        {this.userStore.getUser.admin && <AddSource />}
       </div>
     );
   }
 }
-const mapStateToProp = state => {
-  return {
-    user: state.userReducer.user,
-    sourceList: state.sourceReducer.sourceArray,
-    videoArray: state.videoReducer.videoArray,
-    videoSplit: state.videoReducer.videoSplit
-  };
-};
-const mapDispatch = dispatch => {
-  return {
-    onPopSource: source => dispatch({ type: actionTypes.POP_SOURCE, source }),
-    onInit: array => dispatch({ type: actionTypes.INIT_SOURCE_ARRAY, array }),
-    onPushVideo: video => dispatch({ type: actionTypes.PUSH_VIDEO, video }),
-    onPopVideo: video => dispatch({ type: actionTypes.POP_VIDEO, video })
-  };
-};
-export default connect(
-  mapStateToProp,
-  mapDispatch
-)(SourceList);
+
+export default SourceList;

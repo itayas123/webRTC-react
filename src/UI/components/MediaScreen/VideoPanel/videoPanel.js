@@ -1,8 +1,7 @@
-import "./videoPanel.css";
 import React from "react";
-import videoSrc from "./videos/Welcome.mp4";
+import "./videoPanel.css";
 import videoSrc2 from "./videos/2.mp4";
-import { connect } from "react-redux";
+import videoSrc from "./videos/Welcome.mp4";
 
 class VideoPanel extends React.Component {
   renderVideos() {
@@ -107,10 +106,4 @@ class VideoPanel extends React.Component {
   }
 }
 
-const mapStateToProp = state => {
-  return {
-    videoArray: state.videoReducer.videoArray,
-    videoSplit: state.videoReducer.videoSplit
-  };
-};
-export default connect(mapStateToProp)(VideoPanel);
+export default VideoPanel;

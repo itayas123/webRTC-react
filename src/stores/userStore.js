@@ -1,11 +1,15 @@
-import { observable, action, decorate } from "mobx";
+import { observable, action, computed } from "mobx";
 import API from "./../utils/API";
 
 export const TOKEN = "token";
 
 class UserStore {
-  @observable
-  currentUser = {};
+  @observable currentUser = {};
+
+  @computed
+  get getUser() {
+    return { ...this.currentUser };
+  }
 
   @action
   register = async (name, email, password) => {
@@ -24,7 +28,7 @@ class UserStore {
     try {
       const user = await API.get(`/auth?email=${email}&password=${password}`);
       localStorage.setItem(TOKEN, user.token);
-      this.currentUser = user;
+      this.currentUser = { ...user };
       return user;
     } catch (e) {
       throw e;
@@ -38,19 +42,22 @@ class UserStore {
   };
 
   @action
-  getAllUsers = async () => {
+  fetchAllUsers = async () => {
     return await API.get("/users");
   };
 
   @action
-  getCurrentUser = async () => {
-    const token = localStorage.getItem(TOKEN);
-    if (token) {
-      const user = await API.get(`/users/getCurrentUser?token=${token}`);
+  fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem(TOKEN);
+      if (token) {
+        const user = await API.get(`/users/getCurrentUser?token=${token}`);
 
-      this.currentUser = user;
-      console.log(user.name, this.currentUser.name);
-      return user;
+        this.currentUser = { ...user };
+        return user;
+      }
+    } catch (e) {
+      throw e;
     }
   };
 }
