@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import "./App.css";
 import Navbar from "./UI/components/Navbar/navbar";
-import Login from "./UI/containers/Login/login";
+import Login from "../src/UI/containers/login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
 import { connect } from "react-redux";
 import userService from "./services/user.service";
@@ -55,7 +55,4 @@ const mapDispatch = dispatch => {
     onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
   };
 };
-export default connect(
-  mapStateToProp,
-  mapDispatch
-)(App);
+export default connect(mapStateToProp, mapDispatch)(App);

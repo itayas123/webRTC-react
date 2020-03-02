@@ -40,18 +40,18 @@ class SourceList extends React.Component {
           <button
             disabled={
               !this.spaceInVideoArray() ||
-              this.props.videoArray.includes(source.name)
+              this.props.videoArray.includes(source.src)
             }
             onClick={() => {
-              this.props.onPushVideo(source.name);
+              this.props.onPushVideo(source.src);
             }}
           >
             +
           </button>
           <button
-            disabled={!this.props.videoArray.includes(source.name)}
+            disabled={!this.props.videoArray.includes(source.src)}
             onClick={() => {
-              this.props.onPopVideo(source.name);
+              this.props.onPopVideo(source.src);
             }}
           >
             -
@@ -108,7 +108,4 @@ const mapDispatch = dispatch => {
     onPopVideo: video => dispatch({ type: actionTypes.POP_VIDEO, video })
   };
 };
-export default connect(
-  mapStateToProp,
-  mapDispatch
-)(SourceList);
+export default connect(mapStateToProp, mapDispatch)(SourceList);

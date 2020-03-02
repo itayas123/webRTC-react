@@ -9,5 +9,8 @@ module.exports = function() {
       useNewUrlParser: true,
       useCreateIndex: true
     })
-    .then(() => console.log(`Connected to ${db}...`));
+    .then(() => console.log(`Connected to ${db}...`))
+    .catch(error => {
+      console.error(`Not connected to ${db}... ${error}`);
+    });
 };
