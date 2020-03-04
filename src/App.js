@@ -1,26 +1,26 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
-import { Route, Switch, Link } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
+import { USER_STORE } from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
-import Login from "../src/UI/containers/login/login";
+import Login from "./UI/containers/login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
-import { connect } from "react-redux";
-import userService from "./services/user.service";
-import * as actionTypes from "./store/actions";
 
+@inject(USER_STORE)
+@observer
 class App extends React.Component {
-  componentDidMount() {
-    userService
-      .getCurrentUser()
-      .then(user => {
-        if (user) {
-          this.props.onLogin(user);
-        }
-      })
-      .catch(e => {
-        alert(e);
-      });
+  constructor(props) {
+    super(props);
+    this.userStore = this.props[USER_STORE];
   }
+  componentDidMount = async () => {
+    try {
+      await this.userStore.fetchCurrentUser();
+    } catch (e) {
+      alert(e);
+    }
+  };
 
   render() {
     return (
@@ -28,7 +28,7 @@ class App extends React.Component {
         <Navbar />
         <Switch>
           <Route exact path="/">
-            {this.props.isConnected ? (
+            {this.userStore.getUser.name ? (
               <MediaScreen />
             ) : (
               <div>
@@ -45,14 +45,4 @@ class App extends React.Component {
     );
   }
 }
-const mapStateToProp = state => {
-  return {
-    isConnected: state.userReducer.isConnected
-  };
-};
-const mapDispatch = dispatch => {
-  return {
-    onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
-  };
-};
-export default connect(mapStateToProp, mapDispatch)(App);
+export default App;

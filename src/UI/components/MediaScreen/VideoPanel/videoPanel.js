@@ -194,10 +194,4 @@ const VideoPanel = ({ videoArray }) => {
 //   }
 // }
 
-const mapStateToProp = state => {
-  return {
-    videoArray: state.videoReducer.videoArray,
-    videoSplit: state.videoReducer.videoSplit
-  };
-};
-export default connect(mapStateToProp)(VideoPanel);
+export default VideoPanel;

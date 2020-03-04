@@ -1,21 +1,26 @@
-import React from "react";
-import { connect } from "react-redux";
-import sourceService from "../../../../services/source.service";
-import userService from "../../../../services/user.service";
-import * as actionTypes from "../../../../store/actions";
 import { debounce } from "lodash";
+import { inject, observer } from "mobx-react";
+import React from "react";
+import sourceService from "../../../../services/source.service";
+import { USER_STORE } from "../../../../stores";
 import "./addSource.css";
 
+@inject(USER_STORE)
+@observer
 class AddSource extends React.Component {
-  state = {
-    displayModal: false,
-    name: "",
-    src: "",
-    search: "",
-    usersToDisplay: [],
-    filterUsers: [],
-    usersToSend: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      displayModal: false,
+      name: "",
+      src: "",
+      search: "",
+      usersToDisplay: [],
+      filterUsers: [],
+      usersToSend: []
+    };
+    this.userStore = this.props[USER_STORE];
+  }
 
   componentDidMount = () => {
     const modal = document.getElementById("addModal");
@@ -50,8 +55,8 @@ class AddSource extends React.Component {
   };
 
   openModal = () => {
-    userService
-      .getAllUsers()
+    this.userStore
+      .fetchAllUsers()
       .then(res => {
         this.setState({
           usersToDisplay: res,
@@ -190,12 +195,4 @@ class AddSource extends React.Component {
   }
 }
 
-const mapDispatch = dispatch => {
-  return {
-    onPushSource: source => dispatch({ type: actionTypes.PUSH_SOURCE, source })
-  };
-};
-export default connect(
-  null,
-  mapDispatch
-)(AddSource);
+export default AddSource;

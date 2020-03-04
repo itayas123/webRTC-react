@@ -1,41 +1,37 @@
+import { inject, observer } from "mobx-react";
 import React from "react";
-import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import UserService from "../../../services/user.service";
-import * as actionTypes from "../../../store/actions";
+import { USER_STORE } from "../../../stores";
 import "./login.css";
 
+@inject(USER_STORE)
+@observer
 class Login extends React.Component {
-  state = {
-    email: "",
-    password: "",
-    name: "",
-    register: false,
-    Redirect: false
-  };
-  handleSubmit = e => {
-    e.preventDefault();
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      name: "",
+      register: false,
+      Redirect: false
+    };
+    this.userStore = this.props[USER_STORE];
+  }
 
+  handleSubmit = async e => {
+    e.preventDefault();
     const { name, email, password } = this.state;
 
-    if (this.state.register) {
-      UserService.register(name, email, password)
-        .then(user => {
-          this.props.onLogin(user);
-          this.setState({ Redirect: true });
-        })
-        .catch(e => {
-          alert(e);
-        });
-    } else {
-      UserService.login(email, password)
-        .then(res => {
-          this.props.onLogin(res);
-          this.setState({ Redirect: true });
-        })
-        .catch(e => {
-          alert(e);
-        });
+    try {
+      if (this.state.register) {
+        await this.userStore.register(name, email, password);
+      } else {
+        await this.userStore.login(email, password);
+      }
+      this.setState({ Redirect: true });
+    } catch (e) {
+      alert(e);
     }
   };
 
@@ -101,13 +97,4 @@ class Login extends React.Component {
   }
 }
 
-const mapDispatch = dispatch => {
-  return {
-    onLogin: user => dispatch({ type: actionTypes.LOGIN, user: user })
-  };
-};
-
-export default connect(
-  null,
-  mapDispatch
-)(Login);
+export default Login;

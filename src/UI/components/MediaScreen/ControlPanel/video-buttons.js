@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actionTypes from "../../../../store/actions";
 class VideoButtons extends React.Component {
   render() {
     return (
@@ -49,12 +47,4 @@ class VideoButtons extends React.Component {
   }
 }
 
-const mapDispatch = dispatch => {
-  return {
-    onChangeSplit: split => dispatch({ type: actionTypes.CHANGE_SPLIT, split })
-  };
-};
-export default connect(
-  null,
-  mapDispatch
-)(VideoButtons);
+export default VideoButtons;
