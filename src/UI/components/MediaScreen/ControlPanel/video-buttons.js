@@ -1,18 +1,29 @@
 import React from "react";
+import { inject, observer } from "mobx-react";
+import { VIDEO_STORE } from "../../../../stores";
+
+@inject(VIDEO_STORE)
+@observer
 class VideoButtons extends React.Component {
+  constructor(props) {
+    super(props);
+    this.videoStore = this.props[VIDEO_STORE];
+  }
+
   render() {
+    const { changeSplit } = this.videoStore;
     return (
       <div className="video-buttons">
         <div
           className="butoon-width border-2p pointer"
           onClick={() => {
-            this.props.onChangeSplit(1);
+            changeSplit(1);
           }}
         />
         <div
           className="butoon-width border flex pointer"
           onClick={() => {
-            this.props.onChangeSplit(2);
+            changeSplit(2);
           }}
         >
           <div className="width-50p border" />
@@ -21,7 +32,7 @@ class VideoButtons extends React.Component {
         <div
           className="butoon-width border pointer"
           onClick={() => {
-            this.props.onChangeSplit(3);
+            changeSplit(3);
           }}
         >
           <div className="height-48p border" />
@@ -30,7 +41,7 @@ class VideoButtons extends React.Component {
         <div
           className="butoon-width border pointer"
           onClick={() => {
-            this.props.onChangeSplit(4);
+            changeSplit(4);
           }}
         >
           <div className="height-48p flex">

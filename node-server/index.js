@@ -4,7 +4,7 @@ app.use(cors());
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3001;
 server.listen(port, () => console.log(`Listening on port ${port}...`));
 
 require("./startup/routes")(app);

@@ -1,12 +1,11 @@
-import "./videoPanel.css";
-import React, { useEffect } from "react";
-import videoSrc from "./videos/Welcome.mp4";
-import videoSrc2 from "./videos/2.mp4";
-import { connect } from "react-redux";
 import kurentoUtils from "kurento-utils";
+import React, { useEffect } from "react";
 import io from "socket.io-client";
+import "./videoPanel.css";
+import stores from "../../../../stores";
+import { observer } from "mobx-react";
 let webRtcPeer = undefined;
-const socket = io("http://localhost");
+const socket = io("http://localhost:3001");
 
 socket.on("connect", () => {
   console.log("connected");
@@ -48,7 +47,9 @@ const sendCandidate = candidate => {
 
   socket.emit("candidate", { candidate });
 };
-const VideoPanel = ({ videoArray }) => {
+const { videoStore } = stores;
+const videoArray = videoStore.videoArray;
+export default observer(function VideoPanel() {
   useEffect(() => {
     if (videoArray && videoArray[0]) {
       const videoOutput = document.getElementById("output");
@@ -89,7 +90,7 @@ const VideoPanel = ({ videoArray }) => {
       </div>
     </div>
   );
-};
+});
 
 // class VideoPanel extends React.Component {
 //   renderVideos() {
@@ -193,5 +194,3 @@ const VideoPanel = ({ videoArray }) => {
 //     return <div className="video-panel">{this.renderVideos()}</div>;
 //   }
 // }
-
-export default VideoPanel;

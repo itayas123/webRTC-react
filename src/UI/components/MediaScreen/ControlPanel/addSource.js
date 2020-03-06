@@ -1,11 +1,10 @@
 import { debounce } from "lodash";
 import { inject, observer } from "mobx-react";
 import React from "react";
-import sourceService from "../../../../services/source.service";
-import { USER_STORE } from "../../../../stores";
+import { USER_STORE, SOURCE_STORE } from "../../../../stores";
 import "./addSource.css";
 
-@inject(USER_STORE)
+@inject(USER_STORE, SOURCE_STORE)
 @observer
 class AddSource extends React.Component {
   constructor(props) {
@@ -20,6 +19,7 @@ class AddSource extends React.Component {
       usersToSend: []
     };
     this.userStore = this.props[USER_STORE];
+    this.sourceStore = this.props[SOURCE_STORE];
   }
 
   componentDidMount = () => {
@@ -72,10 +72,9 @@ class AddSource extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, src, usersToSend } = this.state;
-    sourceService
+    this.sourceStore
       .addSource(name, src, usersToSend)
       .then(res => {
-        this.props.onPushSource(res);
         this.setState({ Redirect: true, displayModal: false });
       })
       .catch(err => {

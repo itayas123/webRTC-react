@@ -1,19 +1,21 @@
 import { inject, observer } from "mobx-react";
 import React from "react";
-import { SOURCE_STORE, USER_STORE } from "../../../../stores";
+import { SOURCE_STORE, USER_STORE, VIDEO_STORE } from "../../../../stores";
 import AddSource from "./addSource";
 
-@inject(SOURCE_STORE, USER_STORE)
+@inject(SOURCE_STORE, USER_STORE, VIDEO_STORE)
 @observer
 class SourceList extends React.Component {
   constructor(props) {
     super(props);
     this.sourceStore = this.props[SOURCE_STORE];
     this.userStore = this.props[USER_STORE];
+    this.videoStore = this.props[VIDEO_STORE];
   }
 
   componentDidMount = async () => {
     try {
+      console.log(this.videoStore.videoSplit, this.videoStore.videoArray);
       await this.sourceStore.fetchUserSources();
     } catch (e) {
       alert(e);
@@ -21,11 +23,11 @@ class SourceList extends React.Component {
   };
 
   spaceInVideoArray = () => {
+    const { videoSplit, videoArray } = this.videoStore;
     return (
-      true ||
-      (this.props.videoSplit === 3
-        ? this.props.videoSplit - 1 - this.props.videoArray.length
-        : this.props.videoSplit - this.props.videoArray.length) !== 0
+      (videoSplit === 3
+        ? videoSplit - 1 - videoArray.length
+        : videoSplit - videoArray.length) !== 0
     );
   };
 
@@ -44,20 +46,19 @@ class SourceList extends React.Component {
         <div>
           <button
             disabled={
-              true ||
               !this.spaceInVideoArray() ||
-              this.props.videoArray.includes(source.src)
+              this.videoStore.videoArray.includes(source)
             }
             onClick={() => {
-              // this.props.onPushVideo(source.name);
+              this.videoStore.addVideo(source);
             }}
           >
             +
           </button>
           <button
-            disabled={true || !this.props.videoArray.includes(source.name)}
+            disabled={!this.videoStore.videoArray.includes(source)}
             onClick={() => {
-              // this.props.onPopVideo(source.name);
+              this.videoStore.deleteVideo(source);
             }}
           >
             -
@@ -69,10 +70,10 @@ class SourceList extends React.Component {
   removeSource = async source => {
     try {
       await this.sourceStore.deleteSource(source.name);
+      this.videoStore.deleteVideo(source);
     } catch (e) {
       alert(e);
     }
-    // this.props.onPopVideo(source.name);
   };
   renderSouresList() {
     return (
