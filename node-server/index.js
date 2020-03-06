@@ -19,8 +19,12 @@ io.on("connection", socket => {
       socket.emit("try", { tt: "ttsts" });
     }, 2000);
   }
-  socket.on("start", ({ sdpOffer, url }) => start(sdpOffer, url, socket));
-  socket.on("candidate", ({ candidate }) => kurentoCandidate(candidate));
+  socket.on("start", ({ sdpOffer, url, id }) =>
+    start(sdpOffer, url, id, socket)
+  );
+  socket.on("candidate", ({ candidate, id }) =>
+    kurentoCandidate(candidate, id)
+  );
 });
 
 module.exports = server;

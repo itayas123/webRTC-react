@@ -1,6 +1,8 @@
+// @ts-check
 import { observable, action } from "mobx";
 import io from "socket.io-client";
-
+import kurentoUtils from "kurento-utils";
+import { getRandomNumber } from "../utils/randomNumber";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
 
@@ -12,6 +14,7 @@ export default class VideoStore {
     this.setUpSocket(this.socket);
   }
 
+  @action
   setUpSocket = socket => {
     socket.on("connect", () => {
       console.log("connected");
@@ -40,6 +43,37 @@ export default class VideoStore {
   @action
   addVideo = video => {
     this.videoArray.push(video);
+    setTimeout(() => {
+      const videoOutput = document.getElementById(video.name);
+      console.log(videoOutput);
+      const options = {
+        remoteVideo: videoOutput
+      };
+      const id = getRandomNumber();
+      this.webRtcPeers[id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+        options,
+        error => {
+          if (error) console.error(error);
+          else {
+            this.webRtcPeers[id].generateOffer((error, sdpOffer) => {
+              if (error) console.error(error);
+              else {
+                this.socket.emit("start", { sdpOffer, url: video.src, id });
+              }
+            });
+            this.webRtcPeers[
+              id
+            ].peerConnection.addEventListener(
+              "iceconnectionstatechange",
+              event => this.iceconnectionstatechange(event, id)
+            );
+            this.webRtcPeers[id].on("icecandidate", candidate =>
+              this.sendCandidate(candidate, id)
+            );
+          }
+        }
+      );
+    }, 1000);
   };
 
   @action
@@ -58,5 +92,26 @@ export default class VideoStore {
       this.videoArray.pop();
     }
     this.videoSplit = split;
+  };
+
+  @action
+  iceconnectionstatechange = (event, id) => {
+    const webRtcPeer = this.webRtcPeers[id];
+    if (webRtcPeer && webRtcPeer.peerConnection) {
+      console.log(
+        "oniceconnectionstatechange -> " +
+          webRtcPeer.peerConnection.iceConnectionState
+      );
+      console.log(
+        "icegatheringstate -> " + webRtcPeer.peerConnection.iceGatheringState
+      );
+    }
+  };
+
+  @action
+  sendCandidate = (candidate, id) => {
+    console.log("Local icecandidate " + JSON.stringify(candidate));
+
+    this.socket.emit("candidate", { candidate, id });
   };
 }

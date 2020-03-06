@@ -8,7 +8,7 @@ const args = {
 const kurentoGlobal = {
   client: undefined,
   pipeline: undefined,
-  webRtcEndpoint: undefined
+  webRtcEndpoints: {}
 };
 
 async function getKurentoClient() {
@@ -24,19 +24,20 @@ async function getPipeline() {
   }
   return kurentoGlobal.pipeline;
 }
-const kurentoCandidate = _candidate => {
-  if (kurentoGlobal.webRtcEndpoint) {
+const kurentoCandidate = (_candidate, id) => {
+  const webRtcEndpoint = kurentoGlobal.webRtcEndpoints[id];
+  if (webRtcEndpoint) {
     console.log("recieve candidate", _candidate);
     const candidate = kurentoClient.getComplexType("IceCandidate")(_candidate);
 
-    kurentoGlobal.webRtcEndpoint.addIceCandidate(candidate, error => {
+    webRtcEndpoint.addIceCandidate(candidate, error => {
       if (error) console.error(error);
     });
   }
 };
 
-const start = async (sdpOffer, uri, socket, networkCache = 1000) => {
-  console.log(sdpOffer, uri, networkCache);
+const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
+  console.log(sdpOffer, uri, id, networkCache);
 
   const pipeline = await getPipeline();
   const playerEndpoint = await pipeline.create("PlayerEndpoint", {
@@ -44,7 +45,7 @@ const start = async (sdpOffer, uri, socket, networkCache = 1000) => {
     networkCache
   });
   const webRtcEndpoint = await pipeline.create("WebRtcEndpoint");
-  kurentoGlobal.webRtcEndpoint = webRtcEndpoint;
+  kurentoGlobal.webRtcEndpoints[id] = webRtcEndpoint;
   // set ice candidtae
   webRtcEndpoint.on("OnIceCandidate", event => {
     // const iceCandidate = kurentoClient.getComplexType("IceCandidate")(
@@ -53,7 +54,7 @@ const start = async (sdpOffer, uri, socket, networkCache = 1000) => {
     const candidate = event.candidate;
 
     console.log("Remote icecandidate " + JSON.stringify(candidate));
-    socket.emit("candidate", { candidate });
+    socket.emit("candidate", { candidate, id });
   });
 
   // Start the WebRtcEndpoint
@@ -65,7 +66,7 @@ const start = async (sdpOffer, uri, socket, networkCache = 1000) => {
   });
 
   console.log("SDP Answer from KMS to App:\n%s", sdpAnswer);
-  socket.emit("sdpAnswer", { sdpAnswer });
+  socket.emit("sdpAnswer", { sdpAnswer, id });
 
   await playerEndpoint.play();
   await playerEndpoint.connect(webRtcEndpoint);
