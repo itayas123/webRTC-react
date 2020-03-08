@@ -20,7 +20,6 @@ io.on("connection", socket => {
   socket.on("candidate", ({ candidate, id }) =>
     kurentoCandidate(candidate, id)
   );
-  console.error("===", e);
 });
 
 module.exports = server;
