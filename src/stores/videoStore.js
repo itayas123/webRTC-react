@@ -2,7 +2,6 @@
 import { observable, action } from "mobx";
 import io from "socket.io-client";
 import kurentoUtils from "kurento-utils";
-import { getRandomNumber } from "../utils/randomNumber";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
 
@@ -43,32 +42,32 @@ export default class VideoStore {
   @action
   addVideo = video => {
     this.videoArray.push(video);
+    const { _id, name, src } = video;
     setTimeout(() => {
-      const videoOutput = document.getElementById(video.name);
+      const videoOutput = document.getElementById(name);
       console.log(videoOutput);
       const options = {
-        remoteVideo: videoOutput
+        remoteVideo: videoOutput,
+        onicecandidate: candidate => {
+          this.sendCandidate(candidate, "");
+        }
       };
-      const id = getRandomNumber();
-      this.webRtcPeers[id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+      this.webRtcPeers[_id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
         options,
         error => {
           if (error) console.error(error);
           else {
-            this.webRtcPeers[id].generateOffer((error, sdpOffer) => {
+            this.webRtcPeers[_id].generateOffer((error, sdpOffer) => {
               if (error) console.error(error);
               else {
-                this.socket.emit("start", { sdpOffer, url: video.src, id });
+                this.socket.emit("start", { sdpOffer, url: src, _id });
               }
             });
             this.webRtcPeers[
-              id
+              _id
             ].peerConnection.addEventListener(
               "iceconnectionstatechange",
-              event => this.iceconnectionstatechange(event, id)
-            );
-            this.webRtcPeers[id].on("icecandidate", candidate =>
-              this.sendCandidate(candidate, id)
+              event => this.iceconnectionstatechange(event, _id)
             );
           }
         }
@@ -111,7 +110,6 @@ export default class VideoStore {
   @action
   sendCandidate = (candidate, id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
-
     this.socket.emit("candidate", { candidate, id });
   };
 }

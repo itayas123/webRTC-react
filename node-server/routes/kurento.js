@@ -8,7 +8,8 @@ const args = {
 const kurentoGlobal = {
   client: undefined,
   pipeline: undefined,
-  webRtcEndpoints: {}
+  webRtcEndpoints: {},
+  iceCandidatesQueue: []
 };
 
 async function getKurentoClient() {
@@ -26,14 +27,20 @@ async function getPipeline() {
 }
 const kurentoCandidate = (_candidate, id) => {
   const webRtcEndpoint = kurentoGlobal.webRtcEndpoints[id];
-  if (webRtcEndpoint) {
-    console.log("recieve candidate", _candidate);
-    const candidate = kurentoClient.getComplexType("IceCandidate")(_candidate);
-
+  const candidate = kurentoClient.getComplexType("IceCandidate")(_candidate);
+  console.log("recieve candidate", _candidate);
+  if (webRtcEndpoint)
     webRtcEndpoint.addIceCandidate(candidate, error => {
       if (error) console.error(error);
     });
-  }
+  else kurentoGlobal.iceCandidatesQueue.push(candidate);
+};
+
+const OnIceCandidate = (event, socket, id) => {
+  const candidate = event.candidate;
+
+  console.log("Remote icecandidate " + JSON.stringify(candidate));
+  socket.emit("candidate", { candidate, id });
 };
 
 const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
@@ -47,15 +54,15 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   const webRtcEndpoint = await pipeline.create("WebRtcEndpoint");
   kurentoGlobal.webRtcEndpoints[id] = webRtcEndpoint;
   // set ice candidtae
-  webRtcEndpoint.on("OnIceCandidate", event => {
-    // const iceCandidate = kurentoClient.getComplexType("IceCandidate")(
-    //   event.candidate
-    // );
-    const candidate = event.candidate;
-
-    console.log("Remote icecandidate " + JSON.stringify(candidate));
-    socket.emit("candidate", { candidate, id });
-  });
+  webRtcEndpoint.on("OnIceCandidate", event =>
+    OnIceCandidate(event, socket, id)
+  );
+  // Add ICE candidates that were received asynchronously
+  const iceCandidatesQueue = kurentoGlobal.iceCandidatesQueue;
+  while (iceCandidatesQueue.length) {
+    const candidate = iceCandidatesQueue.shift();
+    webRtcEndpoint.addIceCandidate(candidate);
+  }
 
   // Start the WebRtcEndpoint
   const sdpAnswer = await webRtcEndpoint.processOffer(sdpOffer);
