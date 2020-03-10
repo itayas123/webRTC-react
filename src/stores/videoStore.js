@@ -72,7 +72,7 @@ export default class VideoStore {
           }
         }
       );
-    }, 1000);
+    }, 100);
   };
 
   @action
