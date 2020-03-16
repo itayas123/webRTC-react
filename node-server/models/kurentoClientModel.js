@@ -4,11 +4,9 @@ class KurentoClientModel {
   constructor() {
     this.pipeline = undefined;
     this.webRtcEndpoints = {};
-    this.socket = undefined;
   }
 
-  init = async (socket, ws_uri, options) => {
-    this.socket = socket;
+  init = async (ws_uri, options) => {
     const kurento = await kurentoClient(ws_uri, options);
     this.pipeline = await kurento.create("MediaPipeline");
   };
@@ -25,6 +23,7 @@ class KurentoClientModel {
       id
     );
     const candidate = kurentoClient.getComplexType("IceCandidate")(_candidate);
+
     if (webRtcEndpoint) {
       webRtcEndpoint.addIceCandidate(candidate, error => {
         if (error) console.error(error);
@@ -34,26 +33,25 @@ class KurentoClientModel {
     }
   };
 
-  onSendIceCandidate = (event, id) => {
-    const candidate = event.candidate;
-
-    console.log("Remote icecandidate " + JSON.stringify(candidate));
-    this.socket.emit("candidate", { candidate, id });
-  };
-
   createWebRtcEndpoint = async id => {
-    const newWebRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
-    newWebRtcEndpoint.on("OnIceCandidate", this.onSendIceCandidate);
-    const { webRtcEndpoint, iceCandidatesQueue } = this.getWebRtcEndPointById(
-      id
-    );
-    while (iceCandidatesQueue.length)
-      newWebRtcEndpoint.addIceCandidate(iceCandidatesQueue.shift());
-    return (webRtcEndpoint = newWebRtcEndpoint);
+    try {
+      const newWebRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
+      const webRtcEndpoint = this.getWebRtcEndPointById(id);
+      return (webRtcEndpoint.webRtcEndpoint = newWebRtcEndpoint);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   createPlayerEndpoint = async (uri, options) => {
     return await this.pipeline.create("PlayerEndpoint", { uri, ...options });
+  };
+
+  onUserDesconnected = id => {
+    Object.keys(this.webRtcEndpoints).forEach(key => {
+      if (key.includes(id)) delete this.webRtcEndpoints[key];
+    });
+    console.log(this.webRtcEndpoints);
   };
 }
 module.exports = KurentoClientModel;

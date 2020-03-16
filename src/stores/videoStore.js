@@ -37,20 +37,23 @@ export default class VideoStore {
         if (error) console.error("sdperrror", error);
       });
     });
+
+    window.addEventListener("beforeunload", () =>
+      socket.emit("userDisconnected", socket.id)
+    );
   };
 
   @action
   addVideo = video => {
     this.videoArray.push(video);
-    const { _id, name, src } = video;
+    let { _id, name, src } = video;
+    _id += this.socket.id;
     setTimeout(() => {
       const videoOutput = document.getElementById(name);
       console.log(videoOutput);
       const options = {
         remoteVideo: videoOutput,
-        onicecandidate: candidate => {
-          this.sendCandidate(candidate, "");
-        }
+        onicecandidate: candidate => this.sendCandidate(candidate, _id)
       };
       this.webRtcPeers[_id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
         options,
@@ -108,8 +111,8 @@ export default class VideoStore {
   };
 
   @action
-  sendCandidate = (candidate, id) => {
+  sendCandidate = (candidate, _id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
-    this.socket.emit("candidate", { candidate, id });
+    this.socket.emit("candidate", { candidate, _id });
   };
 }

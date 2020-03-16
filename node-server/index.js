@@ -11,16 +11,23 @@ require("./startup/routes")(app);
 require("./startup/db")();
 require("./startup/config")();
 
-const { start, init, onRecieveIceCandaite } = require("./routes/kurento");
+const {
+  start,
+  init,
+  onRecieveIceCandaite,
+  onUserDesconnected
+} = require("./routes/kurento");
+init();
 io.on("connection", socket => {
-  console.log("socket connected");
-  init(socket);
+  const { id } = socket;
+  console.log("socket connected ", id);
   socket.on("start", ({ sdpOffer, url, _id }) =>
     start(sdpOffer, url, _id, socket)
   );
-  socket.on("candidate", ({ candidate, id }) =>
-    onRecieveIceCandaite(candidate, id)
+  socket.on("candidate", ({ candidate, _id }) =>
+    onRecieveIceCandaite(candidate, _id)
   );
+  socket.on("userDisconnected", onUserDesconnected);
 });
 
 module.exports = server;
