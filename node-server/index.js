@@ -11,14 +11,15 @@ require("./startup/routes")(app);
 require("./startup/db")();
 require("./startup/config")();
 
-const { start, kurentoCandidate } = require("./routes/kurento");
+const { start, init, onRecieveIceCandaite } = require("./routes/kurento");
 io.on("connection", socket => {
   console.log("socket connected");
+  init(socket);
   socket.on("start", ({ sdpOffer, url, _id }) =>
     start(sdpOffer, url, _id, socket)
   );
   socket.on("candidate", ({ candidate, id }) =>
-    kurentoCandidate(candidate, id)
+    onRecieveIceCandaite(candidate, id)
   );
 });
 
