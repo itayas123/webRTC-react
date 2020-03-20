@@ -31,7 +31,7 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   webRtcEndpoint.on("OnIceCandidate", event =>
     onSendIceCandidate(event, id, socket)
   );
-  const { iceCandidatesQueue } = kurentoclient.getWebRtcEndPointById(id);
+  const { iceCandidatesQueue } = kurentoclient.getSessionById(id);
   while (iceCandidatesQueue.length)
     webRtcEndpoint.addIceCandidate(iceCandidatesQueue.shift());
 
@@ -46,7 +46,6 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   console.log("SDP Answer from KMS to App:\n%s", sdpAnswer);
   socket.emit("sdpAnswer", { sdpAnswer, id });
 
-  await playerEndpoint.play();
   await playerEndpoint.connect(webRtcEndpoint);
 
   console.log("player playing and connected", kurentoclient);

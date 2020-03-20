@@ -12,7 +12,7 @@ class AddSource extends React.Component {
     this.state = {
       displayModal: false,
       name: "",
-      src: "",
+      uri: "",
       search: "",
       usersToDisplay: [],
       filterUsers: [],
@@ -58,9 +58,10 @@ class AddSource extends React.Component {
     this.userStore
       .fetchAllUsers()
       .then(res => {
+        const emails = res.map(user => user.email);
         this.setState({
-          usersToDisplay: res,
-          filterUsers: res,
+          usersToDisplay: emails,
+          filterUsers: emails,
           displayModal: true
         });
       })
@@ -71,9 +72,9 @@ class AddSource extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { name, src, usersToSend } = this.state;
+    const { name, uri, usersToSend } = this.state;
     this.sourceStore
-      .addSource(name, src, usersToSend)
+      .addSource(name, uri, usersToSend)
       .then(res => {
         this.setState({ Redirect: true, displayModal: false });
       })
@@ -136,10 +137,10 @@ class AddSource extends React.Component {
               <input
                 type="text"
                 required
-                placeholder="src"
-                value={this.state.src}
+                placeholder="uri"
+                value={this.state.uri}
                 onChange={e => {
-                  this.setState({ src: e.target.value });
+                  this.setState({ uri: e.target.value });
                 }}
               />
               {this.state.usersToDisplay.length > 0 && (

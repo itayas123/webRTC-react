@@ -1,32 +1,22 @@
-import { inject, observer } from "mobx-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { USER_STORE } from "../../../stores";
 import "./navbar.css";
 
-@inject(USER_STORE)
-@observer
-class Navbar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.userStore = this.props.userStore;
-  }
+const navbar = ({ name, logout, showSidebar }) => {
+  return (
+    <div className="navbar">
+      <button onClick={showSidebar}>sidevar</button>
+      <Link to="/">Media Screen</Link>
+      {name ? (
+        <div className="hello-div">
+          {`Hello ${name} -`}
+          <p onClick={logout}>Logout</p>
+        </div>
+      ) : (
+        <Link to="/login-register">Login/ Register</Link>
+      )}
+    </div>
+  );
+};
 
-  render = () => {
-    return (
-      <div className="navbar">
-        <Link to="/">Media Screen</Link>
-        {this.userStore.getUser.name ? (
-          <div className="hello-div">
-            {`Hello ${this.userStore.getUser.name} -`}
-            <p onClick={this.userStore.logout}>Logout</p>
-          </div>
-        ) : (
-          <Link to="/login-register">Login/ Register</Link>
-        )}
-      </div>
-    );
-  };
-}
-
-export default Navbar;
+export default navbar;

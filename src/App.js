@@ -2,17 +2,19 @@ import { inject, observer } from "mobx-react";
 import React from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
-import { USER_STORE } from "./stores";
+import { USER_STORE, UI_STORE } from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
 import Login from "./UI/containers/login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
+import Sidebar from "./UI/components/Sidebar/sidebar";
 
-@inject(USER_STORE)
+@inject(USER_STORE, UI_STORE)
 @observer
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.userStore = this.props[USER_STORE];
+    this.uiStore = this.props[UI_STORE];
   }
   componentDidMount = async () => {
     try {
@@ -23,9 +25,15 @@ class App extends React.Component {
   };
 
   render() {
+    const { showSidebar, setShowSidebar } = this.uiStore;
     return (
       <div className="App">
-        <Navbar />
+        <Navbar
+          name={this.userStore.getUser.name}
+          logout={this.userStore.logout}
+          showSidebar={() => setShowSidebar(true)}
+        />
+        <Sidebar show={showSidebar} hideSidebar={() => setShowSidebar(false)} />
         <Switch>
           <Route exact path="/">
             {this.userStore.getUser.name ? (

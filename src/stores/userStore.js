@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
 import API from "./../utils/API";
 
 export const TOKEN = "token";
@@ -8,7 +8,7 @@ class UserStore {
 
   @computed
   get getUser() {
-    return { ...this.currentUser };
+    return toJS(this.currentUser);
   }
 
   @action
@@ -28,7 +28,7 @@ class UserStore {
     try {
       const user = await API.get(`/auth?email=${email}&password=${password}`);
       localStorage.setItem(TOKEN, user.token);
-      this.currentUser = { ...user };
+      this.currentUser = user;
       return user;
     } catch (e) {
       throw e;
@@ -53,7 +53,7 @@ class UserStore {
       if (token) {
         const user = await API.get(`/users/getCurrentUser?token=${token}`);
 
-        this.currentUser = { ...user };
+        this.currentUser = user;
         return user;
       }
     } catch (e) {

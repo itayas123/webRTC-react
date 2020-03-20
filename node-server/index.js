@@ -17,7 +17,7 @@ const {
   onRecieveIceCandaite,
   onUserDesconnected
 } = require("./routes/kurento");
-init();
+//init();
 io.on("connection", socket => {
   const { id } = socket;
   console.log("socket connected ", id);

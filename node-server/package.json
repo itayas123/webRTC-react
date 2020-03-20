@@ -14,10 +14,8 @@
     "config": "^3.2.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "kurento-client": "^6.13.0",
-    "lodash": "^4.17.15",
     "mongoose": "^5.7.7",
     "nodemon": "^2.0.2",
     "socket.io": "^2.3.0"

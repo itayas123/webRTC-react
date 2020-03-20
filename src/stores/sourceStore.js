@@ -6,10 +6,10 @@ export default class SourceStore {
   @observable sources = observable.array();
 
   @action
-  addSource = async (name, src, usersToSend) => {
+  addSource = async (name, uri, usersToSend) => {
     try {
       const source = await API.post("/sources", {
-        source: { name: name, src: src },
+        source: { name, uri },
         users: usersToSend
       });
       this.sources.push(source);

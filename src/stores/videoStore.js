@@ -46,7 +46,7 @@ export default class VideoStore {
   @action
   addVideo = video => {
     this.videoArray.push(video);
-    let { _id, name, src } = video;
+    let { _id, name, uri } = video;
     _id += this.socket.id;
     setTimeout(() => {
       const videoOutput = document.getElementById(name);
@@ -63,7 +63,7 @@ export default class VideoStore {
             this.webRtcPeers[_id].generateOffer((error, sdpOffer) => {
               if (error) console.error(error);
               else {
-                this.socket.emit("start", { sdpOffer, url: src, _id });
+                this.socket.emit("start", { sdpOffer, url: uri, _id });
               }
             });
             this.webRtcPeers[
@@ -81,7 +81,7 @@ export default class VideoStore {
   @action
   deleteVideo = video => {
     const index = this.videoArray.findIndex(
-      videoObj => video.src === videoObj.src
+      videoObj => video._id === videoObj._id
     );
     if (index !== -1) this.videoArray.splice(index, 1);
   };

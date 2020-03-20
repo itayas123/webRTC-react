@@ -1,7 +1,7 @@
 .media-screen {
   width: 95%;
   height: 93%;
-  margin: auto;
+  margin: 7% auto 0;
   display: flex;
   justify-content: space-between;
 }

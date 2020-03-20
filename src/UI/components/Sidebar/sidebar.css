@@ -1,0 +1,12 @@
+.sidebar {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 300px;
+  left: -300px;
+  background-color: white;
+  transition: all 0.5s;
+}
+.show-sidebar {
+  left: 0;
+}

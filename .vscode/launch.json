@@ -1,0 +1,29 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\scripts\\start.js"
+    },
+    {
+      "name": "start LOCALHOST",
+      "type": "node",
+      "request": "launch",
+      "args": ["${workspaceRoot}/node-server/index.js"],
+      // "runtimeArgs": ["--require", "ts-node/register"],
+      "cwd": "${workspaceRoot}/node-server",
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
+      // "env": {
+      //     "TS_NODE_IGNORE": "false",
+      //     "NODE_ENV": "localhost"
+      // }
+    }
+  ]
+}
