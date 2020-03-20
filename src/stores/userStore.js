@@ -6,17 +6,27 @@ export const TOKEN = "token";
 class UserStore {
   @observable currentUser = {};
 
+  constructor(stores) {
+    this.stores = stores;
+  }
+
   @computed
   get getUser() {
     return toJS(this.currentUser);
   }
 
   @action
+  setCurrentUser = user => {
+    this.currentUser = user;
+    this.stores.sourceStore.fetchUserSources();
+  };
+
+  @action
   register = async (name, email, password) => {
     try {
       const user = await API.post("/users", { name, email, password });
       localStorage.setItem(TOKEN, user.token);
-      this.currentUser = user;
+      this.setCurrentUser(user);
       return user;
     } catch (e) {
       throw e;
@@ -28,7 +38,7 @@ class UserStore {
     try {
       const user = await API.get(`/auth?email=${email}&password=${password}`);
       localStorage.setItem(TOKEN, user.token);
-      this.currentUser = user;
+      this.setCurrentUser(user);
       return user;
     } catch (e) {
       throw e;
@@ -39,6 +49,7 @@ class UserStore {
   logout = () => {
     localStorage.removeItem(TOKEN);
     this.currentUser = {};
+    this.stores.sourceStore.reset();
   };
 
   @action
@@ -49,14 +60,13 @@ class UserStore {
   @action
   fetchCurrentUser = async () => {
     try {
-      const token = localStorage.getItem(TOKEN);
-      if (token) {
-        const user = await API.get(`/users/getCurrentUser?token=${token}`);
-
-        this.currentUser = user;
+      if (localStorage.getItem(TOKEN)) {
+        const user = await API.get("/users/getCurrentUser");
+        this.setCurrentUser(user);
         return user;
       }
     } catch (e) {
+      this.logout();
       throw e;
     }
   };

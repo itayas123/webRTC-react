@@ -14,6 +14,7 @@
   padding: 10px;
   border-radius: 15px;
   cursor: pointer;
+  display: flex;
 }
 .disabled {
   opacity: 0.5;
@@ -25,9 +26,13 @@
 .camera-img {
   width: 30px;
   height: 30px;
+  margin: auto 0;
 }
 .item-list:hover {
   border: #292525 1px solid;
+}
+.source-details {
+  width: 100%;
 }
 .source-name {
   margin: auto;
@@ -60,8 +65,4 @@
   border: 5px solid black;
   border-radius: 50%;
   width: 25px;
-}
-
-.flex {
-  display: flex;
 }

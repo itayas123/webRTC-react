@@ -14,35 +14,23 @@ class SourceList extends React.Component {
     this.videoStore = this.props[VIDEO_STORE];
   }
 
-  componentDidMount = async () => {
-    try {
-      console.log(this.videoStore.videoSplit, this.videoStore.videoArray);
-      await this.sourceStore.fetchUserSources();
-    } catch (e) {
-      alert(e);
-    }
-  };
-
-  addVideo = source => {
-    this.videoStore.addVideo(source);
-  };
-
   renderSource = (source, index) => {
     const isDisabled = this.videoStore.videoArray.includes(source);
     return (
       <div
         className={`item-list ${isDisabled ? "disabled" : ""}`}
-        onClick={() => (isDisabled ? {} : this.addVideo(source))}
+        onClick={() => (isDisabled ? {} : this.videoStore.addVideo(source))}
         key={index}
       >
-        <div className="flex">
-          <img className="camera-img" src={camera} />
+        <img className="camera-img" src={camera} />
+        <div className="source-details">
           <div className="source-name">{source.name}</div>
+          <div className="source-uri">{source.uri}</div>
         </div>
-        <div className="source-uri">{source.uri}</div>
       </div>
     );
   };
+
   removeSource = async source => {
     try {
       await this.sourceStore.deleteSource(source.name);
@@ -51,6 +39,7 @@ class SourceList extends React.Component {
       alert(e);
     }
   };
+
   render() {
     return (
       <div>

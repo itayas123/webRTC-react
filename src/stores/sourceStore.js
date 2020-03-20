@@ -5,6 +5,15 @@ import { TOKEN } from "./userStore";
 export default class SourceStore {
   @observable sources = observable.array();
 
+  constructor(stores) {
+    this.stores = stores;
+  }
+
+  @action
+  reset = () => {
+    this.sources.replace([]);
+  };
+
   @action
   addSource = async (name, uri, usersToSend) => {
     try {
@@ -21,11 +30,7 @@ export default class SourceStore {
   @action
   fetchUserSources = async () => {
     try {
-      const token = localStorage.getItem(TOKEN);
-      let userSources = [];
-      if (token) {
-        userSources = await API.get(`/sources?token=${token}`);
-      }
+      const userSources = await API.get("/sources");
       this.sources.replace(userSources);
     } catch (e) {
       throw e;

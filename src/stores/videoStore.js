@@ -5,8 +5,9 @@ import kurentoUtils from "kurento-utils";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
 
-  constructor() {
+  constructor(stores) {
     this.webRtcPeers = {};
+    this.stores = stores;
     this.socket = io("http://localhost:3001");
     this.setUpSocket(this.socket);
   }
@@ -15,10 +16,6 @@ export default class VideoStore {
   setUpSocket = socket => {
     socket.on("connect", () => {
       console.log("connected");
-    });
-
-    socket.on("try", msg => {
-      console.log("msg", msg);
     });
 
     socket.on("candidate", ({ candidate, id }) => {

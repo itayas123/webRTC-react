@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
-import { sidebarIcon, logout } from "../../../assets";
+import { sidebarIcon, logout, tiger } from "../../../assets";
 
 const navbar = ({ name, onLogout, showSidebar }) => {
   return (
@@ -12,7 +12,10 @@ const navbar = ({ name, onLogout, showSidebar }) => {
         src={sidebarIcon}
         alt="sidebar"
       />
-      <Link to="/">Media Screen</Link>
+      <div className="hello-div">
+        <img src={tiger} className="tiger" />
+        נמ"ר
+      </div>
       <div>
         {name ? (
           <div className="hello-div">
@@ -21,7 +24,9 @@ const navbar = ({ name, onLogout, showSidebar }) => {
             <img src={logout} className="logout-img" onClick={onLogout} />
           </div>
         ) : (
-          <Link to="/login-register">Login/ Register</Link>
+          <Link className="hello-div" to="/login-register">
+            Login/ Register
+          </Link>
         )}
       </div>
     </div>

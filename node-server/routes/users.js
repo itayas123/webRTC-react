@@ -11,9 +11,12 @@ router.get("/", async (req, res) => {
 
 router.get("/getCurrentUser", async (req, res) => {
   try {
-    const { _id } = jwt.decode(req.query.token);
-    const user = await User.findById(_id);
-    return res.send({ data: user, error: user ? null : "Invalid token." });
+    if (req.headers.token) {
+      const { _id } = jwt.decode(req.headers.token);
+      const user = await User.findById(_id);
+      return res.send({ data: user, error: user ? null : "Invalid token." });
+    }
+    return res.send({ data: null, error: "Invalid token." });
   } catch (e) {
     console.log(e);
   }

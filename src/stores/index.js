@@ -10,10 +10,10 @@ export const UI_STORE = "uiStore";
 
 class Stores {
   constructor() {
-    this.userStore = new UserStore();
-    this.sourceStore = new SourceStore();
-    this.videoStore = new VideoStore();
-    this.uiStore = new UiStore();
+    this.userStore = new UserStore(this);
+    this.sourceStore = new SourceStore(this);
+    this.videoStore = new VideoStore(this);
+    this.uiStore = new UiStore(this);
   }
 
   getStores() {

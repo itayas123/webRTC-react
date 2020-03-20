@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 router.get("/", async (req, res) => {
   let user = null;
   try {
-    const { _id } = jwt.decode(req.query.token);
+    const { _id } = jwt.decode(req.headers.token);
     user = await User.findById(_id).populate("sources");
     if (user) {
       let allSources = [];
