@@ -3,6 +3,7 @@ import { inject, observer } from "mobx-react";
 import React from "react";
 import { USER_STORE, SOURCE_STORE } from "../../../../stores";
 import "./addSource.css";
+import Modal from "../../Modal/modal";
 
 @inject(USER_STORE, SOURCE_STORE)
 @observer
@@ -107,23 +108,15 @@ class AddSource extends React.Component {
     return (
       <div>
         <button className="add-btn" onClick={this.openModal}>
-          Add
+          Add Source
         </button>
-        <div
-          className={`modal ${
-            this.state.displayModal ? "modal-block" : "modal-none"
-          }`}
-          id="addModal"
+        <Modal
+          show={this.state.displayModal}
+          handleClose={() => {
+            this.setState({ displayModal: false });
+          }}
         >
-          <div className="modal-content">
-            <span
-              onClick={() => {
-                this.setState({ displayModal: false });
-              }}
-              className="close"
-            >
-              x
-            </span>
+          <div className="add-modal">
             <form onSubmit={this.handleSubmit} className="form">
               <input
                 type="text"
@@ -189,7 +182,7 @@ class AddSource extends React.Component {
               </button>
             </form>
           </div>
-        </div>
+        </Modal>
       </div>
     );
   }

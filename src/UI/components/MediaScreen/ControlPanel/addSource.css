@@ -1,37 +1,8 @@
-.modal {
-  z-index: 1;
-  left: 0;
-  top: 0;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-.modal-block {
-  display: block;
-}
-.modal-none {
-  display: none;
-}
-.modal-content {
+.add-modal {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+  width: 600px;
 }
 .users-list {
   height: 200px;
@@ -44,6 +15,16 @@
   margin: 0;
   overflow: hidden;
   overflow-y: auto;
+}
+.add-btn {
+  background-color: #292525;
+  color: white;
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 15px;
+  width: 200px;
+  border: 1px solid #292525;
+  margin: 40px 0;
 }
 .search {
   border: 1px solid #292525;

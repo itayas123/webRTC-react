@@ -1,0 +1,87 @@
+.modal-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  z-index: 15;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+}
+.modal {
+  position: fixed;
+  overflow: initial;
+  top: 50%;
+  left: 50%;
+  width: fit-content;
+  height: auto;
+  z-index: 20;
+  visibility: hidden;
+  display: initial;
+  backface-visibility: hidden;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.modal-show {
+  visibility: visible;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.modal-main {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 0px 0px 52px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  color: #000;
+  line-height: 40px;
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  vertical-align: middle;
+  padding-left: 10px;
+  justify-content: space-between;
+  border-radius: 3px 3px 0 0;
+  padding-top: 35px;
+}
+
+.modal-content {
+  height: 100%;
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  padding: 0 10px 10px;
+  overflow-y: initial;
+  background: transparent;
+  border: none;
+}
+
+.btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.modal-effect-1 .modal-main {
+  transform: scale(0.7);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.modal-show.modal-effect-1 .modal-main {
+  transform: scale(1);
+  opacity: 1;
+}

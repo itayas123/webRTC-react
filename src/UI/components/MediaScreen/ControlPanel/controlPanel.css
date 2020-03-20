@@ -48,13 +48,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-.add-btn {
-  background-color: #292525;
-  color: white;
-  width: 50%;
-  height: 50px;
-  margin: 50px auto 0;
-}
 .record {
   height: 25px;
   width: 90%;
