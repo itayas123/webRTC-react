@@ -30,7 +30,7 @@ class App extends React.Component {
       <div className="App">
         <Navbar
           name={this.userStore.getUser.name}
-          logout={this.userStore.logout}
+          onLogout={this.userStore.logout}
           showSidebar={() => setShowSidebar(true)}
         />
         <Sidebar show={showSidebar} hideSidebar={() => setShowSidebar(false)} />

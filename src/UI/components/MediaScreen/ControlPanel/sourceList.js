@@ -23,15 +23,6 @@ class SourceList extends React.Component {
     }
   };
 
-  spaceInVideoArray = () => {
-    const { videoSplit, videoArray } = this.videoStore;
-    return (
-      (videoSplit === 3
-        ? videoSplit - 1 - videoArray.length
-        : videoSplit - videoArray.length) !== 0
-    );
-  };
-
   addVideo = source => {
     this.videoStore.addVideo(source);
   };

@@ -5,8 +5,6 @@ import kurentoUtils from "kurento-utils";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
 
-  @observable videoSplit = 1;
-
   constructor() {
     this.webRtcPeers = {};
     this.socket = io("http://localhost:3001");
@@ -84,16 +82,6 @@ export default class VideoStore {
       videoObj => video._id === videoObj._id
     );
     if (index !== -1) this.videoArray.splice(index, 1);
-  };
-
-  @action
-  changeSplit = split => {
-    const start = split === 3 ? split - 1 : split;
-    const length = this.videoArray.length;
-    for (let i = start; i <= length; i++) {
-      this.videoArray.pop();
-    }
-    this.videoSplit = split;
   };
 
   @action

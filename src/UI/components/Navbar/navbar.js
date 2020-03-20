@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
-import { sidebarIcon } from "../../../assets";
+import { sidebarIcon, logout } from "../../../assets";
 
-const navbar = ({ name, logout, showSidebar }) => {
+const navbar = ({ name, onLogout, showSidebar }) => {
   return (
     <div className="navbar">
       <img
@@ -17,7 +17,8 @@ const navbar = ({ name, logout, showSidebar }) => {
         {name ? (
           <div className="hello-div">
             {`Hello ${name} -`}
-            <p onClick={logout}>Logout</p>
+            <p onClick={onLogout}>Logout</p>
+            <img src={logout} className="logout-img" onClick={onLogout} />
           </div>
         ) : (
           <Link to="/login-register">Login/ Register</Link>
