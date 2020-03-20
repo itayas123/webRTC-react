@@ -1,10 +1,9 @@
-import "./mediaScreen.css";
-import React from "react";
-import ControlPanel from "../../components/MediaScreen/ControlPanel/controlPanel";
-import VideoPanel from "../../components/MediaScreen/VideoPanel/videoPanel";
-import { inject, observer } from "mobx-react";
-import { VIDEO_STORE } from "../../../stores";
 import { toJS } from "mobx";
+import { inject, observer } from "mobx-react";
+import React from "react";
+import { VIDEO_STORE } from "../../../stores";
+import VideoPanel from "../../components/MediaScreen/VideoPanel/videoPanel";
+import "./mediaScreen.css";
 
 @inject(VIDEO_STORE)
 @observer

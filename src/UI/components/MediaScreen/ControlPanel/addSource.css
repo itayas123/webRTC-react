@@ -45,12 +45,6 @@
   overflow: hidden;
   overflow-y: auto;
 }
-.item-list {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: gray solid 1px;
-  padding: 0 5px;
-}
 .search {
   border: 1px solid #292525;
   border-radius: 5px;

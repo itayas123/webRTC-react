@@ -1,6 +1,4 @@
-import { observable, action } from "mobx";
-import API from "../utils/API";
-import { TOKEN } from "./userStore";
+import { action, observable } from "mobx";
 
 export default class UiStore {
   @observable showSidebar = false;

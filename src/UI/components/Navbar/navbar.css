@@ -4,10 +4,11 @@
   box-shadow: 0px -5px 75px #292525;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   position: fixed;
   top: 0;
-  width: 100%;
+  width: -webkit-fill-available;
+  padding: 0 20px;
 }
 .navbar > a {
   color: white;
@@ -32,4 +33,7 @@
 }
 .hello-div > p:hover {
   text-decoration: underline;
+}
+.sidebar-icon {
+  cursor: pointer;
 }

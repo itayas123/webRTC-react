@@ -1,11 +1,14 @@
 import React from "react";
 import "./sidebar.css";
 import ControlPanel from "../MediaScreen/ControlPanel/controlPanel";
+import { xButton } from "../../../assets";
 
 const sidebar = ({ show, hideSidebar }) => {
   return (
     <div className={`sidebar ${show ? "show-sidebar" : ""}`}>
-      <button onClick={hideSidebar}>hide</button>
+      <div className="sidebar-title">
+        <img className="sidebar-close" onClick={hideSidebar} src={xButton} />
+      </div>
       <ControlPanel />
     </div>
   );
