@@ -22,7 +22,7 @@ class Modal extends Component {
 
   onClickBackground = event => {
     const { children, handleClose } = this.props;
-    if (event.target.classList.contains("modal")) {
+    if (event.target.classList.contains("modal-overlay")) {
       if (children.reset) {
         children.reset();
       }
@@ -40,12 +40,14 @@ class Modal extends Component {
     } = this.props;
 
     return (
-      <div className={`modal-overlay ${show ? "show" : ""}`}>
+      <div
+        className={`modal-overlay ${show ? "show" : ""}`}
+        onClick={this.onClickBackground}
+      >
         <div
           className={`modal modal-effect-1 ${
             show ? "modal-show" : ""
           } ${className}`}
-          onClick={this.onClickBackground}
         >
           <section className="modal-main">
             <section className="modal-header">

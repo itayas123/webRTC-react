@@ -1,11 +1,11 @@
 import { debounce } from "lodash";
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import { USER_STORE, SOURCE_STORE } from "../../../../stores";
-import "./addSource.css";
+import stores from "../../../../stores";
 import Modal from "../../Modal/modal";
+import "./addSource.css";
 
-@inject(USER_STORE, SOURCE_STORE)
+const { sourceStore, userStore } = stores;
 @observer
 class AddSource extends React.Component {
   constructor(props) {
@@ -19,18 +19,7 @@ class AddSource extends React.Component {
       filterUsers: [],
       usersToSend: []
     };
-    this.userStore = this.props[USER_STORE];
-    this.sourceStore = this.props[SOURCE_STORE];
   }
-
-  componentDidMount = () => {
-    const modal = document.getElementById("addModal");
-    window.onclick = e => {
-      if (e.target === modal) {
-        this.setState({ displayModal: false });
-      }
-    };
-  };
 
   renderUserItem = (email, index) => {
     return (
@@ -56,7 +45,7 @@ class AddSource extends React.Component {
   };
 
   openModal = () => {
-    this.userStore
+    userStore
       .fetchAllUsers()
       .then(res => {
         const emails = res.map(user => user.email);
@@ -74,7 +63,7 @@ class AddSource extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, uri, usersToSend } = this.state;
-    this.sourceStore
+    sourceStore
       .addSource(name, uri, usersToSend)
       .then(res => {
         this.setState({ Redirect: true, displayModal: false });

@@ -1,25 +1,18 @@
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import { SOURCE_STORE, USER_STORE, VIDEO_STORE } from "../../../../stores";
-import AddSource from "./addSource";
 import { camera } from "../../../../assets";
+import stores from "../../../../stores";
+import AddSource from "./addSource";
 
-@inject(SOURCE_STORE, USER_STORE, VIDEO_STORE)
+const { sourceStore, userStore, videoStore } = stores;
 @observer
 class SourceList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.sourceStore = this.props[SOURCE_STORE];
-    this.userStore = this.props[USER_STORE];
-    this.videoStore = this.props[VIDEO_STORE];
-  }
-
   renderSource = (source, index) => {
-    const isDisabled = this.videoStore.videoArray.includes(source);
+    const isDisabled = videoStore.videoArray.includes(source);
     return (
       <div
         className={`item-list ${isDisabled ? "disabled" : ""}`}
-        onClick={() => (isDisabled ? {} : this.videoStore.addVideo(source))}
+        onClick={() => (isDisabled ? {} : videoStore.addVideo(source))}
         key={index}
       >
         <img className="camera-img" src={camera} />
@@ -33,24 +26,23 @@ class SourceList extends React.Component {
 
   removeSource = async source => {
     try {
-      await this.sourceStore.deleteSource(source.name);
-      this.videoStore.deleteVideo(source);
+      await sourceStore.deleteSource(source.name);
+      videoStore.deleteVideo(source);
     } catch (e) {
       alert(e);
     }
   };
 
   render() {
+    const { sources } = sourceStore;
     return (
       <div>
-        <h2>video list</h2>
+        <h2>source list</h2>
         <div className="source-list">
-          {this.sourceStore.sources &&
-            this.sourceStore.sources.map((source, index) =>
-              this.renderSource(source, index)
-            )}
+          {sources &&
+            sources.map((source, index) => this.renderSource(source, index))}
         </div>
-        {this.userStore.getUser.admin && <AddSource />}
+        {userStore.getUser.admin && <AddSource />}
       </div>
     );
   }

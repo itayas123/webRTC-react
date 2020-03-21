@@ -1,10 +1,10 @@
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { USER_STORE } from "../../../stores";
+import stores from "../../../stores";
 import "./login.css";
 
-@inject(USER_STORE)
+const { userStore } = stores;
 @observer
 class Login extends React.Component {
   constructor(props) {
@@ -16,18 +16,18 @@ class Login extends React.Component {
       register: false,
       Redirect: false
     };
-    this.userStore = this.props[USER_STORE];
   }
 
   handleSubmit = async e => {
     e.preventDefault();
     const { name, email, password } = this.state;
+    const { login, register } = userStore;
 
     try {
       if (this.state.register) {
-        await this.userStore.register(name, email, password);
+        await register(name, email, password);
       } else {
-        await this.userStore.login(email, password);
+        await login(email, password);
       }
       this.setState({ Redirect: true });
     } catch (e) {

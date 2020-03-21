@@ -7,11 +7,6 @@ export default class ControlPanel extends React.Component {
     return (
       <div className="control-panel">
         <SourceList />
-        <div className="record">
-          <button className="record-button" />
-          <div>record</div>
-          <div>00:00</div>
-        </div>
       </div>
     );
   }

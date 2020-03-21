@@ -1,42 +1,38 @@
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
-import { USER_STORE, UI_STORE } from "./stores";
+import stores from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
 import Login from "./UI/containers/login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
 import Sidebar from "./UI/components/Sidebar/sidebar";
 
-@inject(USER_STORE, UI_STORE)
+const { userStore, uiStore } = stores;
 @observer
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.userStore = this.props[USER_STORE];
-    this.uiStore = this.props[UI_STORE];
-  }
   componentDidMount = async () => {
     try {
-      await this.userStore.fetchCurrentUser();
+      await userStore.fetchCurrentUser();
     } catch (e) {
       alert(e);
     }
   };
 
   render() {
-    const { showSidebar, setShowSidebar } = this.uiStore;
+    const { showSidebar, setShowSidebar } = uiStore;
+    const { getUser, logout } = userStore;
     return (
       <div className="App">
         <Navbar
-          name={this.userStore.getUser.name}
-          onLogout={this.userStore.logout}
+          name={getUser.name}
+          onLogout={logout}
           showSidebar={() => setShowSidebar(true)}
         />
         <Sidebar show={showSidebar} hideSidebar={() => setShowSidebar(false)} />
         <Switch>
           <Route exact path="/">
-            {this.userStore.getUser.name ? (
+            {getUser.name ? (
               <MediaScreen />
             ) : (
               <div>
