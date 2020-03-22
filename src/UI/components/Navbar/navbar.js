@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 import { sidebarIcon, logout, tiger } from "../../../assets";
+import { ROUTES } from "../../../Routes";
 
-const navbar = ({ name, onLogout, showSidebar }) => {
+const navbar = ({ user, onLogout, showSidebar }) => {
+  const { name, admin } = user;
   return (
     <div className="navbar">
       <img
@@ -12,10 +14,20 @@ const navbar = ({ name, onLogout, showSidebar }) => {
         src={sidebarIcon}
         alt="sidebar"
       />
-      <div className="hello-div">
+      <Link className="hello-div" to={ROUTES.HOME}>
         <img src={tiger} className="tiger" />
         נמ"ר
-      </div>
+      </Link>
+      {admin && (
+        <>
+          <Link className="hello-div" to={ROUTES.USERS}>
+            Users
+          </Link>
+          <Link className="hello-div" to={ROUTES.SOURCES}>
+            Sources
+          </Link>
+        </>
+      )}
       <div>
         {name ? (
           <div className="hello-div">
@@ -24,8 +36,8 @@ const navbar = ({ name, onLogout, showSidebar }) => {
             <img src={logout} className="logout-img" onClick={onLogout} />
           </div>
         ) : (
-          <Link className="hello-div" to="/login-register">
-            Login/ Register
+          <Link className="hello-div" to={ROUTES.LOGIN}>
+            Login
           </Link>
         )}
       </div>

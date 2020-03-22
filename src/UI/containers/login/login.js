@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { Redirect } from "react-router-dom";
+import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import "./login.css";
 
@@ -13,14 +14,14 @@ class Login extends React.Component {
       email: "",
       password: "",
       name: "",
-      register: false,
-      Redirect: false
+      register: false
     };
   }
 
   handleSubmit = async e => {
     e.preventDefault();
     const { name, email, password } = this.state;
+    const { history } = this.props;
     const { login, register } = userStore;
 
     try {
@@ -29,7 +30,6 @@ class Login extends React.Component {
       } else {
         await login(email, password);
       }
-      this.setState({ Redirect: true });
     } catch (e) {
       alert(e);
     }
@@ -40,9 +40,10 @@ class Login extends React.Component {
   };
 
   render() {
+    if (userStore.getUser.name) return <Redirect to={ROUTES.HOME} />;
+
     return (
       <div className="main">
-        {this.state.Redirect && <Redirect to="/" />}
         <div className="buttons">
           <button
             className={this.state.register ? "" : "un-active"}

@@ -62,7 +62,11 @@ class KurentoClientModel {
 
   onUserDesconnected = id => {
     Object.keys(this.sessions).forEach(key => {
-      if (key.includes(id)) delete this.sessions[key];
+      if (key.includes(id)) {
+        const { webRtcEndpoint } = this.getSessionById(key);
+        webRtcEndpoint.release();
+        delete this.sessions[key];
+      }
     });
     console.log(this.sessions);
   };

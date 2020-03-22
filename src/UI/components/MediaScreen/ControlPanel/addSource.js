@@ -66,7 +66,7 @@ class AddSource extends React.Component {
     sourceStore
       .addSource(name, uri, usersToSend)
       .then(res => {
-        this.setState({ Redirect: true, displayModal: false });
+        this.setState({ displayModal: false });
       })
       .catch(err => {
         alert(err);
