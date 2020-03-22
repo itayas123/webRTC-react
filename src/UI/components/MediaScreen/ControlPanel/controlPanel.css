@@ -18,7 +18,7 @@
 }
 .disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: initial;
 }
 .disabled:hover {
   border: none !important;

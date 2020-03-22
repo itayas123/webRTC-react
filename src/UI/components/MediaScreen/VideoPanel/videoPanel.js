@@ -1,122 +1,60 @@
 import React from "react";
+import _ from "lodash";
+import { WidthProvider, Responsive } from "react-grid-layout";
 import "./videoPanel.css";
+import { xButton } from "../../../../assets";
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-export default function VideoPanel({ videoArray }) {
-  console.log(videoArray, videoArray[0]);
+export default class VideoPanel extends React.PureComponent {
+  constructor(props) {
+    super(props);
+  }
 
-  return (
-    <div className="video-panel">
-      <div className="wh100p border-2p">
-        <video
-          id={videoArray[0] ? videoArray[0].name : "video"}
-          autoPlay
-          className="video"
-          // controls
+  createElement = (video, index) => {
+    const elementValues = {
+      i: index.toString(),
+      x: index * 5,
+      y: 0,
+      w: 5,
+      h: 5
+    };
+    return (
+      <div key={video._id} data-grid={elementValues}>
+        <img
+          src={xButton}
+          className="remove-video"
+          onClick={() => this.props.deleteVideo(video)}
         />
+        <video className="video" id={video.name} autoPlay />
       </div>
-    </div>
-  );
+    );
+  };
+
+  // We're using the cols coming back from this to calculate where to add new items.
+  onBreakpointChange = (breakpoint, cols) => {
+    this.setState({
+      breakpoint: breakpoint,
+      cols: cols
+    });
+  };
+
+  onLayoutChange = layout => {
+    this.setState({ layout: layout });
+  };
+
+  render() {
+    return (
+      <ResponsiveReactGridLayout
+        onLayoutChange={this.onLayoutChange}
+        onBreakpointChange={this.onBreakpointChange}
+        className="layout"
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        rowHeight={100}
+      >
+        {this.props.videoArray.map((video, index) =>
+          this.createElement(video, index)
+        )}
+      </ResponsiveReactGridLayout>
+    );
+  }
 }
-
-// class VideoPanel extends React.Component {
-//   renderVideos() {
-//     switch (this.props.videoSplit) {
-//       case 1:
-//         return (
-//           <div className="wh100p border-2p">
-//             {this.props.videoArray && this.props.videoArray[0] ? (
-//               <video
-//                 autoPlay
-//                 className="video"
-//                 controls
-//                 src="http://localhost:3001/api/sources/video"
-//               />
-//             ) : (
-//               ""
-//             )}
-//           </div>
-//         );
-//       case 2:
-//         return (
-//           <div className="wh100p border flex">
-//             <div className="width-50p border">
-//               {this.props.videoArray && this.props.videoArray[0] ? (
-//                 <video autoPlay className="video" controls src={videoSrc} />
-//               ) : (
-//                 ""
-//               )}
-//             </div>
-//             <div className="width-50p border">
-//               {this.props.videoArray && this.props.videoArray[1] ? (
-//                 <video autoPlay className="video" controls src={videoSrc2} />
-//               ) : (
-//                 ""
-//               )}
-//             </div>
-//           </div>
-//         );
-//       case 3:
-//         return (
-//           <div className="wh100p border">
-//             <div className="height-50p border">
-//               {this.props.videoArray && this.props.videoArray[0] ? (
-//                 <video autoPlay className="video" controls src={videoSrc} />
-//               ) : (
-//                 ""
-//               )}
-//             </div>
-//             <div className="height-50p border">
-//               {this.props.videoArray && this.props.videoArray[1] ? (
-//                 <video autoPlay className="video" controls src={videoSrc2} />
-//               ) : (
-//                 ""
-//               )}
-//             </div>
-//           </div>
-//         );
-//       case 4:
-//         return (
-//           <div className="wh100p border">
-//             <div className="height-50p flex">
-//               <div className="width-50p border">
-//                 {this.props.videoArray && this.props.videoArray[0] ? (
-//                   <video autoPlay className="video" controls src={videoSrc} />
-//                 ) : (
-//                   ""
-//                 )}
-//               </div>
-//               <div className="width-50p border">
-//                 {this.props.videoArray && this.props.videoArray[1] ? (
-//                   <video autoPlay className="video" controls src={videoSrc2} />
-//                 ) : (
-//                   ""
-//                 )}
-//               </div>
-//             </div>
-//             <div className="height-50p flex">
-//               <div className="width-50p border">
-//                 {this.props.videoArray && this.props.videoArray[2] ? (
-//                   <video autoPlay className="video" controls src={videoSrc} />
-//                 ) : (
-//                   ""
-//                 )}
-//               </div>
-//               <div className="width-50p border">
-//                 {this.props.videoArray && this.props.videoArray[3] ? (
-//                   <video autoPlay className="video" controls src={videoSrc2} />
-//                 ) : (
-//                   ""
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         );
-//       default:
-//         return <div className="wh100p border-2p" />;
-//     }
-//   }
-
-//   render() {
-//     return <div className="video-panel">{this.renderVideos()}</div>;
-//   }
-// }

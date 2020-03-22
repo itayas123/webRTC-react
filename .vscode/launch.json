@@ -16,14 +16,9 @@
       "type": "node",
       "request": "launch",
       "args": ["${workspaceRoot}/node-server/index.js"],
-      // "runtimeArgs": ["--require", "ts-node/register"],
       "cwd": "${workspaceRoot}/node-server",
       "protocol": "inspector",
       "internalConsoleOptions": "openOnSessionStart"
-      // "env": {
-      //     "TS_NODE_IGNORE": "false",
-      //     "NODE_ENV": "localhost"
-      // }
     }
   ]
 }

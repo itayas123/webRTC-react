@@ -48,13 +48,11 @@ class KurentoClientModel {
         uri,
         ...options
       });
-      debugger;
       playerEndpoint.on("Error", err => {
-        debugger;
         const deleteee = Object.values(this.playerEndpoints).find(
           player => player.id === err.source
         );
-        console.error(err, this.playerEndpoints);
+        console.error("deleee", deleteee, err, this.playerEndpoints);
       });
       await playerEndpoint.play((err, error) => {});
       this.playerEndpoints[uri] = playerEndpoint;

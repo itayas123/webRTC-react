@@ -11,7 +11,10 @@ class MediaScreen extends React.Component {
   render() {
     return (
       <div className="media-screen">
-        <VideoPanel videoArray={toJS(videoStore.videoArray)} />
+        <VideoPanel
+          videoArray={toJS(videoStore.videoArray)}
+          deleteVideo={videoStore.deleteVideo}
+        />
       </div>
     );
   }

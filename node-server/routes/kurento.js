@@ -6,9 +6,7 @@ const args = {
 
 const kurentoclient = new KurentoClientModel();
 
-const init = async () => {
-  kurentoclient.init(args.ws_uri);
-};
+const init = () => kurentoclient.init(args.ws_uri);
 
 const onSendIceCandidate = (event, id, socket) => {
   const candidate = event.candidate;
