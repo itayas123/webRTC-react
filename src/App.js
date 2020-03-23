@@ -9,11 +9,20 @@ import Sidebar from "./UI/components/Sidebar/sidebar";
 const { userStore, uiStore } = stores;
 @observer
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true
+    };
+  }
+
   componentDidMount = async () => {
     try {
       await userStore.fetchCurrentUser();
     } catch (e) {
       alert(e);
+    } finally {
+      this.setState({ isLoading: false });
     }
   };
 
@@ -28,7 +37,7 @@ class App extends React.Component {
           showSidebar={() => setShowSidebar(true)}
         />
         <Sidebar show={showSidebar} hideSidebar={() => setShowSidebar(false)} />
-        <Routes />
+        {this.state.isLoading ? <> loading </> : <Routes />}
       </div>
     );
   }

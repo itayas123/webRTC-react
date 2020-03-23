@@ -1,0 +1,13 @@
+.custom-button {
+  background-color: #292525;
+  color: white;
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 15px;
+  min-width: 200px;
+  max-height: 50px;
+  border: 1px solid #292525;
+}
+button:focus {
+  outline: none;
+}

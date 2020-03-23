@@ -5,7 +5,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate("sources");
   return res.send({ data: users, error: null });
 });
 

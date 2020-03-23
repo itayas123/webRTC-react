@@ -4,6 +4,7 @@ import React from "react";
 import stores from "../../../../stores";
 import Modal from "../../Modal/modal";
 import "./addSource.css";
+import Button from "../../Button/button";
 
 const { sourceStore, userStore } = stores;
 @observer
@@ -96,9 +97,9 @@ class AddSource extends React.Component {
   render() {
     return (
       <div>
-        <button className="add-btn" onClick={this.openModal}>
+        <Button className="add-btn" onClick={this.openModal}>
           Add Source
-        </button>
+        </Button>
         <Modal
           show={this.state.displayModal}
           handleClose={() => {
@@ -166,9 +167,7 @@ class AddSource extends React.Component {
                   </div>
                 </div>
               )}
-              <button type="submit" className="add-source-submit">
-                Submit
-              </button>
+              <Button type="submit">Submit</Button>
             </form>
           </div>
         </Modal>

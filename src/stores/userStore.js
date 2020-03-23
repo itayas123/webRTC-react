@@ -6,6 +6,8 @@ export const TOKEN = "token";
 class UserStore {
   @observable currentUser = {};
 
+  @observable allUsers = observable.array();
+
   constructor(stores) {
     this.stores = stores;
   }
@@ -54,7 +56,9 @@ class UserStore {
 
   @action
   fetchAllUsers = async () => {
-    return await API.get("/users");
+    const users = await API.get("/users");
+    this.allUsers.replace(users);
+    return users;
   };
 
   @action

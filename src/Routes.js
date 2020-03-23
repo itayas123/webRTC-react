@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import Login from "./UI/containers/login/login";
 import MediaScreen from "./UI/containers/MediaScreen/mediaScreen";
+import Users from "./UI/containers/Users/users";
 
 export const ROUTES = {
   HOME: "/",
@@ -13,14 +14,19 @@ export const ROUTES = {
 class Routes extends Component {
   render() {
     return (
-      <Switch>
-        <Route exact path={ROUTES.HOME}>
-          <MediaScreen />
-        </Route>
-        <Route path={ROUTES.LOGIN}>
-          <Login />
-        </Route>
-      </Switch>
+      <div className="routes">
+        <Switch>
+          <Route exact path={ROUTES.HOME}>
+            <MediaScreen />
+          </Route>
+          <Route path={ROUTES.LOGIN}>
+            <Login />
+          </Route>
+          <Route path={ROUTES.USERS}>
+            <Users />
+          </Route>
+        </Switch>
+      </div>
     );
   }
 }

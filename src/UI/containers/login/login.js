@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import "./login.css";
+import Button from "../../components/Button/button";
 
 const { userStore } = stores;
 @observer
@@ -45,22 +46,22 @@ class Login extends React.Component {
     return (
       <div className="main">
         <div className="buttons">
-          <button
+          <Button
             className={this.state.register ? "" : "un-active"}
             onClick={() => {
               this.setState({ register: true });
             }}
           >
             Register
-          </button>
-          <button
+          </Button>
+          <Button
             className={this.state.register ? "un-active" : ""}
             onClick={() => {
               this.setState({ register: false });
             }}
           >
             Login
-          </button>
+          </Button>
         </div>
         <form onSubmit={this.handleSubmit} className="form">
           <input
@@ -91,7 +92,7 @@ class Login extends React.Component {
               this.handleChange("password", e.target.value);
             }}
           />
-          <button type="submit">Submit</button>
+          <Button type="submit">Submit</Button>
         </form>
       </div>
     );
