@@ -28,12 +28,10 @@ class UserStore {
   };
 
   @action
-  register = async (name, email, password) => {
+  createUser = async user => {
     try {
-      const user = await API.post("/users", { name, email, password });
-      localStorage.setItem(TOKEN, user.token);
-      this.setCurrentUser(user);
-      return user;
+      await API.post("/users", user);
+      await this.fetchAllUsers();
     } catch (e) {
       throw e;
     }
@@ -60,9 +58,14 @@ class UserStore {
 
   @action
   fetchAllUsers = async () => {
-    const users = await API.get("/users");
-    this.allUsers.replace(users);
-    return users;
+    try {
+      const users = await API.get("/users");
+      this.allUsers.replace(users);
+      return users;
+    } catch (e) {
+      this.logout();
+      throw e;
+    }
   };
 
   @action
@@ -86,19 +89,31 @@ class UserStore {
 
   @action
   setSelectedUser = user => {
-    this.selectedUser = user;
+    const sources = this.stores.sourceStore.sources.map(source => ({
+      ...source,
+      isActive: user.sources.includes(source._id)
+    }));
+    this.selectedUser = { ...user, sources };
   };
 
   @action
   updateUser = async user => {
-    await API.put(`/users/${user._id}`, user);
-    await this.fetchAllUsers();
+    try {
+      await API.put(`/users/${user._id}`, user);
+      await this.fetchAllUsers();
+    } catch (err) {
+      throw err;
+    }
   };
 
   @action
   deleteUser = async user => {
-    await API.delete(`/users/${user._id}`);
-    await this.fetchAllUsers();
+    try {
+      await API.delete(`/users/${user._id}`);
+      await this.fetchAllUsers();
+    } catch (err) {
+      throw err;
+    }
   };
 }
 export default UserStore;

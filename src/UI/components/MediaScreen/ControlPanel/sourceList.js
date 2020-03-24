@@ -34,13 +34,15 @@ class SourceList extends React.Component {
   };
 
   render() {
-    const { sources } = sourceStore;
+    const { userSources } = sourceStore;
     return (
       <div>
         <h2>source list</h2>
         <div className="source-list">
-          {sources &&
-            sources.map((source, index) => this.renderSource(source, index))}
+          {userSources &&
+            userSources.map((source, index) =>
+              this.renderSource(source, index)
+            )}
         </div>
         {userStore.getUser.admin && <AddSource />}
       </div>

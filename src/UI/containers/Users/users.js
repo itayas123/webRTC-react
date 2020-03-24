@@ -72,24 +72,54 @@ const columns = [
   }
 ];
 
-const { userStore } = stores;
+const { userStore, sourceStore } = stores;
 
 const toggleModal = () => {
   const { isModalshown, setIsModalShown } = userStore;
   setIsModalShown(!isModalshown);
 };
 
+const onSubmit = async values => {
+  const { updateUser, createUser } = userStore;
+  try {
+    const user = {
+      ...values,
+      sources: values.sources
+        .filter(source => source.isActive)
+        .map(source => source._id)
+    };
+    if (user._id) await updateUser(user);
+    else await createUser(user);
+    toggleModal();
+  } catch (err) {
+    alert(err);
+  }
+};
+
 const Users = ({}) => {
   useEffect(() => {
     userStore.fetchAllUsers();
+    sourceStore.fetchAllSources();
   }, []);
 
-  const { allUsers, getUser, isModalshown, selectedUser } = userStore;
+  const {
+    allUsers,
+    getUser,
+    isModalshown,
+    selectedUser,
+    setSelectedUser
+  } = userStore;
   if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
   return (
     <div className="users-container">
       <h1>Users Management</h1>
-      <Button className="add-user" onClick={toggleModal}>
+      <Button
+        className="add-user"
+        onClick={() => {
+          toggleModal();
+          setSelectedUser({ sources: [] });
+        }}
+      >
         Add User
       </Button>
       <DataTable columns={columns} data={toJS(allUsers)} />
@@ -97,6 +127,7 @@ const Users = ({}) => {
         show={isModalshown}
         onClose={toggleModal}
         initialValues={toJS(selectedUser)}
+        onSubmit={onSubmit}
       />
     </div>
   );

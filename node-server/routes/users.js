@@ -5,7 +5,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
-  const users = await User.find({}).populate("sources");
+  const users = await User.find({});
   return res.send({ data: users, error: null });
 });
 
@@ -51,19 +51,17 @@ router.delete("/:_id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   let user = null;
-  const { email, name, password } = req.body;
   try {
     user = await User.findOne({ email: req.body.email });
 
     if (user)
       return res.send({ data: null, error: "User already registered." });
 
-    user = new User({ email, name, password, admin: false, sources: [] });
+    user = new User(req.body);
     await user.save();
-    const token = user.generateAuthToken();
 
     return res.send({
-      data: { ...user.toObject(), password: null, token },
+      data: user,
       error: null
     });
   } catch (e) {

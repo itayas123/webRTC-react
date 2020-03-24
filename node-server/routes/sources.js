@@ -6,6 +6,15 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
+  try {
+    const allSources = await Source.find({});
+    return res.send({ data: allSources, error: null });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.get("/sourcesByUser", async (req, res) => {
   let user = null;
   try {
     const { _id } = jwt.decode(req.headers.token);

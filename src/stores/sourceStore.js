@@ -5,13 +5,15 @@ import { TOKEN } from "./userStore";
 export default class SourceStore {
   @observable sources = observable.array();
 
+  @observable userSources = observable.array();
+
   constructor(stores) {
     this.stores = stores;
   }
 
   @action
   reset = () => {
-    this.sources.replace([]);
+    this.userSources.replace([]);
   };
 
   @action
@@ -21,7 +23,7 @@ export default class SourceStore {
         source: { name, uri },
         users: usersToSend
       });
-      this.sources.push(source);
+      await this.updateSources();
     } catch (e) {
       throw e;
     }
@@ -30,19 +32,34 @@ export default class SourceStore {
   @action
   fetchUserSources = async () => {
     try {
-      const userSources = await API.get("/sources");
-      this.sources.replace(userSources);
+      const userSources = await API.get("/sources/sourcesByUser");
+      this.userSources.replace(userSources);
     } catch (e) {
       throw e;
     }
   };
 
   @action
+  fetchAllSources = async () => {
+    try {
+      const sources = await API.get("/sources");
+      this.sources.replace(sources);
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  @action
+  updateSources = async () => {
+    await this.fetchAllSources();
+    await this.fetchUserSources();
+  };
+
+  @action
   deleteSource = async name => {
     try {
       const source = await API.delete(`/sources?name=${name}`);
-      const index = this.sources.indexOf(source);
-      if (index > -1) this.sources.splice(index, 1);
+      await this.updateSources();
     } catch (e) {
       throw e;
     }

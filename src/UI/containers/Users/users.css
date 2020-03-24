@@ -12,3 +12,7 @@
 .admin-checkbox > label {
   margin: 0 10px 3px;
 }
+.sources {
+  max-height: 150px;
+  overflow: auto;
+}

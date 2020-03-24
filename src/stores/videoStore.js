@@ -8,8 +8,8 @@ export default class VideoStore {
   constructor(stores) {
     this.webRtcPeers = {};
     this.stores = stores;
-    this.socket = io("http://localhost:3001");
-    this.setUpSocket(this.socket);
+    //this.socket = io("http://localhost:3001");
+    //this.setUpSocket(this.socket);
   }
 
   @action

@@ -2,25 +2,6 @@
   display: flex;
   margin-top: 100px;
 }
-.form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  margin: auto;
-}
-.form > input {
-  margin: 10px 0;
-  height: 30px;
-  background-color: transparent;
-  color: black;
-  border: 1px solid #292525;
-  border-radius: 10px;
-  padding: 10px;
-  outline: none;
-}
-.form > input::placeholder {
-  color: gray;
-}
 .hide {
   display: none;
 }

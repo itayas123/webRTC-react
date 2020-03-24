@@ -1,0 +1,33 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+}
+.form .input-div {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.form input {
+  margin: 10px 0;
+  height: 30px;
+  background-color: transparent;
+  color: black;
+  border: 1px solid #292525;
+  border-radius: 10px;
+  padding: 10px;
+  outline: none;
+  min-width: 300px;
+}
+.form input::placeholder {
+  color: gray;
+}
+.form input[type="checkbox"] {
+  min-width: 20px;
+}
+.form label {
+  width: fit-content;
+  margin: 0 5px;
+  cursor: pointer;
+}
