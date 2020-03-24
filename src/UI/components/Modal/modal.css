@@ -42,6 +42,7 @@
   height: 100%;
   border-radius: 3px;
   box-shadow: 0px 0px 52px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s;
 }
 
 .modal-header {
@@ -76,9 +77,8 @@
 }
 
 .modal-effect-1 .modal-main {
-  transform: scale(0.7);
+  transform: scale(0.3);
   opacity: 0;
-  transition: all 0.3s;
 }
 
 .modal-show.modal-effect-1 .modal-main {

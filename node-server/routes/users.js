@@ -22,6 +22,33 @@ router.get("/getCurrentUser", async (req, res) => {
   }
 });
 
+router.put("/:_id", async (req, res) => {
+  try {
+    const { _id } = req.params;
+    await User.updateOne({ _id }, req.body);
+    const newUser = await User.findById(_id);
+    return res.send({
+      data: newUser,
+      error: null
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+router.delete("/:_id", async (req, res) => {
+  try {
+    const { _id } = req.params;
+    await User.deleteOne({ _id });
+    return res.send({
+      data: req.body,
+      error: null
+    });
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 router.post("/", async (req, res) => {
   let user = null;
   const { email, name, password } = req.body;

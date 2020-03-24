@@ -2,32 +2,13 @@ const app = require("express")();
 const cors = require("cors");
 app.use(cors());
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
 
 const port = process.env.PORT || 3001;
 server.listen(port, () => console.log(`Listening on port ${port}...`));
 
 require("./startup/routes")(app);
+//require("./startup/socket")(server);
 require("./startup/db")();
 require("./startup/config")();
-
-const {
-  start,
-  init,
-  onRecieveIceCandaite,
-  onUserDesconnected
-} = require("./routes/kurento");
-// init();
-io.on("connection", socket => {
-  const { id } = socket;
-  console.log("socket connected ", id);
-  socket.on("start", ({ sdpOffer, url, _id }) =>
-    start(sdpOffer, url, _id, socket)
-  );
-  socket.on("candidate", ({ candidate, _id }) =>
-    onRecieveIceCandaite(candidate, _id)
-  );
-  socket.on("userDisconnected", onUserDesconnected);
-});
 
 module.exports = server;

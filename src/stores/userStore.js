@@ -8,6 +8,10 @@ class UserStore {
 
   @observable allUsers = observable.array();
 
+  @observable isModalshown = false;
+
+  @observable selectedUser = {};
+
   constructor(stores) {
     this.stores = stores;
   }
@@ -73,6 +77,28 @@ class UserStore {
       this.logout();
       throw e;
     }
+  };
+
+  @action
+  setIsModalShown = show => {
+    this.isModalshown = show;
+  };
+
+  @action
+  setSelectedUser = user => {
+    this.selectedUser = user;
+  };
+
+  @action
+  updateUser = async user => {
+    await API.put(`/users/${user._id}`, user);
+    await this.fetchAllUsers();
+  };
+
+  @action
+  deleteUser = async user => {
+    await API.delete(`/users/${user._id}`);
+    await this.fetchAllUsers();
   };
 }
 export default UserStore;

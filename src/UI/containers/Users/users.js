@@ -8,6 +8,7 @@ import { Redirect } from "react-router-dom";
 import { ROUTES } from "../../../Routes";
 import { deleteIcon, editIcon } from "../../../assets";
 import "./users.css";
+import AddUser from "../../components/Users/addUser";
 
 const columns = [
   {
@@ -46,14 +47,24 @@ const columns = [
   },
   {
     Header: "",
-    Cell: ({ row }) => {
-      return (
-        <div className="actions">
-          <img src={deleteIcon} />
-          <img src={editIcon} />
-        </div>
-      );
-    },
+    Cell: ({ row }) => (
+      <div className="actions">
+        <img
+          src={deleteIcon}
+          onClick={() => {
+            if (window.confirm("Are you sure?"))
+              userStore.deleteUser(row._original);
+          }}
+        />
+        <img
+          src={editIcon}
+          onClick={() => {
+            toggleModal();
+            userStore.setSelectedUser(row._original);
+          }}
+        />
+      </div>
+    ),
     sortable: false,
     filterable: false,
     resizable: false,
@@ -63,18 +74,30 @@ const columns = [
 
 const { userStore } = stores;
 
+const toggleModal = () => {
+  const { isModalshown, setIsModalShown } = userStore;
+  setIsModalShown(!isModalshown);
+};
+
 const Users = ({}) => {
   useEffect(() => {
     userStore.fetchAllUsers();
   }, []);
 
-  const { allUsers, getUser } = userStore;
+  const { allUsers, getUser, isModalshown, selectedUser } = userStore;
   if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
   return (
     <div className="users-container">
-      <h1>User Management</h1>
-      <Button className="add-user">Add User</Button>
+      <h1>Users Management</h1>
+      <Button className="add-user" onClick={toggleModal}>
+        Add User
+      </Button>
       <DataTable columns={columns} data={toJS(allUsers)} />
+      <AddUser
+        show={isModalshown}
+        onClose={toggleModal}
+        initialValues={toJS(selectedUser)}
+      />
     </div>
   );
 };
