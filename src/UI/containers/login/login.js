@@ -5,95 +5,62 @@ import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import "./login.css";
 import Button from "../../components/Button/button";
+import { Formik, Form, Field } from "formik";
+import Input from "../../components/Input/input";
 
 const { userStore } = stores;
 @observer
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      name: "",
-      register: false
-    };
-  }
-
-  handleSubmit = async e => {
-    e.preventDefault();
-    const { name, email, password } = this.state;
-    const { history } = this.props;
-    const { login, register } = userStore;
+  handleSubmit = async values => {
+    const { email, password } = values;
+    const { login } = userStore;
 
     try {
-      if (this.state.register) {
-        await register(name, email, password);
-      } else {
-        await login(email, password);
-      }
+      await login(email, password);
     } catch (e) {
       alert(e);
     }
-  };
-
-  handleChange = (name, value) => {
-    this.setState({ [name]: value });
   };
 
   render() {
     if (userStore.getUser.name) return <Redirect to={ROUTES.HOME} />;
 
     return (
-      <div className="main">
-        <div className="buttons">
-          <Button
-            className={this.state.register ? "" : "un-active"}
-            onClick={() => {
-              this.setState({ register: true });
-            }}
-          >
-            Register
-          </Button>
-          <Button
-            className={this.state.register ? "un-active" : ""}
-            onClick={() => {
-              this.setState({ register: false });
-            }}
-          >
-            Login
-          </Button>
-        </div>
-        <form onSubmit={this.handleSubmit} className="form">
-          <input
-            type="text"
-            className={this.state.register ? "" : "hide"}
-            required={this.state.register}
-            placeholder="name"
-            value={this.state.name}
-            onChange={e => {
-              this.handleChange("name", e.target.value);
-            }}
-          />
-          <input
-            type="email"
-            required
-            placeholder="email"
-            value={this.state.email}
-            onChange={e => {
-              this.handleChange("email", e.target.value);
-            }}
-          />
-          <input
-            type="password"
-            required
-            placeholder="password"
-            value={this.state.password}
-            onChange={e => {
-              this.handleChange("password", e.target.value);
-            }}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
+      <div className="login">
+        <h1>Login</h1>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          onSubmit={this.handleSubmit}
+          render={({ values }) => {
+            return (
+              <Form className="form">
+                <Field
+                  name="email"
+                  render={({ field }) => (
+                    <Input
+                      placeholder="email"
+                      id="email"
+                      type="email"
+                      {...field}
+                    />
+                  )}
+                />
+                <Field
+                  name="password"
+                  render={({ field }) => (
+                    <Input
+                      placeholder="password"
+                      id="password"
+                      type="password"
+                      {...field}
+                    />
+                  )}
+                />
+                <Button type="submit">Submit</Button>
+              </Form>
+            );
+          }}
+        />
       </div>
     );
   }

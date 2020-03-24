@@ -1,22 +1,10 @@
-.main {
-  display: flex;
-  margin-top: 100px;
+.login {
+  margin: 150px auto;
+  width: fit-content;
 }
 .hide {
   display: none;
 }
 .logout {
   margin: auto;
-}
-.buttons {
-  display: flex;
-  flex-direction: column;
-  margin: 100px 50px;
-}
-.buttons > button {
-  margin: 15px;
-}
-.un-active {
-  background-color: white !important;
-  color: #292525 !important;
 }
