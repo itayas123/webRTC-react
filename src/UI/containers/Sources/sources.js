@@ -7,8 +7,8 @@ import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
-import AddUser from "../../components/Users/addUser";
 import "../Users/users.css";
+import AddSource from "../../components/Sources/addSource";
 
 const columns = [
   {
@@ -98,7 +98,7 @@ const Sources = ({}) => {
         Add Source
       </Button>
       <DataTable columns={columns} data={toJS(sources)} />
-      <AddUser
+      <AddSource
         show={isModalshown}
         onClose={toggleModal}
         initialValues={toJS(selectedSource)}

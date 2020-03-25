@@ -43,7 +43,7 @@ export default class VideoPanel extends React.PureComponent {
   };
 
   render() {
-    return (
+    return this.props.videoArray.length ? (
       <ResponsiveReactGridLayout
         onLayoutChange={this.onLayoutChange}
         onBreakpointChange={this.onBreakpointChange}
@@ -55,6 +55,8 @@ export default class VideoPanel extends React.PureComponent {
           this.createElement(video, index)
         )}
       </ResponsiveReactGridLayout>
+    ) : (
+      <h1 className="add-title">Add a video</h1>
     );
   }
 }

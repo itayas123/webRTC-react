@@ -43,3 +43,7 @@
   font-size: 0.75rem;
   margin-top: 2px;
 }
+.record-img {
+  cursor: pointer;
+  width: 45px;
+}

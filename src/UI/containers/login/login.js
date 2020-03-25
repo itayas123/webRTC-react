@@ -27,7 +27,7 @@ class Login extends React.Component {
 
     return (
       <div className="login">
-        <h1>Login</h1>
+        <h1>Sign in</h1>
         <Formik
           initialValues={{ email: "", password: "" }}
           onSubmit={this.handleSubmit}
