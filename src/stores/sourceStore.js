@@ -7,6 +7,10 @@ export default class SourceStore {
 
   @observable userSources = observable.array();
 
+  @observable isModalshown = false;
+
+  @observable selectedSource = {};
+
   constructor(stores) {
     this.stores = stores;
   }
@@ -19,7 +23,7 @@ export default class SourceStore {
   @action
   addSource = async (name, uri, usersToSend) => {
     try {
-      const source = await API.post("/sources", {
+      await API.post("/sources", {
         source: { name, uri },
         users: usersToSend
       });
@@ -56,12 +60,32 @@ export default class SourceStore {
   };
 
   @action
-  deleteSource = async name => {
+  deleteSource = async source => {
     try {
-      const source = await API.delete(`/sources?name=${name}`);
+      await API.delete(`/sources/${source._id}`);
       await this.updateSources();
     } catch (e) {
       throw e;
+    }
+  };
+
+  @action
+  setIsModalShown = show => {
+    this.isModalshown = show;
+  };
+
+  @action
+  setSelectedSource = source => {
+    this.selectedSource = source;
+  };
+
+  @action
+  updateSource = async source => {
+    try {
+      await API.put(`/sources/${source._id}`, source);
+      await this.updateSources();
+    } catch (err) {
+      throw err;
     }
   };
 }

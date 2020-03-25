@@ -37,10 +37,6 @@ export default class VideoStore {
       console.log("stopRecord", uri);
       this.addVideo({ uri, _id: uri, name: uri });
     });
-
-    window.addEventListener("beforeunload", () =>
-      socket.emit("userDisconnected", socket.id)
-    );
   };
 
   @action

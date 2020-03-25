@@ -21,6 +21,6 @@ module.exports = async function(server) {
     );
     socket.on("startRecord", ({ _id, uri }) => startRecord(_id, uri));
     socket.on("stopRecord", ({ _id }) => stopRecord(_id, socket));
-    socket.on("userDisconnected", onUserDesconnected);
+    socket.on("disconnect", () => onUserDesconnected(id));
   });
 };

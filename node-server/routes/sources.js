@@ -31,10 +31,14 @@ router.get("/sourcesByUser", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/:_id", async (req, res) => {
   try {
-    await Source.deleteOne({ name: req.query.name });
-    res.status(204).send();
+    const { _id } = req.params;
+    await Source.deleteOne({ _id });
+    return res.send({
+      data: req.body,
+      error: null
+    });
   } catch (e) {
     console.log(e);
   }
