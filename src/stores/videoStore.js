@@ -8,8 +8,8 @@ export default class VideoStore {
   constructor(stores) {
     this.webRtcPeers = {};
     this.stores = stores;
-    //this.socket = io("http://localhost:3001");
-    //this.setUpSocket(this.socket);
+    this.socket = io("http://localhost:3001");
+    this.setUpSocket(this.socket);
   }
 
   @action
@@ -31,6 +31,11 @@ export default class VideoStore {
       this.webRtcPeers[id].processAnswer(sdpAnswer, error => {
         if (error) console.error("sdperrror", error);
       });
+    });
+
+    socket.on("stopRecord", ({ uri }) => {
+      console.log("stopRecord", uri);
+      this.addVideo({ uri, _id: uri, name: uri });
     });
 
     window.addEventListener("beforeunload", () =>
@@ -99,5 +104,23 @@ export default class VideoStore {
   sendCandidate = (candidate, _id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
     this.socket.emit("candidate", { candidate, _id });
+  };
+
+  @action
+  startRecord = (id, uri) => {
+    const _id = id + this.socket.id;
+    console.log("starting record " + _id);
+    this.socket.emit("startRecord", { _id, uri });
+    const index = this.videoArray.findIndex(video => video._id === id);
+    this.videoArray[index].isRecording = true;
+  };
+
+  @action
+  stopRecord = id => {
+    const _id = id + this.socket.id;
+    console.log("stoping record " + _id);
+    this.socket.emit("stopRecord", { _id });
+    const index = this.videoArray.findIndex(video => video._id === id);
+    this.videoArray[index].isRecording = false;
   };
 }

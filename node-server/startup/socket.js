@@ -3,6 +3,8 @@ const {
   start,
   init,
   onRecieveIceCandaite,
+  startRecord,
+  stopRecord,
   onUserDesconnected
 } = require("../routes/kurento");
 module.exports = async function(server) {
@@ -17,6 +19,8 @@ module.exports = async function(server) {
     socket.on("candidate", ({ candidate, _id }) =>
       onRecieveIceCandaite(candidate, _id)
     );
+    socket.on("startRecord", ({ _id, uri }) => startRecord(_id, uri));
+    socket.on("stopRecord", ({ _id }) => stopRecord(_id, socket));
     socket.on("userDisconnected", onUserDesconnected);
   });
 };

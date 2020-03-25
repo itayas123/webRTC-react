@@ -15,7 +15,8 @@ class KurentoClientModel {
   getSessionById = id => {
     return (this.sessions[id] = this.sessions[id] || {
       webRtcEndpoint: undefined,
-      iceCandidatesQueue: []
+      iceCandidatesQueue: [],
+      recordEndpoint: undefined
     });
   };
 
@@ -34,9 +35,9 @@ class KurentoClientModel {
 
   createWebRtcEndpoint = async id => {
     try {
-      const newWebRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
-      const webRtcEndpoint = this.getSessionById(id);
-      return (webRtcEndpoint.webRtcEndpoint = newWebRtcEndpoint);
+      const webRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
+      const session = this.getSessionById(id);
+      return (session.webRtcEndpoint = webRtcEndpoint);
     } catch (error) {
       console.error(error);
     }
@@ -58,6 +59,20 @@ class KurentoClientModel {
       this.playerEndpoints[uri] = playerEndpoint;
     }
     return this.playerEndpoints[uri];
+  };
+
+  createRecorderEndpoint = async (id, uri) => {
+    try {
+      const recordEndpoint = await this.pipeline.create("RecorderEndpoint", {
+        uri,
+        stopOnEndOfStream: true
+        // uri: `${uri}/${id}.webm`
+      });
+      const session = this.getSessionById(id);
+      return (session.recordEndpoint = recordEndpoint);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   onUserDesconnected = id => {

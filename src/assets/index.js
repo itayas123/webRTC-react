@@ -5,5 +5,17 @@ const logout = require("./logout.svg");
 const tiger = require("./tiger.svg");
 const deleteIcon = require("./deleteIcon.svg");
 const editIcon = require("./editIcon.svg");
+const startRecordIcon = require("./startRecordIcon.svg");
+const stopRecordIcon = require("./stopRecordIcon.svg");
 
-export { sidebarIcon, xButton, camera, logout, tiger, deleteIcon, editIcon };
+export {
+  sidebarIcon,
+  xButton,
+  camera,
+  logout,
+  tiger,
+  deleteIcon,
+  editIcon,
+  startRecordIcon,
+  stopRecordIcon
+};

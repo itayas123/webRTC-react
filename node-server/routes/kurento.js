@@ -1,7 +1,8 @@
 // @ts-check
 const KurentoClientModel = require("../models/kurentoClientModel");
 const args = {
-  ws_uri: "ws://127.0.0.1:8888/kurento"
+  ws_uri: "ws://127.0.0.1:8888/kurento",
+  file_uri: "file:///C:/Users/User/Desktop/works/itay/node-server/try-home.webm"
 };
 
 const kurentoclient = new KurentoClientModel();
@@ -49,7 +50,34 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   console.log("player playing and connected", kurentoclient);
 };
 
+const startRecord = async (id, uri) => {
+  const recordEndpoint = await kurentoclient.createRecorderEndpoint(
+    id,
+    args.file_uri
+  );
+  const playerEndpoint = await kurentoclient.createPlayerEndpoint(uri);
+  //await webRtcEndpoint.connect(webRtcEndpoint);
+  await playerEndpoint.connect(recordEndpoint);
+  await recordEndpoint.record();
+  console.log("recording");
+};
+
+const stopRecord = async (id, socket) => {
+  const { recordEndpoint } = kurentoclient.getSessionById(id);
+  await recordEndpoint.stop();
+  const uri = await recordEndpoint.getUri();
+  socket.emit("stopRecord", { uri });
+  console.log(" stop recording ", uri);
+};
+
 const onRecieveIceCandaite = kurentoclient.onRecieveIceCandidate;
 const onUserDesconnected = kurentoclient.onUserDesconnected;
 
-module.exports = { init, start, onRecieveIceCandaite, onUserDesconnected };
+module.exports = {
+  init,
+  start,
+  onRecieveIceCandaite,
+  onUserDesconnected,
+  startRecord,
+  stopRecord
+};

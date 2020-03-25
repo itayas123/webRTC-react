@@ -20,7 +20,8 @@
   opacity: 0.5;
   cursor: initial;
 }
-.disabled:hover {
+.disabled:hover,
+.no-border {
   border: none !important;
 }
 .camera-img {
