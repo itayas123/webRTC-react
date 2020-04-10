@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "../Modal/modal";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FieldArray } from "formik";
 import Input from "../Input/input";
 import Button from "../Button/button";
 
@@ -37,6 +37,30 @@ const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
                   />
                 )}
               />
+              <h3>users</h3>
+              <div className="users">
+                <FieldArray
+                  name="users"
+                  render={array =>
+                    values.users &&
+                    values.users.map((source, index) => (
+                      <Field
+                        name={`users[${index}].isActive`}
+                        key={source._id}
+                        render={({ field }) => (
+                          <Input
+                            id={`users[${index}].isActive`}
+                            {...field}
+                            type="checkbox"
+                            checked={field.value}
+                            placeholder={source.name}
+                          />
+                        )}
+                      />
+                    ))
+                  }
+                />
+              </div>
               <Button type="submit">Submit</Button>
             </Form>
           );

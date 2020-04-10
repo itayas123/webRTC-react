@@ -15,7 +15,7 @@ const navbar = ({ user, onLogout, showSidebar }) => {
         alt="sidebar"
       />
       <Link className="hello-div" to={ROUTES.HOME}>
-        <img src={tiger} className="tiger" />
+        <img src={tiger} className="tiger" alt="tiger" />
         נמ"ר
       </Link>
       {admin && (
@@ -33,7 +33,12 @@ const navbar = ({ user, onLogout, showSidebar }) => {
           <div className="hello-div">
             {`Hello ${name} -`}
             <p onClick={onLogout}>Logout</p>
-            <img src={logout} className="logout-img" onClick={onLogout} />
+            <img
+              src={logout}
+              className="logout-img"
+              alt="logout"
+              onClick={onLogout}
+            />
           </div>
         ) : (
           <Link className="hello-div" to={ROUTES.LOGIN}>

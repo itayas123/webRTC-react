@@ -3,7 +3,7 @@ import React from "react";
 import { camera, startRecordIcon, stopRecordIcon } from "../../../../assets";
 import stores from "../../../../stores";
 
-const { sourceStore, userStore, videoStore } = stores;
+const { sourceStore, videoStore } = stores;
 @observer
 class SourceList extends React.Component {
   renderSource = source => {
@@ -14,7 +14,7 @@ class SourceList extends React.Component {
         onClick={() => (isDisabled ? {} : videoStore.addVideo(source))}
         key={source._id}
       >
-        <img className="camera-img" src={camera} />
+        <img className="camera-img" src={camera} alt="camera" />
         <div className="source-details">
           <div className="source-name">{source.name}</div>
           <div className="source-uri">{source.uri}</div>
@@ -30,6 +30,7 @@ class SourceList extends React.Component {
       <div className="item-list no-border" key={_id}>
         <img
           className="record-img"
+          alt="record"
           src={isRecording ? stopRecordIcon : startRecordIcon}
           onClick={() =>
             isRecording ? stopRecord(_id) : startRecord(_id, uri)
@@ -61,11 +62,15 @@ class SourceList extends React.Component {
         <div className="source-list">
           {userSources && userSources.map(source => this.renderSource(source))}
         </div>
-        <h2>record list</h2>
-        <div className="source-list">
-          {videoArray && videoArray.map(video => this.renderRecord(video))}
-        </div>
-        {/* {userStore.getUser.admin && <AddSource />} */}
+        {videoArray.length > 0 && (
+          <>
+            <h2>record list</h2>
+            <div className="source-list">
+              {videoArray.map(video => this.renderRecord(video))}
+            </div>
+            {/* {userStore.getUser.admin && <AddSource />} */}
+          </>
+        )}
       </div>
     );
   }

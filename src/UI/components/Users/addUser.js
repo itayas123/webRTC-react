@@ -72,6 +72,7 @@ const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
                     values.sources.map((source, index) => (
                       <Field
                         name={`sources[${index}].isActive`}
+                        key={source._id}
                         render={({ field }) => (
                           <Input
                             id={`sources[${index}].isActive`}

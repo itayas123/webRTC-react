@@ -49,12 +49,12 @@ class KurentoClientModel {
         uri,
         ...options
       });
-      playerEndpoint.on("Error", err => {
-        const deleteee = Object.values(this.playerEndpoints).find(
-          player => player.id === err.source
-        );
-        console.error("deleee", deleteee, err, this.playerEndpoints);
-      });
+      // playerEndpoint.on("Error", err => {
+      //   const deleteee = Object.values(this.playerEndpoints).find(
+      //     player => player.id === err.source
+      //   );
+      //   console.error("deleee", deleteee, err, this.playerEndpoints);
+      // });
       await playerEndpoint.play((err, error) => {});
       this.playerEndpoints[uri] = playerEndpoint;
     }
@@ -65,8 +65,8 @@ class KurentoClientModel {
     try {
       const recordEndpoint = await this.pipeline.create("RecorderEndpoint", {
         uri,
+        //uri: `${uri}${id}.webm`,
         stopOnEndOfStream: true
-        // uri: `${uri}/${id}.webm`
       });
       const session = this.getSessionById(id);
       return (session.recordEndpoint = recordEndpoint);

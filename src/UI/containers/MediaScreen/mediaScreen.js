@@ -1,16 +1,16 @@
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
+import { Redirect } from "react-router-dom";
+import { isNullOrUndefined } from "util";
+import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import VideoPanel from "../../components/MediaScreen/VideoPanel/videoPanel";
 import "./mediaScreen.css";
-import { Redirect } from "react-router-dom";
-import { ROUTES } from "../../../Routes";
-import { isNullOrUndefined } from "util";
 
 const { videoStore, userStore } = stores;
 
-const MediaScreen = ({}) => {
+const MediaScreen = () => {
   if (isNullOrUndefined(userStore.getUser.name))
     return <Redirect to={ROUTES.LOGIN} />;
 

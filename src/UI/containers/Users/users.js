@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
 import { observer } from "mobx-react";
@@ -51,6 +51,7 @@ const columns = [
       <div className="actions">
         <img
           src={deleteIcon}
+          alt="delete"
           onClick={() => {
             if (window.confirm("Are you sure?"))
               userStore.deleteUser(row._original);
@@ -58,6 +59,7 @@ const columns = [
         />
         <img
           src={editIcon}
+          alt="edit"
           onClick={() => {
             toggleModal();
             userStore.setSelectedUser(row._original);
@@ -96,7 +98,7 @@ const onSubmit = async values => {
   }
 };
 
-const Users = ({}) => {
+const Users = () => {
   useEffect(() => {
     userStore.fetchAllUsers();
     sourceStore.fetchAllSources();

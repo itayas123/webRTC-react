@@ -1,6 +1,5 @@
-import { observable, action } from "mobx";
+import { action, observable } from "mobx";
 import API from "../utils/API";
-import { TOKEN } from "./userStore";
 
 export default class SourceStore {
   @observable sources = observable.array();

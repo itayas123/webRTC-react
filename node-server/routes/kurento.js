@@ -1,8 +1,10 @@
 // @ts-check
 const KurentoClientModel = require("../models/kurentoClientModel");
+
 const args = {
   ws_uri: "ws://127.0.0.1:8888/kurento",
-  file_uri: "file:///C:/Users/User/Desktop/works/itay/node-server/try-home.webm"
+  file_uri: "file:///tmp/try-home.webm",
+  //file_uri: "https://namer-records.s3.eu-central-1.amazonaws.com/"
 };
 
 const kurentoclient = new KurentoClientModel();
@@ -15,7 +17,7 @@ const onSendIceCandidate = (event, id, socket) => {
   console.log("Remote icecandidate " + JSON.stringify(candidate));
   socket.emit("candidate", {
     candidate,
-    id
+    id,
   });
 };
 
@@ -23,11 +25,11 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   console.log(uri, sdpOffer, id, networkCache);
 
   const playerEndpoint = await kurentoclient.createPlayerEndpoint(uri, {
-    networkCache
+    networkCache,
   });
 
   const webRtcEndpoint = await kurentoclient.createWebRtcEndpoint(id);
-  webRtcEndpoint.on("OnIceCandidate", event =>
+  webRtcEndpoint.on("OnIceCandidate", (event) =>
     onSendIceCandidate(event, id, socket)
   );
   const { iceCandidatesQueue } = kurentoclient.getSessionById(id);
@@ -37,7 +39,7 @@ const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
   // Start the WebRtcEndpoint
   const sdpAnswer = await webRtcEndpoint.processOffer(sdpOffer);
 
-  webRtcEndpoint.gatherCandidates(err => {
+  webRtcEndpoint.gatherCandidates((err) => {
     if (err) {
       console.error("ERROR:", err);
     }
@@ -63,11 +65,15 @@ const startRecord = async (id, uri) => {
 };
 
 const stopRecord = async (id, socket) => {
-  const { recordEndpoint } = kurentoclient.getSessionById(id);
-  await recordEndpoint.stop();
-  const uri = await recordEndpoint.getUri();
-  socket.emit("stopRecord", { uri });
-  console.log(" stop recording ", uri);
+  try {
+    const { recordEndpoint } = kurentoclient.getSessionById(id);
+    await recordEndpoint.stop();
+    const uri = await recordEndpoint.getUri();
+    //socket.emit("stopRecord", { uri });
+    console.log(" stop recording ", uri, recordEndpoint);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const onRecieveIceCandaite = kurentoclient.onRecieveIceCandidate;
@@ -79,5 +85,5 @@ module.exports = {
   onRecieveIceCandaite,
   onUserDesconnected,
   startRecord,
-  stopRecord
+  stopRecord,
 };

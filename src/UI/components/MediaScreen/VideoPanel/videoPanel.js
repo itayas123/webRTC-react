@@ -1,15 +1,10 @@
 import React from "react";
-import _ from "lodash";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import "./videoPanel.css";
 import { xButton } from "../../../../assets";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export default class VideoPanel extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   createElement = (video, index) => {
     const elementValues = {
       i: index.toString(),
@@ -23,6 +18,7 @@ export default class VideoPanel extends React.PureComponent {
         <img
           src={xButton}
           className="remove-video"
+          alt="remove"
           onClick={() => this.props.deleteVideo(video)}
         />
         <video className="video" id={video.name} autoPlay />

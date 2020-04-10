@@ -36,7 +36,7 @@ class Modal extends Component {
       handleClose,
       show = false,
       children,
-      className
+      className = ""
     } = this.props;
 
     return (
@@ -52,7 +52,12 @@ class Modal extends Component {
           <section className="modal-main">
             <section className="modal-header">
               <h3>{title}</h3>
-              <img className="btn-close" onClick={handleClose} src={xButton} />
+              <img
+                className="btn-close"
+                alt="close"
+                onClick={handleClose}
+                src={xButton}
+              />
             </section>
             <div className="modal-content">{show && children}</div>
           </section>

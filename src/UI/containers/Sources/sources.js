@@ -27,6 +27,7 @@ const columns = [
       <div className="actions">
         <img
           src={deleteIcon}
+          alt="delete"
           onClick={() => {
             if (window.confirm("Are you sure?"))
               sourceStore.deleteSource(row._original);
@@ -34,6 +35,7 @@ const columns = [
         />
         <img
           src={editIcon}
+          alt="edit"
           onClick={() => {
             toggleModal();
             sourceStore.setSelectedSource(row._original);
@@ -72,12 +74,12 @@ const onSubmit = async values => {
   }
 };
 
-const Sources = ({}) => {
+const Sources = () => {
   useEffect(() => {
     sourceStore.fetchAllSources();
   }, []);
 
-  const { getUser } = userStore;
+  const { getUser, allUsers } = userStore;
   const {
     sources,
     isModalshown,
@@ -101,7 +103,7 @@ const Sources = ({}) => {
       <AddSource
         show={isModalshown}
         onClose={toggleModal}
-        initialValues={toJS(selectedSource)}
+        initialValues={{ ...toJS(selectedSource), users: [...toJS(allUsers)] }}
         onSubmit={onSubmit}
       />
     </div>
