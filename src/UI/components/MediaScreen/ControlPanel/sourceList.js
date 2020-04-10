@@ -6,7 +6,7 @@ import stores from "../../../../stores";
 const { sourceStore, videoStore } = stores;
 @observer
 class SourceList extends React.Component {
-  renderSource = source => {
+  renderSource = (source) => {
     const isDisabled = videoStore.videoArray.includes(source);
     return (
       <div
@@ -23,7 +23,7 @@ class SourceList extends React.Component {
     );
   };
 
-  renderRecord = video => {
+  renderRecord = (video) => {
     const { isRecording, _id, uri } = video;
     const { startRecord, stopRecord } = videoStore;
     return (
@@ -44,7 +44,7 @@ class SourceList extends React.Component {
     );
   };
 
-  removeSource = async source => {
+  removeSource = async (source) => {
     try {
       await sourceStore.deleteSource(source.name);
       videoStore.deleteVideo(source);
@@ -55,18 +55,19 @@ class SourceList extends React.Component {
 
   render() {
     const { videoArray } = videoStore;
-    const { userSources } = sourceStore;
+    const { getUserAliveSources } = sourceStore;
     return (
       <div>
         <h2>source list</h2>
         <div className="source-list">
-          {userSources && userSources.map(source => this.renderSource(source))}
+          {getUserAliveSources &&
+            getUserAliveSources.map((source) => this.renderSource(source))}
         </div>
         {videoArray.length > 0 && (
           <>
             <h2>record list</h2>
             <div className="source-list">
-              {videoArray.map(video => this.renderRecord(video))}
+              {videoArray.map((video) => this.renderRecord(video))}
             </div>
             {/* {userStore.getUser.admin && <AddSource />} */}
           </>

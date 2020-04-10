@@ -13,22 +13,27 @@ export default class VideoStore {
   }
 
   @action
-  setUpSocket = socket => {
+  setUpSocket = (socket) => {
     socket.on("connect", () => {
       console.log("connected");
+    });
+
+    socket.on("aliveSources", ({ sources }) => {
+      console.log("aliveSources", sources);
+      this.stores.sourceStore.setAliveSources(sources);
     });
 
     socket.on("candidate", ({ candidate, id }) => {
       console.log("recieve candidate", candidate);
 
-      this.webRtcPeers[id].addIceCandidate(candidate, error => {
+      this.webRtcPeers[id].addIceCandidate(candidate, (error) => {
         if (error) console.error(error);
       });
     });
 
     socket.on("sdpAnswer", ({ sdpAnswer, id }) => {
       console.log("sdpAnswer", JSON.stringify(sdpAnswer));
-      this.webRtcPeers[id].processAnswer(sdpAnswer, error => {
+      this.webRtcPeers[id].processAnswer(sdpAnswer, (error) => {
         if (error) console.error("sdperrror", error);
       });
     });
@@ -40,7 +45,7 @@ export default class VideoStore {
   };
 
   @action
-  addVideo = video => {
+  addVideo = (video) => {
     this.videoArray.push(video);
     let { _id, name, uri } = video;
     _id += this.socket.id;
@@ -49,11 +54,11 @@ export default class VideoStore {
       console.log(videoOutput);
       const options = {
         remoteVideo: videoOutput,
-        onicecandidate: candidate => this.sendCandidate(candidate, _id)
+        onicecandidate: (candidate) => this.sendCandidate(candidate, _id),
       };
       this.webRtcPeers[_id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
         options,
-        error => {
+        (error) => {
           if (error) console.error(error);
           else {
             this.webRtcPeers[_id].generateOffer((error, sdpOffer) => {
@@ -66,7 +71,7 @@ export default class VideoStore {
               _id
             ].peerConnection.addEventListener(
               "iceconnectionstatechange",
-              event => this.iceconnectionstatechange(event, _id)
+              (event) => this.iceconnectionstatechange(event, _id)
             );
           }
         }
@@ -75,9 +80,9 @@ export default class VideoStore {
   };
 
   @action
-  deleteVideo = video => {
+  deleteVideo = (video) => {
     const index = this.videoArray.findIndex(
-      videoObj => video._id === videoObj._id
+      (videoObj) => video._id === videoObj._id
     );
     if (index !== -1) this.videoArray.splice(index, 1);
   };
@@ -107,16 +112,16 @@ export default class VideoStore {
     const _id = id + this.socket.id;
     console.log("starting record " + _id);
     this.socket.emit("startRecord", { _id, uri });
-    const index = this.videoArray.findIndex(video => video._id === id);
+    const index = this.videoArray.findIndex((video) => video._id === id);
     this.videoArray[index].isRecording = true;
   };
 
   @action
-  stopRecord = id => {
+  stopRecord = (id) => {
     const _id = id + this.socket.id;
     console.log("stoping record " + _id);
     this.socket.emit("stopRecord", { _id });
-    const index = this.videoArray.findIndex(video => video._id === id);
+    const index = this.videoArray.findIndex((video) => video._id === id);
     this.videoArray[index].isRecording = false;
   };
 }

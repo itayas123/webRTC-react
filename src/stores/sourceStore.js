@@ -1,10 +1,12 @@
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
 import API from "../utils/API";
 
 export default class SourceStore {
   @observable sources = observable.array();
 
   @observable userSources = observable.array();
+
+  @observable aliveSources = observable.array();
 
   @observable isModalshown = false;
 
@@ -19,12 +21,24 @@ export default class SourceStore {
     this.userSources.replace([]);
   };
 
+  @computed
+  get getUserAliveSources() {
+    return this.userSources.filter((source) =>
+      this.aliveSources.includes(source.uri)
+    );
+  }
+
+  @action
+  setAliveSources = (aliveSources) => {
+    this.aliveSources.replace(aliveSources);
+  };
+
   @action
   addSource = async (name, uri, usersToSend) => {
     try {
       await API.post("/sources", {
         source: { name, uri },
-        users: usersToSend
+        users: usersToSend,
       });
       await this.updateSources();
     } catch (e) {
@@ -59,7 +73,7 @@ export default class SourceStore {
   };
 
   @action
-  deleteSource = async source => {
+  deleteSource = async (source) => {
     try {
       await API.delete(`/sources/${source._id}`);
       await this.updateSources();
@@ -69,17 +83,17 @@ export default class SourceStore {
   };
 
   @action
-  setIsModalShown = show => {
+  setIsModalShown = (show) => {
     this.isModalshown = show;
   };
 
   @action
-  setSelectedSource = source => {
+  setSelectedSource = (source) => {
     this.selectedSource = source;
   };
 
   @action
-  updateSource = async source => {
+  updateSource = async (source) => {
     try {
       await API.put(`/sources/${source._id}`, source);
       await this.updateSources();

@@ -5,14 +5,16 @@ const {
   onRecieveIceCandaite,
   startRecord,
   stopRecord,
-  onUserDesconnected
+  onUserDesconnected,
+  sendAliveSources,
 } = require("../routes/kurento");
-module.exports = async function(server) {
-  await init();
+module.exports = async function (server) {
   const io = socketIO(server);
-  io.on("connection", socket => {
+  await init(io.sockets);
+  io.on("connection", async (socket) => {
     const { id } = socket;
     console.log("socket connected ", id);
+    sendAliveSources(socket);
     socket.on("start", ({ sdpOffer, url, _id }) =>
       start(sdpOffer, url, _id, socket)
     );

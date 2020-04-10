@@ -9,7 +9,15 @@ const args = {
 
 const kurentoclient = new KurentoClientModel();
 
-const init = () => kurentoclient.init(args.ws_uri);
+const init = async (socket) => {
+  setInterval(() => sendAliveSources(socket), 20000);
+  await kurentoclient.init(args.ws_uri);
+};
+
+const sendAliveSources = async (socket) => {
+  const sources = await kurentoclient.getAliveSources();
+  socket.emit("aliveSources", { sources });
+};
 
 const onSendIceCandidate = (event, id, socket) => {
   const candidate = event.candidate;
@@ -21,12 +29,10 @@ const onSendIceCandidate = (event, id, socket) => {
   });
 };
 
-const start = async (sdpOffer, uri, id, socket, networkCache = 1000) => {
-  console.log(uri, sdpOffer, id, networkCache);
+const start = async (sdpOffer, uri, id, socket) => {
+  console.log(uri, sdpOffer, id);
 
-  const playerEndpoint = await kurentoclient.createPlayerEndpoint(uri, {
-    networkCache,
-  });
+  const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
 
   const webRtcEndpoint = await kurentoclient.createWebRtcEndpoint(id);
   webRtcEndpoint.on("OnIceCandidate", (event) =>
@@ -57,7 +63,7 @@ const startRecord = async (id, uri) => {
     id,
     args.file_uri
   );
-  const playerEndpoint = await kurentoclient.createPlayerEndpoint(uri);
+  const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
   //await webRtcEndpoint.connect(webRtcEndpoint);
   await playerEndpoint.connect(recordEndpoint);
   await recordEndpoint.record();
@@ -86,4 +92,5 @@ module.exports = {
   onUserDesconnected,
   startRecord,
   stopRecord,
+  sendAliveSources,
 };
