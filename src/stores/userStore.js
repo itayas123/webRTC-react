@@ -22,13 +22,13 @@ class UserStore {
   }
 
   @action
-  setCurrentUser = user => {
+  setCurrentUser = (user) => {
     this.currentUser = user;
     this.stores.sourceStore.fetchUserSources();
   };
 
   @action
-  createUser = async user => {
+  createUser = async (user) => {
     try {
       await API.post("/users", user);
       await this.fetchAllUsers();
@@ -40,7 +40,9 @@ class UserStore {
   @action
   login = async (email, password) => {
     try {
-      const user = await API.get(`/auth?email=${email}&password=${password}`);
+      const user = await API.get(
+        `/users/login?email=${email}&password=${password}`
+      );
       localStorage.setItem(TOKEN, user.token);
       this.setCurrentUser(user);
       return user;
@@ -71,7 +73,8 @@ class UserStore {
   @action
   fetchCurrentUser = async () => {
     try {
-      if (localStorage.getItem(TOKEN)) {
+      const token = localStorage.getItem(TOKEN);
+      if (token && token !== "undefined") {
         const user = await API.get("/users/getCurrentUser");
         this.setCurrentUser(user);
         return user;
@@ -83,21 +86,21 @@ class UserStore {
   };
 
   @action
-  setIsModalShown = show => {
+  setIsModalShown = (show) => {
     this.isModalshown = show;
   };
 
   @action
-  setSelectedUser = user => {
-    const sources = this.stores.sourceStore.sources.map(source => ({
+  setSelectedUser = (user) => {
+    const sources = this.stores.sourceStore.sources.map((source) => ({
       ...source,
-      isActive: user.sources.includes(source._id)
+      isActive: user.sources.includes(source._id),
     }));
     this.selectedUser = { ...user, sources };
   };
 
   @action
-  updateUser = async user => {
+  updateUser = async (user) => {
     try {
       await API.put(`/users/${user._id}`, user);
       await this.fetchAllUsers();
@@ -107,7 +110,7 @@ class UserStore {
   };
 
   @action
-  deleteUser = async user => {
+  deleteUser = async (user) => {
     try {
       await API.delete(`/users/${user._id}`);
       await this.fetchAllUsers();

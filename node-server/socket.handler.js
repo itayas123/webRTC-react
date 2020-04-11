@@ -7,7 +7,7 @@ const {
   stopRecord,
   onUserDesconnected,
   sendAliveSources,
-} = require("../routes/kurento");
+} = require("./services/kurento");
 module.exports = async function (server) {
   const io = socketIO(server);
   await init(io.sockets);

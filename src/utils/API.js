@@ -3,10 +3,10 @@ import { TOKEN } from "../stores/userStore";
 
 const API = axios.create({
   baseURL: "http://localhost:3001/api",
-  responseType: "json"
+  responseType: "json",
 });
 
-API.interceptors.request.use(config => {
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN);
   if (token) {
     config.headers[TOKEN] = token;
@@ -14,12 +14,22 @@ API.interceptors.request.use(config => {
   return config;
 });
 
-API.interceptors.response.use(response => {
-  if (response.data.error) {
-    throw new Error(response.data.error);
-  } else if (response.data.data) {
-    return response.data.data;
+API.interceptors.response.use(
+  (response) => {
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    } else if (response.data.data) {
+      return response.data.data;
+    }
+    return response;
+  },
+  (error) => {
+    const errorMessage = error.response.data;
+    console.log(errorMessage);
+    if (errorMessage) {
+      throw new Error(errorMessage.error);
+    }
+    throw error;
   }
-  return response;
-});
+);
 export default API;

@@ -2,7 +2,7 @@
 const Source = require("../models/source");
 const User = require("../models/user");
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
@@ -37,7 +37,7 @@ router.delete("/:_id", async (req, res) => {
     await Source.deleteOne({ _id });
     return res.send({
       data: req.body,
-      error: null
+      error: null,
     });
   } catch (e) {
     console.log(e);
@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
 
   return res.send({
     data: source,
-    error: null
+    error: null,
   });
 });
 

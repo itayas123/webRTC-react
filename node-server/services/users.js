@@ -1,7 +1,7 @@
 //const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const jwt = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
@@ -29,7 +29,7 @@ router.put("/:_id", async (req, res) => {
     const newUser = await User.findById(_id);
     return res.send({
       data: newUser,
-      error: null
+      error: null,
     });
   } catch (e) {
     console.log(e);
@@ -42,7 +42,7 @@ router.delete("/:_id", async (req, res) => {
     await User.deleteOne({ _id });
     return res.send({
       data: req.body,
-      error: null
+      error: null,
     });
   } catch (e) {
     console.log(e);
@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
 
     return res.send({
       data: user,
-      error: null
+      error: null,
     });
   } catch (e) {
     console.log(e);
