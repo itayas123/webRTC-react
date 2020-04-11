@@ -1,17 +1,12 @@
 // @ts-check
 const KurentoClientModel = require("../models/kurentoClientModel");
-
-const args = {
-  ws_uri: "ws://127.0.0.1:8888/kurento",
-  file_uri: "file:///tmp/try-home.webm",
-  //file_uri: "https://namer-records.s3.eu-central-1.amazonaws.com/"
-};
+const config = require("../config");
 
 const kurentoclient = new KurentoClientModel();
 
 const init = async (socket) => {
-  setInterval(() => sendAliveSources(socket), 20000);
-  await kurentoclient.init(args.ws_uri);
+  setInterval(() => sendAliveSources(socket), config.ALIVE_SOURCES_TIME);
+  await kurentoclient.init(config.WS_URI);
 };
 
 const sendAliveSources = async (socket) => {
@@ -61,7 +56,7 @@ const start = async (sdpOffer, uri, id, socket) => {
 const startRecord = async (id, uri) => {
   const recordEndpoint = await kurentoclient.createRecorderEndpoint(
     id,
-    args.file_uri
+    config.RECORD_FILE_URI
   );
   const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
   //await webRtcEndpoint.connect(webRtcEndpoint);

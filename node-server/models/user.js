@@ -1,33 +1,33 @@
-const config = require("config");
+const config = require("../config");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   admin: {
     type: Boolean,
-    required: false
+    required: false,
   },
   sources: {
     type: Array,
-    required: false
-  }
+    required: false,
+  },
 });
 
-userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id }, config.get("jwtPrivateKey"));
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign({ _id: this._id }, config.JWT_PRIVATE_KEY);
   return token;
 };
 
