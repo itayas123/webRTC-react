@@ -40,9 +40,7 @@ class UserStore {
   @action
   login = async (email, password) => {
     try {
-      const user = await API.get(
-        `/users/login?email=${email}&password=${password}`
-      );
+      const user = await API.put("/users/login", { email, password });
       localStorage.setItem(TOKEN, user.token);
       this.setCurrentUser(user);
       return user;

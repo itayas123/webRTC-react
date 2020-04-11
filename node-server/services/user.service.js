@@ -11,9 +11,9 @@ class UserService extends CRUDService {
   }
 
   setupRoutes() {
-    super.setupRoutes();
+    this.router.put("/login", this.login.bind(this));
     this.router.get("/getCurrentUser", this.getCurrentUser.bind(this));
-    this.router.get("/login", this.login.bind(this));
+    super.setupRoutes();
   }
 
   async getCurrentUser(req, res, next) {
@@ -33,8 +33,7 @@ class UserService extends CRUDService {
 
   async login(req, res, next) {
     try {
-      // TODO: change to body
-      const { email, password } = req.query;
+      const { email, password } = req.body;
       const user = await this.model.findOne({ email });
       if (!user) return next(new ErrorResponse("Invalid email", 404));
       if (user.password !== password)
