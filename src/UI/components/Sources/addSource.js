@@ -41,19 +41,19 @@ const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
               <div className="users">
                 <FieldArray
                   name="users"
-                  render={array =>
+                  render={(array) =>
                     values.users &&
-                    values.users.map((source, index) => (
+                    values.users.map((user, index) => (
                       <Field
                         name={`users[${index}].isActive`}
-                        key={source._id}
+                        key={user._id}
                         render={({ field }) => (
                           <Input
                             id={`users[${index}].isActive`}
                             {...field}
                             type="checkbox"
                             checked={field.value}
-                            placeholder={source.name}
+                            placeholder={user.name}
                           />
                         )}
                       />

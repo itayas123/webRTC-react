@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const users = require("./services/user.service");
-const sources = require("./services/sources");
+const sources = require("./services/source.service");
 const config = require("./config");
 
 app.use(cors());

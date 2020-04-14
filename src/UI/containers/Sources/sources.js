@@ -14,12 +14,12 @@ const columns = [
   {
     Header: "name",
     accessor: "name",
-    width: 200
+    width: 200,
   },
   {
     Header: "uri",
     accessor: "uri",
-    width: 450
+    width: 450,
   },
   {
     Header: "",
@@ -46,8 +46,8 @@ const columns = [
     sortable: false,
     filterable: false,
     resizable: false,
-    width: 150
-  }
+    width: 150,
+  },
 ];
 
 const { userStore, sourceStore } = stores;
@@ -57,17 +57,17 @@ const toggleModal = () => {
   setIsModalShown(!isModalshown);
 };
 
-const onSubmit = async values => {
-  const { updateUser, createUser } = userStore;
+const onSubmit = async (values) => {
+  const { addSource, updateSource } = sourceStore;
   try {
-    const user = {
-      ...values,
-      sources: values.sources
-        .filter(source => source.isActive)
-        .map(source => source._id)
+    const source = {
+      source: values,
+      users: values.users
+        .filter((user) => user.isActive)
+        .map((user) => user._id),
     };
-    if (user._id) await updateUser(user);
-    else await createUser(user);
+    if (source._id) await updateSource(source);
+    else await addSource(source);
     toggleModal();
   } catch (err) {
     alert(err);
@@ -77,6 +77,7 @@ const onSubmit = async values => {
 const Sources = () => {
   useEffect(() => {
     sourceStore.fetchAllSources();
+    userStore.fetchAllUsers();
   }, []);
 
   const { getUser, allUsers } = userStore;
@@ -84,7 +85,7 @@ const Sources = () => {
     sources,
     isModalshown,
     setSelectedSource,
-    selectedSource
+    selectedSource,
   } = sourceStore;
   if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
   return (
@@ -103,7 +104,7 @@ const Sources = () => {
       <AddSource
         show={isModalshown}
         onClose={toggleModal}
-        initialValues={{ ...toJS(selectedSource), users: [...toJS(allUsers)] }}
+        initialValues={toJS({ ...selectedSource, users: [...allUsers] })}
         onSubmit={onSubmit}
       />
     </div>

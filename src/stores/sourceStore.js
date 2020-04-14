@@ -34,12 +34,9 @@ export default class SourceStore {
   };
 
   @action
-  addSource = async (name, uri, usersToSend) => {
+  addSource = async (source) => {
     try {
-      await API.post("/sources", {
-        source: { name, uri },
-        users: usersToSend,
-      });
+      await API.post("/sources", source);
       await this.updateSources();
     } catch (e) {
       throw e;
@@ -68,8 +65,12 @@ export default class SourceStore {
 
   @action
   updateSources = async () => {
-    await this.fetchAllSources();
-    await this.fetchUserSources();
+    try {
+      await this.fetchAllSources();
+      await this.fetchUserSources();
+    } catch (e) {
+      throw e;
+    }
   };
 
   @action
