@@ -1,6 +1,6 @@
 const express = require("express");
 const expressRouter = express.Router({ mergeParams: true });
-const jwt = require("jsonwebtoken");
+const { getUserIdByToken } = require("../utils");
 const ErrorResponse = require("../models/errorResponse");
 const CRUDService = require("./crud.service");
 const User = require("../models/user");
@@ -16,11 +16,21 @@ class UserService extends CRUDService {
     super.setupRoutes();
   }
 
+  async getAll(req, res, next) {
+    try {
+      const results = await User.find({}).populate("sources");
+      return res.send({ data: results });
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
+
   async getCurrentUser(req, res, next) {
     try {
       const { token } = req.headers;
       if (token) {
-        const { _id } = jwt.decode(token);
+        const _id = getUserIdByToken(token);
         const user = await this.model.findById(_id);
         return res.send({ data: user });
       }

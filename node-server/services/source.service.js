@@ -1,6 +1,6 @@
 const express = require("express");
 const expressRouter = express.Router({ mergeParams: true });
-const jwt = require("jsonwebtoken");
+const { getUserIdByToken } = require("../utils");
 const ErrorResponse = require("../models/errorResponse");
 const CRUDService = require("./crud.service");
 const Source = require("../models/source");
@@ -19,7 +19,8 @@ class SourceService extends CRUDService {
   async sourcesByUser(req, res, next) {
     let user = null;
     try {
-      const { _id } = jwt.decode(req.headers.token);
+      const { token } = req.headers;
+      const _id = getUserIdByToken(token);
       user = await User.findById(_id).populate("sources");
       if (user) {
         let allSources = [];

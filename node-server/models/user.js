@@ -20,10 +20,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: false,
   },
-  sources: {
-    type: Array,
-    required: false,
-  },
+  sources: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Source",
+    },
+  ],
 });
 
 userSchema.methods.generateAuthToken = function () {
