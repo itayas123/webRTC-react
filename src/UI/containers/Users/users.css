@@ -16,3 +16,6 @@
   max-height: 150px;
   overflow: auto;
 }
+.user-sources {
+  padding: 10px 50px 35px;
+}

@@ -7,48 +7,53 @@ import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
-import "../Users/users.css";
 import AddSource from "../../components/Sources/addSource";
+import "../Users/users.css";
 
-const columns = [
-  {
-    Header: "name",
-    accessor: "name",
-    width: 200,
-  },
-  {
-    Header: "uri",
-    accessor: "uri",
-    width: 450,
-  },
-  {
-    Header: "",
-    Cell: ({ row }) => (
-      <div className="actions">
-        <img
-          src={deleteIcon}
-          alt="delete"
-          onClick={() => {
-            if (window.confirm("Are you sure?"))
-              sourceStore.delete(row._original._id);
-          }}
-        />
-        <img
-          src={editIcon}
-          alt="edit"
-          onClick={() => {
-            toggleModal();
-            sourceStore.setSelected(row._original);
-          }}
-        />
-      </div>
-    ),
-    sortable: false,
-    filterable: false,
-    resizable: false,
-    width: 150,
-  },
-];
+export const sourceColumns = (actions) => {
+  const columns = [
+    {
+      Header: "name",
+      accessor: "name",
+      width: 200,
+    },
+    {
+      Header: "uri",
+      accessor: "uri",
+      width: 450,
+    },
+  ];
+  if (actions) {
+    columns.push({
+      Header: "",
+      Cell: ({ row }) => (
+        <div className="actions">
+          <img
+            src={deleteIcon}
+            alt="delete"
+            onClick={() => {
+              if (window.confirm("Are you sure?"))
+                sourceStore.delete(row._original._id);
+            }}
+          />
+          <img
+            src={editIcon}
+            alt="edit"
+            onClick={() => {
+              toggleModal();
+              sourceStore.setSelected(row._original);
+            }}
+          />
+        </div>
+      ),
+      sortable: false,
+      filterable: false,
+      resizable: false,
+      width: 150,
+    });
+  }
+  return columns;
+};
 
 const { userStore, sourceStore } = stores;
 
@@ -95,7 +100,7 @@ const Sources = () => {
       >
         Add Source
       </Button>
-      <DataTable columns={columns} data={toJS(list)} />
+      <DataTable columns={sourceColumns(true)} data={toJS(list)} />
       <AddSource
         show={isModalshown}
         onClose={toggleModal}

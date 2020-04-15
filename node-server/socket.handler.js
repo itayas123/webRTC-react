@@ -10,7 +10,7 @@ const {
 } = require("./services/kurento");
 module.exports = async function (server) {
   const io = socketIO(server);
-  await init(io.sockets);
+  //await init(io.sockets);
   io.on("connection", async (socket) => {
     const { id } = socket;
     console.log("socket connected ", id);

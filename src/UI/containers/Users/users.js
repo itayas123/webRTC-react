@@ -1,14 +1,15 @@
+import { toJS } from "mobx";
+import { observer } from "mobx-react";
 import React, { useEffect } from "react";
+import { Redirect } from "react-router-dom";
+import { deleteIcon, editIcon } from "../../../assets";
+import { ROUTES } from "../../../Routes";
+import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
-import { observer } from "mobx-react";
-import stores from "../../../stores";
-import { toJS } from "mobx";
-import { Redirect } from "react-router-dom";
-import { ROUTES } from "../../../Routes";
-import { deleteIcon, editIcon } from "../../../assets";
-import "./users.css";
 import AddUser from "../../components/Users/addUser";
+import { sourceColumns } from "../Sources/sources";
+import "./users.css";
 
 const columns = [
   {
@@ -118,7 +119,19 @@ const Users = () => {
       >
         Add User
       </Button>
-      <DataTable columns={columns} data={toJS(list)} />
+      <DataTable
+        columns={columns}
+        data={toJS(list)}
+        SubComponent={(row) => {
+          const { sources, name } = row.original;
+          return (
+            <div className="user-sources">
+              <h3>{`${name} allowed sources`}</h3>
+              <DataTable data={sources} columns={sourceColumns()} minRows={3} />
+            </div>
+          );
+        }}
+      />
       <AddUser
         show={isModalshown}
         onClose={toggleModal}
