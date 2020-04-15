@@ -30,7 +30,7 @@ const columns = [
           alt="delete"
           onClick={() => {
             if (window.confirm("Are you sure?"))
-              sourceStore.deleteSource(row._original);
+              sourceStore.delete(row._original._id);
           }}
         />
         <img
@@ -38,7 +38,7 @@ const columns = [
           alt="edit"
           onClick={() => {
             toggleModal();
-            sourceStore.setSelectedSource(row._original);
+            sourceStore.setSelected(row._original);
           }}
         />
       </div>
@@ -58,7 +58,7 @@ const toggleModal = () => {
 };
 
 const onSubmit = async (values) => {
-  const { addSource, updateSource } = sourceStore;
+  const { create, update } = sourceStore;
   try {
     const source = {
       source: values,
@@ -66,8 +66,8 @@ const onSubmit = async (values) => {
         .filter((user) => user.isActive)
         .map((user) => user._id),
     };
-    if (source._id) await updateSource(source);
-    else await addSource(source);
+    if (source._id) await update(source);
+    else await create(source);
     toggleModal();
   } catch (err) {
     alert(err);
@@ -76,17 +76,12 @@ const onSubmit = async (values) => {
 
 const Sources = () => {
   useEffect(() => {
-    sourceStore.fetchAllSources();
-    userStore.fetchAllUsers();
+    sourceStore.fetchAll();
+    userStore.fetchAll();
   }, []);
 
-  const { getUser, allUsers } = userStore;
-  const {
-    sources,
-    isModalshown,
-    setSelectedSource,
-    selectedSource,
-  } = sourceStore;
+  const { getUser, list: allUsers } = userStore;
+  const { list, isModalshown, setSelected, selected } = sourceStore;
   if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
   return (
     <div className="users-container">
@@ -95,16 +90,16 @@ const Sources = () => {
         className="add-user"
         onClick={() => {
           toggleModal();
-          setSelectedSource({});
+          setSelected({});
         }}
       >
         Add Source
       </Button>
-      <DataTable columns={columns} data={toJS(sources)} />
+      <DataTable columns={columns} data={toJS(list)} />
       <AddSource
         show={isModalshown}
         onClose={toggleModal}
-        initialValues={toJS({ ...selectedSource, users: [...allUsers] })}
+        initialValues={toJS({ ...selected, users: [...allUsers] })}
         onSubmit={onSubmit}
       />
     </div>

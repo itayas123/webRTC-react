@@ -9,8 +9,8 @@ const navbar = ({ user, onLogout, showSidebar }) => {
   return (
     <div className="navbar">
       <img
-        className="sidebar-icon"
-        onClick={showSidebar}
+        className={`sidebar-icon ${name ? "" : "disabled"}`}
+        onClick={name ? showSidebar : () => {}}
         src={sidebarIcon}
         alt="sidebar"
       />

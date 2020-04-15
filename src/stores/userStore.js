@@ -1,18 +1,14 @@
 import { observable, action, computed, toJS } from "mobx";
 import API from "./../utils/API";
+import CRUDStore from "./crudStore";
 
 export const TOKEN = "token";
 
-class UserStore {
+class UserStore extends CRUDStore {
   @observable currentUser = {};
 
-  @observable allUsers = observable.array();
-
-  @observable isModalshown = false;
-
-  @observable selectedUser = {};
-
   constructor(stores) {
+    super("/users");
     this.stores = stores;
   }
 
@@ -22,19 +18,24 @@ class UserStore {
   }
 
   @action
-  setCurrentUser = (user) => {
-    this.currentUser = user;
-    this.stores.sourceStore.fetchUserSources();
+  setSelected = (user) => {
+    const allSources = this.stores.sourceStore.list;
+    this.selected = {
+      ...user,
+      sources: allSources.map((source) => ({
+        ...source,
+        isActive: user.sources
+          .map((userSource) => userSource._id)
+          .includes(source._id),
+      })),
+    };
+    console.log(this.selected, allSources);
   };
 
   @action
-  createUser = async (user) => {
-    try {
-      await API.post("/users", user);
-      await this.fetchAllUsers();
-    } catch (e) {
-      throw e;
-    }
+  setCurrentUser = (user) => {
+    this.currentUser = user;
+    this.stores.sourceStore.fetchUserSources();
   };
 
   @action
@@ -57,18 +58,6 @@ class UserStore {
   };
 
   @action
-  fetchAllUsers = async () => {
-    try {
-      const users = await API.get("/users");
-      this.allUsers.replace(users);
-      return users;
-    } catch (e) {
-      this.logout();
-      throw e;
-    }
-  };
-
-  @action
   fetchCurrentUser = async () => {
     try {
       const token = localStorage.getItem(TOKEN);
@@ -80,40 +69,6 @@ class UserStore {
     } catch (e) {
       this.logout();
       throw e;
-    }
-  };
-
-  @action
-  setIsModalShown = (show) => {
-    this.isModalshown = show;
-  };
-
-  @action
-  setSelectedUser = (user) => {
-    const sources = this.stores.sourceStore.sources.map((source) => ({
-      ...source,
-      isActive: user.sources.includes(source._id),
-    }));
-    this.selectedUser = { ...user, sources };
-  };
-
-  @action
-  updateUser = async (user) => {
-    try {
-      await API.put(`/users/${user._id}`, user);
-      await this.fetchAllUsers();
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  @action
-  deleteUser = async (user) => {
-    try {
-      await API.delete(`/users/${user._id}`);
-      await this.fetchAllUsers();
-    } catch (err) {
-      throw err;
     }
   };
 }

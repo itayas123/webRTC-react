@@ -11,6 +11,7 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.4",
+    "babel-preset-mobx": "^2.0.0",
     "babel-preset-react-app": "^9.0.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
@@ -90,7 +91,8 @@
     "@babel/core": "^6.1.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.0",
-    "@babel/plugin-proposal-export-namespace-from": "^7.7.4"
+    "@babel/plugin-proposal-export-namespace-from": "^7.7.4",
+    "babel-plugin-transform-async-super": "^1.0.0"
   },
   "babel": {
     "plugins": [
@@ -106,9 +108,11 @@
           "loose": true
         }
       ],
-      "@babel/plugin-proposal-export-namespace-from"
+      "@babel/plugin-proposal-export-namespace-from",
+      "babel-plugin-transform-async-super"
     ],
     "presets": [
+      "mobx",
       "react-app"
     ]
   },

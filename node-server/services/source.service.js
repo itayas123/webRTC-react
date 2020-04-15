@@ -23,9 +23,11 @@ class SourceService extends CRUDService {
       const _id = getUserIdByToken(token);
       user = await User.findById(_id).populate("sources");
       if (user) {
-        let allSources = [];
-        if (user.admin) allSources = await this.model.find({});
-        return res.send({ data: [...user.sources, ...allSources] });
+        if (user.admin) {
+          const allSources = await this.model.find({});
+          return res.send({ data: allSources });
+        }
+        return res.send({ data: user.sources });
       } else {
         return next(new ErrorResponse("Invalid token", 401));
       }

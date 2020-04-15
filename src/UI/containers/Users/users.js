@@ -14,12 +14,12 @@ const columns = [
   {
     Header: "email",
     accessor: "email",
-    width: 200
+    width: 200,
   },
   {
     Header: "name",
     accessor: "name",
-    width: 200
+    width: 200,
   },
   {
     Header: "admin",
@@ -29,7 +29,7 @@ const columns = [
     filterMethod: (filter, row) => {
       const value = row.admin ? "Yes" : "No";
       return value.toLowerCase().includes(filter.value.toLowerCase());
-    }
+    },
   },
   {
     Header: "password",
@@ -39,11 +39,11 @@ const columns = [
         {value
           .toString()
           .split("")
-          .map(char => "*")}
+          .map((char) => "*")}
       </span>
     ),
     width: 200,
-    filterable: false
+    filterable: false,
   },
   {
     Header: "",
@@ -54,7 +54,7 @@ const columns = [
           alt="delete"
           onClick={() => {
             if (window.confirm("Are you sure?"))
-              userStore.deleteUser(row._original);
+              userStore.delete(row._original._id);
           }}
         />
         <img
@@ -62,7 +62,7 @@ const columns = [
           alt="edit"
           onClick={() => {
             toggleModal();
-            userStore.setSelectedUser(row._original);
+            userStore.setSelected(row._original);
           }}
         />
       </div>
@@ -70,8 +70,8 @@ const columns = [
     sortable: false,
     filterable: false,
     resizable: false,
-    width: 150
-  }
+    width: 150,
+  },
 ];
 
 const { userStore, sourceStore } = stores;
@@ -81,17 +81,17 @@ const toggleModal = () => {
   setIsModalShown(!isModalshown);
 };
 
-const onSubmit = async values => {
-  const { updateUser, createUser } = userStore;
+const onSubmit = async (values) => {
+  const { update, create } = userStore;
   try {
     const user = {
       ...values,
       sources: values.sources
-        .filter(source => source.isActive)
-        .map(source => source._id)
+        .filter((source) => source.isActive)
+        .map((source) => source._id),
     };
-    if (user._id) await updateUser(user);
-    else await createUser(user);
+    if (user._id) await update(user);
+    else await create(user);
     toggleModal();
   } catch (err) {
     alert(err);
@@ -100,17 +100,11 @@ const onSubmit = async values => {
 
 const Users = () => {
   useEffect(() => {
-    userStore.fetchAllUsers();
-    sourceStore.fetchAllSources();
+    userStore.fetchAll();
+    sourceStore.fetchAll();
   }, []);
 
-  const {
-    allUsers,
-    getUser,
-    isModalshown,
-    selectedUser,
-    setSelectedUser
-  } = userStore;
+  const { list, getUser, isModalshown, selected, setSelected } = userStore;
   if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
   return (
     <div className="users-container">
@@ -119,16 +113,16 @@ const Users = () => {
         className="add-user"
         onClick={() => {
           toggleModal();
-          setSelectedUser({ sources: [] });
+          setSelected({ sources: [] });
         }}
       >
         Add User
       </Button>
-      <DataTable columns={columns} data={toJS(allUsers)} />
+      <DataTable columns={columns} data={toJS(list)} />
       <AddUser
         show={isModalshown}
         onClose={toggleModal}
-        initialValues={toJS(selectedUser)}
+        initialValues={toJS(selected)}
         onSubmit={onSubmit}
       />
     </div>

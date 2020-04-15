@@ -11,17 +11,18 @@ export default class VideoPanel extends React.PureComponent {
       x: index * 5,
       y: 0,
       w: 5,
-      h: 5
+      h: 5,
     };
+    const videoId = video._id;
     return (
-      <div key={video._id} data-grid={elementValues}>
+      <div key={videoId} data-grid={elementValues}>
         <img
           src={xButton}
           className="remove-video"
           alt="remove"
           onClick={() => this.props.deleteVideo(video)}
         />
-        <video className="video" id={video.name} autoPlay />
+        <video className="video" id={videoId} autoPlay />
       </div>
     );
   };
@@ -30,11 +31,11 @@ export default class VideoPanel extends React.PureComponent {
   onBreakpointChange = (breakpoint, cols) => {
     this.setState({
       breakpoint: breakpoint,
-      cols: cols
+      cols: cols,
     });
   };
 
-  onLayoutChange = layout => {
+  onLayoutChange = (layout) => {
     this.setState({ layout: layout });
   };
 

@@ -1,18 +1,14 @@
 import { action, observable, computed } from "mobx";
 import API from "../utils/API";
+import CRUDStore from "./crudStore";
 
-export default class SourceStore {
-  @observable sources = observable.array();
-
+export default class SourceStore extends CRUDStore {
   @observable userSources = observable.array();
 
   @observable aliveSources = observable.array();
 
-  @observable isModalshown = false;
-
-  @observable selectedSource = {};
-
   constructor(stores) {
+    super("/sources");
     this.stores = stores;
   }
 
@@ -20,6 +16,16 @@ export default class SourceStore {
   reset = () => {
     this.userSources.replace([]);
   };
+
+  @action
+  async fetchAll() {
+    try {
+      await super.fetchAll();
+      await this.fetchUserSources();
+    } catch (err) {
+      throw err;
+    }
+  }
 
   @computed
   get getUserAliveSources() {
@@ -34,72 +40,12 @@ export default class SourceStore {
   };
 
   @action
-  addSource = async (source) => {
-    try {
-      await API.post("/sources", source);
-      await this.updateSources();
-    } catch (e) {
-      throw e;
-    }
-  };
-
-  @action
   fetchUserSources = async () => {
     try {
       const userSources = await API.get("/sources/sourcesByUser");
       this.userSources.replace(userSources);
     } catch (e) {
       throw e;
-    }
-  };
-
-  @action
-  fetchAllSources = async () => {
-    try {
-      const sources = await API.get("/sources");
-      this.sources.replace(sources);
-    } catch (e) {
-      throw e;
-    }
-  };
-
-  @action
-  updateSources = async () => {
-    try {
-      await this.fetchAllSources();
-      await this.fetchUserSources();
-    } catch (e) {
-      throw e;
-    }
-  };
-
-  @action
-  deleteSource = async (source) => {
-    try {
-      await API.delete(`/sources/${source._id}`);
-      await this.updateSources();
-    } catch (e) {
-      throw e;
-    }
-  };
-
-  @action
-  setIsModalShown = (show) => {
-    this.isModalshown = show;
-  };
-
-  @action
-  setSelectedSource = (source) => {
-    this.selectedSource = source;
-  };
-
-  @action
-  updateSource = async (source) => {
-    try {
-      await API.put(`/sources/${source._id}`, source);
-      await this.updateSources();
-    } catch (err) {
-      throw err;
     }
   };
 }

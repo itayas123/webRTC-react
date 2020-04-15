@@ -44,6 +44,9 @@
 .sidebar-icon {
   cursor: pointer;
 }
+.sidebar-icon.disabled {
+  opacity: 0.5;
+}
 .logout-img {
   cursor: pointer;
   width: 50px;

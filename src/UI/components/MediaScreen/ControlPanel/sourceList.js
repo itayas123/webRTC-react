@@ -44,15 +44,6 @@ class SourceList extends React.Component {
     );
   };
 
-  removeSource = async (source) => {
-    try {
-      await sourceStore.deleteSource(source.name);
-      videoStore.deleteVideo(source);
-    } catch (e) {
-      alert(e);
-    }
-  };
-
   render() {
     const { videoArray } = videoStore;
     const { getUserAliveSources } = sourceStore;
@@ -60,8 +51,7 @@ class SourceList extends React.Component {
       <div>
         <h2>source list</h2>
         <div className="source-list">
-          {getUserAliveSources &&
-            getUserAliveSources.map((source) => this.renderSource(source))}
+          {getUserAliveSources.map((source) => this.renderSource(source))}
         </div>
         {videoArray.length > 0 && (
           <>
