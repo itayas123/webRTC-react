@@ -57,8 +57,8 @@ export default class CRUDStore {
     this.isModalshown = show;
   };
 
-  @action.bound
-  setSelected(selected) {
+  @action
+  setSelected = (selected) => {
     this.selected = selected;
-  }
+  };
 }
