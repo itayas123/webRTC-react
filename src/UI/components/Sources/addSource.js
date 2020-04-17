@@ -1,71 +1,69 @@
+import { FieldArray, Form, Formik } from "formik";
 import React from "react";
-import Modal from "../Modal/modal";
-import { Formik, Form, Field, FieldArray } from "formik";
-import Input from "../Input/input";
 import Button from "../Button/button";
+import Checkbox from "../Input/checkbox";
+import Modal from "../Modal/modal";
 
 const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
   return (
     <Modal show={show} handleClose={onClose} title="Add/Edit Source">
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        render={({ values }) => {
-          return (
-            <Form className="form">
-              <Field
-                name="name"
-                render={({ field }) => (
-                  <Input
-                    placeholder="name"
-                    id="name"
-                    type="text"
-                    autoComplete="new-password"
-                    {...field}
-                  />
-                )}
-              />
-              <Field
-                name="uri"
-                render={({ field }) => (
-                  <Input
-                    placeholder="uri"
-                    id="uri"
-                    type="text"
-                    autoComplete="new-password"
-                    {...field}
-                  />
-                )}
-              />
-              <h3>users</h3>
-              <div className="users">
-                <FieldArray
-                  name="users"
-                  render={(array) =>
-                    values.users &&
-                    values.users.map((user, index) => (
-                      <Field
-                        name={`users[${index}].isActive`}
-                        key={user._id}
-                        render={({ field }) => (
-                          <Input
-                            id={`users[${index}].isActive`}
-                            {...field}
-                            type="checkbox"
-                            checked={field.value}
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          /* and other goodies */
+        }) => (
+          <Form className="form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="name"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.name}
+              autoComplete="off"
+            />
+            <input
+              type="text"
+              name="uri"
+              placeholder="uri"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.uri}
+              autoComplete="off"
+            />
+            {values.users && (
+              <>
+                <h3>users</h3>
+                <div className="users">
+                  <FieldArray name="users">
+                    {({ form }) => (
+                      <>
+                        {form.values.users.map((user, index) => (
+                          <Checkbox
+                            key={user._id}
+                            name={`users[${index}].isActive`}
                             placeholder={user.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={user.isActive}
                           />
-                        )}
-                      />
-                    ))
-                  }
-                />
-              </div>
-              <Button type="submit">Submit</Button>
-            </Form>
-          );
-        }}
-      />
+                        ))}
+                      </>
+                    )}
+                  </FieldArray>
+                </div>
+              </>
+            )}
+            <Button type="submit">Submit</Button>
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };

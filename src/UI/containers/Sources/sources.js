@@ -65,14 +65,17 @@ const toggleModal = () => {
 const onSubmit = async (values) => {
   const { create, update } = sourceStore;
   try {
-    const source = {
-      source: values,
-      users: values.users
-        .filter((user) => user.isActive)
-        .map((user) => user._id),
-    };
-    if (source._id) await update(source);
-    else await create(source);
+    if (values._id) {
+      await update(values);
+    } else {
+      const source = {
+        source: values,
+        users: values.users
+          .filter((user) => user.isActive)
+          .map((user) => user._id),
+      };
+      await create(source);
+    }
     toggleModal();
   } catch (err) {
     alert(err);
@@ -95,7 +98,7 @@ const Sources = () => {
         className="add-user"
         onClick={() => {
           toggleModal();
-          setSelected({});
+          setSelected({ name: "", uri: "", users: allUsers });
         }}
       >
         Add Source
@@ -104,7 +107,7 @@ const Sources = () => {
       <AddSource
         show={isModalshown}
         onClose={toggleModal}
-        initialValues={toJS({ ...selected, users: [...allUsers] })}
+        initialValues={toJS(selected)}
         onSubmit={onSubmit}
       />
     </div>

@@ -1,17 +1,16 @@
+import { Form, Formik } from "formik";
 import { observer } from "mobx-react";
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
-import "./login.css";
 import Button from "../../components/Button/button";
-import { Formik, Form, Field } from "formik";
-import Input from "../../components/Input/input";
+import "./login.css";
 
 const { userStore } = stores;
 @observer
 class Login extends React.Component {
-  handleSubmit = async values => {
+  handleSubmit = async (values) => {
     const { email, password } = values;
     const { login } = userStore;
 
@@ -31,36 +30,38 @@ class Login extends React.Component {
         <Formik
           initialValues={{ email: "", password: "" }}
           onSubmit={this.handleSubmit}
-          render={({ values }) => {
-            return (
-              <Form className="form">
-                <Field
-                  name="email"
-                  render={({ field }) => (
-                    <Input
-                      placeholder="email"
-                      id="email"
-                      type="email"
-                      {...field}
-                    />
-                  )}
-                />
-                <Field
-                  name="password"
-                  render={({ field }) => (
-                    <Input
-                      placeholder="password"
-                      id="password"
-                      type="password"
-                      {...field}
-                    />
-                  )}
-                />
-                <Button type="submit">Submit</Button>
-              </Form>
-            );
-          }}
-        />
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <Form className="form" onSubmit={handleSubmit}>
+              <input
+                type="email"
+                name="email"
+                placeholder="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+              />
+              <Button type="submit">Submit</Button>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }

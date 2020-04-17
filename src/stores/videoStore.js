@@ -1,5 +1,5 @@
 // @ts-check
-import { observable, action, reaction } from "mobx";
+import { observable, action } from "mobx";
 import io from "socket.io-client";
 import kurentoUtils from "kurento-utils";
 import { sleep } from "../utils";

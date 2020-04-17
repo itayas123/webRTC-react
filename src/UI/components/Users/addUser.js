@@ -1,97 +1,85 @@
+import { FieldArray, Form, Formik } from "formik";
 import React from "react";
-import Modal from "../Modal/modal";
-import { Formik, Form, Field, FieldArray } from "formik";
-import Input from "../Input/input";
 import Button from "../Button/button";
+import Checkbox from "../Input/checkbox";
+import Modal from "../Modal/modal";
 
 const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
   return (
     <Modal show={show} handleClose={onClose} title="Add/Edit User">
-      <Formik
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        render={({ values }) => {
-          return (
-            <Form className="form">
-              <div>
-                <Field
-                  name="email"
-                  render={({ field }) => (
-                    <Input
-                      placeholder="email"
-                      id="email"
-                      type="email"
-                      autoComplete="new-password"
-                      {...field}
-                    />
-                  )}
-                />
-                <Field
-                  name="password"
-                  render={({ field }) => (
-                    <Input
-                      placeholder="password"
-                      id="password"
-                      type="password"
-                      autoComplete="new-password"
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
-              <Field
-                name="name"
-                render={({ field }) => (
-                  <Input
-                    placeholder="name"
-                    id="name"
-                    type="text"
-                    autoComplete="new-password"
-                    {...field}
-                  />
-                )}
-              />
-              <Field
-                name="admin"
-                render={({ field }) => (
-                  <Input
-                    id="admin"
-                    {...field}
-                    type="checkbox"
-                    checked={field.value}
-                    placeholder="Is Admin?"
-                  />
-                )}
-              />
-              <h3>sources</h3>
-              <div className="sources">
-                <FieldArray
-                  name="sources"
-                  render={array =>
-                    values.sources &&
-                    values.sources.map((source, index) => (
-                      <Field
-                        name={`sources[${index}].isActive`}
-                        key={source._id}
-                        render={({ field }) => (
-                          <Input
-                            id={`sources[${index}].isActive`}
-                            {...field}
-                            type="checkbox"
-                            checked={field.value}
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          /* and other goodies */
+        }) => (
+          <Form autoComplete="off" className="form" onSubmit={handleSubmit}>
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.email}
+              autoComplete="off"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.password}
+              autoComplete="off"
+            />
+            <input
+              type="text"
+              name="name"
+              placeholder="name"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.name}
+              autoComplete="off"
+            />
+            <Checkbox
+              name="admin"
+              placeholder="Is Admin ?"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.admin}
+            />
+            {values.sources && (
+              <>
+                <h3>sources</h3>
+                <div className="sources">
+                  <FieldArray name="sources">
+                    {({ form }) => (
+                      <>
+                        {form.values.sources.map((source, index) => (
+                          <Checkbox
+                            key={source._id}
+                            name={`sources[${index}].isActive`}
                             placeholder={source.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={source.isActive}
                           />
-                        )}
-                      />
-                    ))
-                  }
-                />
-              </div>
-              <Button type="submit">Submit</Button>
-            </Form>
-          );
-        }}
-      />
+                        ))}
+                      </>
+                    )}
+                  </FieldArray>
+                </div>
+              </>
+            )}
+            <Button type="submit">Submit</Button>
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };
