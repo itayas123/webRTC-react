@@ -16,15 +16,12 @@ module.exports = async function (server) {
     const { id } = socket;
     console.log("socket connected ", id);
     sendAliveSources(socket);
-    socket.on("start", ({ sdpOffer, url, _id }) =>
-      start(sdpOffer, url, _id, socket)
-    );
-    socket.on("candidate", ({ candidate, _id }) =>
-      onRecieveIceCandaite(candidate, _id)
-    );
-    socket.on("startRecord", ({ _id }) => startRecord(_id));
-    socket.on("stopRecord", ({ _id }) => stopRecord(_id));
+    // TODO: check another option
+    socket.on("start", (...args) => start(args[0], args[1], args[2], socket));
+    socket.on("candidate", onRecieveIceCandaite);
+    socket.on("startRecord", startRecord);
+    socket.on("stopRecord", stopRecord);
+    socket.on("deleteSession", onDeleteSession);
     socket.on("disconnect", () => onUserDesconnected(id));
-    socket.on("deleteSession", ({ id }) => onDeleteSession(id));
   });
 };

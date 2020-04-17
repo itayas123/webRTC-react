@@ -11,17 +11,14 @@ const init = async (socket) => {
 
 const sendAliveSources = async (socket) => {
   const sources = await kurentoclient.getAliveSources();
-  socket.emit("aliveSources", { sources });
+  socket.emit("aliveSources", sources);
 };
 
 const onSendIceCandidate = (event, id, socket) => {
   const candidate = event.candidate;
 
   console.log("Remote icecandidate " + JSON.stringify(candidate));
-  socket.emit("candidate", {
-    candidate,
-    id,
-  });
+  socket.emit("candidate", candidate, id);
 };
 
 const start = async (sdpOffer, uri, id, socket) => {
@@ -46,7 +43,7 @@ const start = async (sdpOffer, uri, id, socket) => {
     }
   });
   console.log("SDP Answer from KMS to App:\n%s", sdpAnswer);
-  socket.emit("sdpAnswer", { sdpAnswer, id });
+  socket.emit("sdpAnswer", sdpAnswer, id);
 
   await playerEndpoint.connect(webRtcEndpoint);
 
@@ -71,7 +68,7 @@ const stopRecord = async (id) => {
     const { recordEndpoint } = kurentoclient.getSessionById(id);
     await recordEndpoint.stop();
     const uri = await recordEndpoint.getUri();
-    //socket.emit("stopRecord", { uri });
+    //socket.emit("stopRecord", uri);
     console.log(" stop recording ", uri, recordEndpoint);
   } catch (err) {
     console.error(err);

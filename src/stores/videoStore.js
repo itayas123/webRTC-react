@@ -12,18 +12,6 @@ export default class VideoStore {
     // setup socket io client
     this.socket = io("http://localhost:3001");
     this.setUpSocket(this.socket);
-    // set up video reaction
-    reaction(
-      () => this.videoArray.length,
-      async (videoLength) => {
-        if (videoLength > Object.keys(this.webRtcPeers).length) {
-          // await for the video element to be render
-          await sleep(100);
-          const { _id, uri } = this.videoArray[videoLength - 1];
-          this.handleAddVideo(_id, uri);
-        }
-      }
-    );
   }
 
   @action
@@ -32,12 +20,12 @@ export default class VideoStore {
       console.log("connected");
     });
 
-    socket.on("aliveSources", ({ sources }) => {
+    this.socket.on("aliveSources", (sources) => {
       console.log("aliveSources", sources);
       this.stores.sourceStore.setAliveSources(sources);
     });
 
-    socket.on("candidate", ({ candidate, id }) => {
+    socket.on("candidate", (candidate, id) => {
       console.log("recieve candidate", candidate);
 
       this.webRtcPeers[id].addIceCandidate(candidate, (error) => {
@@ -45,22 +33,25 @@ export default class VideoStore {
       });
     });
 
-    socket.on("sdpAnswer", ({ sdpAnswer, id }) => {
+    socket.on("sdpAnswer", (sdpAnswer, id) => {
       console.log("sdpAnswer", JSON.stringify(sdpAnswer));
       this.webRtcPeers[id].processAnswer(sdpAnswer, (error) => {
         if (error) console.error("sdperrror", error);
       });
     });
 
-    socket.on("stopRecord", ({ uri }) => {
+    socket.on("stopRecord", (uri) => {
       console.log("stopRecord", uri);
       this.addVideo({ uri, _id: uri, name: uri });
     });
   };
 
   @action
-  addVideo = (video) => {
+  addVideo = async (video) => {
     this.videoArray.push(video);
+    await sleep(100);
+    const { _id, uri } = video;
+    this.handleAddVideo(_id, uri);
   };
 
   handleAddVideo = (id, uri) => {
@@ -86,7 +77,7 @@ export default class VideoStore {
           if (error) {
             return console.error(error);
           }
-          this.socket.emit("start", { sdpOffer, url: uri, _id: sessionId });
+          this.socket.emit("start", sdpOffer, uri, sessionId);
         });
         // listen to iceconnectionstatechange in order to know the state of the stream
         this.webRtcPeers[
@@ -110,7 +101,7 @@ export default class VideoStore {
 
   handleDeleteVideo = (videoId) => {
     const id = videoId + this.socket.id;
-    this.socket.emit("deleteSession", { id });
+    this.socket.emit("deleteSession", id);
     delete this.webRtcPeers[id];
   };
 
@@ -129,17 +120,17 @@ export default class VideoStore {
   };
 
   @action
-  sendCandidate = (candidate, _id) => {
+  sendCandidate = (candidate, id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
-    this.socket.emit("candidate", { candidate, _id });
+    this.socket.emit("candidate", candidate, id);
   };
 
   @action
   toggleRecord = (video) => {
-    let { _id, uri, isRecording } = video;
+    let { _id, isRecording } = video;
     _id += this.socket.id;
     video.isRecording = !isRecording;
     console.log(`toggler record ${!isRecording} ${_id}`);
-    //this.socket.emit("startRecord", { _id, uri });
+    //this.socket.emit(isRecording ? "stopRecord" : "startRecord", _id);
   };
 }
