@@ -7,10 +7,11 @@ const {
   stopRecord,
   onUserDesconnected,
   sendAliveSources,
+  onDeleteSession,
 } = require("./services/kurento");
 module.exports = async function (server) {
   const io = socketIO(server);
-  //await init(io.sockets);
+  await init(io);
   io.on("connection", async (socket) => {
     const { id } = socket;
     console.log("socket connected ", id);
@@ -24,5 +25,6 @@ module.exports = async function (server) {
     socket.on("startRecord", ({ _id, uri }) => startRecord(_id, uri));
     socket.on("stopRecord", ({ _id }) => stopRecord(_id, socket));
     socket.on("disconnect", () => onUserDesconnected(id));
+    socket.on("deleteSession", ({ id }) => onDeleteSession(id));
   });
 };

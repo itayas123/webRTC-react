@@ -79,6 +79,7 @@ const stopRecord = async (id, socket) => {
 
 const onRecieveIceCandaite = kurentoclient.onRecieveIceCandidate;
 const onUserDesconnected = kurentoclient.onUserDesconnected;
+const onDeleteSession = kurentoclient.deleteSession;
 
 module.exports = {
   init,
@@ -88,4 +89,5 @@ module.exports = {
   startRecord,
   stopRecord,
   sendAliveSources,
+  onDeleteSession,
 };

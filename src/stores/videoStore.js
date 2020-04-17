@@ -13,7 +13,17 @@ export default class VideoStore {
     this.socket = io("http://localhost:3001");
     this.setUpSocket(this.socket);
     // set up video reaction
-    this.videoReaction();
+    reaction(
+      () => this.videoArray.length,
+      async (videoLength) => {
+        if (videoLength > Object.keys(this.webRtcPeers).length) {
+          // await for the video element to be render
+          await sleep(100);
+          const { _id, uri } = this.videoArray[videoLength - 1];
+          this.handleAddVideo(_id, uri);
+        }
+      }
+    );
   }
 
   @action
@@ -53,58 +63,55 @@ export default class VideoStore {
     this.videoArray.push(video);
   };
 
-  videoReaction = () => {
-    reaction(
-      () => this.videoArray.length,
-      async (videoLength) => {
-        if (videoLength > Object.keys(this.webRtcPeers).length) {
-          // await for the video element to be render
-          await sleep(100);
-          let { _id, uri } = this.videoArray[videoLength - 1];
-          const videoOutput = document.getElementById(_id);
-          console.log(videoOutput, _id);
-          if (!videoOutput) return false;
-          // set unique Id
-          _id += this.socket.id;
-          // options with video element and onIceCandidate callback
-          const options = {
-            remoteVideo: videoOutput,
-            onicecandidate: (candidate) => this.sendCandidate(candidate, _id),
-          };
-          // get SDP offer with kurentoUtils by our above options
-          this.webRtcPeers[_id] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
-            options,
-            (error) => {
-              if (error) {
-                return console.error(error);
-              }
-              // send the SDP offer to server in order to recieve SDP answer
-              this.webRtcPeers[_id].generateOffer((error, sdpOffer) => {
-                if (error) {
-                  return console.error(error);
-                }
-                this.socket.emit("start", { sdpOffer, url: uri, _id });
-              });
-              // listen to iceconnectionstatechange in order to know the state of the stream
-              this.webRtcPeers[
-                _id
-              ].peerConnection.addEventListener(
-                "iceconnectionstatechange",
-                (event) => this.iceconnectionstatechange(event, _id)
-              );
-            }
-          );
+  handleAddVideo = (id, uri) => {
+    const videoOutput = document.getElementById(id);
+    console.log(videoOutput, id);
+    if (!videoOutput) return false;
+    // set unique Id
+    const sessionId = id + this.socket.id;
+    // options with video element and onIceCandidate callback
+    const options = {
+      remoteVideo: videoOutput,
+      onicecandidate: (candidate) => this.sendCandidate(candidate, sessionId),
+    };
+    // get SDP offer with kurentoUtils by our above options
+    this.webRtcPeers[sessionId] = kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(
+      options,
+      (error) => {
+        if (error) {
+          return console.error(error);
         }
+        // send the SDP offer to server in order to recieve SDP answer
+        this.webRtcPeers[sessionId].generateOffer((error, sdpOffer) => {
+          if (error) {
+            return console.error(error);
+          }
+          this.socket.emit("start", { sdpOffer, url: uri, _id: sessionId });
+        });
+        // listen to iceconnectionstatechange in order to know the state of the stream
+        this.webRtcPeers[
+          sessionId
+        ].peerConnection.addEventListener("iceconnectionstatechange", (event) =>
+          this.iceconnectionstatechange(event, sessionId)
+        );
       }
     );
   };
 
   @action
   deleteVideo = (video) => {
-    const index = this.videoArray.findIndex(
-      (videoObj) => video._id === videoObj._id
-    );
-    if (index !== -1) this.videoArray.splice(index, 1);
+    const { _id } = video;
+    const index = this.videoArray.findIndex((videoObj) => _id === videoObj._id);
+    if (index !== -1) {
+      this.videoArray.splice(index, 1);
+      this.handleDeleteVideo(_id);
+    }
+  };
+
+  handleDeleteVideo = (videoId) => {
+    const id = videoId + this.socket.id;
+    this.socket.emit("deleteSession", { id });
+    delete this.webRtcPeers[id];
   };
 
   @action

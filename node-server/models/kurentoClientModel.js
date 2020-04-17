@@ -97,15 +97,20 @@ class KurentoClientModel {
     }
   };
 
+  deleteSession = (sessionId) => {
+    console.log(`delete session: ${sessionId}`);
+    const { webRtcEndpoint } = this.getSessionById(sessionId);
+    webRtcEndpoint.release();
+    delete this.sessions[sessionId];
+    console.log("all sessions ", this.sessions);
+  };
+
   onUserDesconnected = (id) => {
     Object.keys(this.sessions).forEach((key) => {
       if (key.includes(id)) {
-        const { webRtcEndpoint } = this.getSessionById(key);
-        webRtcEndpoint.release();
-        delete this.sessions[key];
+        this.deleteSession(key);
       }
     });
-    console.log(this.sessions);
   };
 }
 module.exports = KurentoClientModel;
