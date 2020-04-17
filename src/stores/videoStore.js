@@ -135,20 +135,11 @@ export default class VideoStore {
   };
 
   @action
-  startRecord = (id, uri) => {
-    const _id = id + this.socket.id;
-    console.log("starting record " + _id);
-    this.socket.emit("startRecord", { _id, uri });
-    const index = this.videoArray.findIndex((video) => video._id === id);
-    this.videoArray[index].isRecording = true;
-  };
-
-  @action
-  stopRecord = (id) => {
-    const _id = id + this.socket.id;
-    console.log("stoping record " + _id);
-    this.socket.emit("stopRecord", { _id });
-    const index = this.videoArray.findIndex((video) => video._id === id);
-    this.videoArray[index].isRecording = false;
+  toggleRecord = (video) => {
+    let { _id, uri, isRecording } = video;
+    _id += this.socket.id;
+    video.isRecording = !isRecording;
+    console.log(`toggler record ${!isRecording} ${_id}`);
+    //this.socket.emit("startRecord", { _id, uri });
   };
 }

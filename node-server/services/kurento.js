@@ -27,9 +27,9 @@ const onSendIceCandidate = (event, id, socket) => {
 const start = async (sdpOffer, uri, id, socket) => {
   console.log(uri, sdpOffer, id);
 
-  const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
+  const playerEndpoint = await kurentoclient.playerEndpoints[uri];
 
-  const webRtcEndpoint = await kurentoclient.createWebRtcEndpoint(id);
+  const webRtcEndpoint = await kurentoclient.createWebRtcEndpoint(id, uri);
   webRtcEndpoint.on("OnIceCandidate", (event) =>
     onSendIceCandidate(event, id, socket)
   );
@@ -53,19 +53,20 @@ const start = async (sdpOffer, uri, id, socket) => {
   console.log("player playing and connected", kurentoclient);
 };
 
-const startRecord = async (id, uri) => {
+const startRecord = async (id) => {
   const recordEndpoint = await kurentoclient.createRecorderEndpoint(
     id,
     config.RECORD_FILE_URI
   );
-  const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
+  const { uri } = kurentoclient.getSessionById(id);
+  const playerEndpoint = await kurentoclient.playerEndpoints[uri];
   //await webRtcEndpoint.connect(webRtcEndpoint);
   await playerEndpoint.connect(recordEndpoint);
   await recordEndpoint.record();
   console.log("recording");
 };
 
-const stopRecord = async (id, socket) => {
+const stopRecord = async (id) => {
   try {
     const { recordEndpoint } = kurentoclient.getSessionById(id);
     await recordEndpoint.stop();

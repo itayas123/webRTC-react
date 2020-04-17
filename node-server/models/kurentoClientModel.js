@@ -20,6 +20,7 @@ class KurentoClientModel {
       webRtcEndpoint: undefined,
       iceCandidatesQueue: [],
       recordEndpoint: undefined,
+      uri: "",
     });
   };
 
@@ -33,7 +34,7 @@ class KurentoClientModel {
       if (ip.length) {
         const res = await ping.promise.probe(ip);
         if (res.alive) {
-          await this.getPlayerEndpoint(uri);
+          await this.createPlayerEndpoint(uri);
           pings.push(uri);
         }
       }
@@ -54,17 +55,18 @@ class KurentoClientModel {
     }
   };
 
-  createWebRtcEndpoint = async (id) => {
+  createWebRtcEndpoint = async (id, uri) => {
     try {
       const webRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
-      const session = this.getSessionById(id);
-      return (session.webRtcEndpoint = webRtcEndpoint);
+      let session = this.getSessionById(id);
+      session = { ...session, webRtcEndpoint, uri };
+      return session.webRtcEndpoint;
     } catch (error) {
       console.error(error);
     }
   };
 
-  getPlayerEndpoint = async (uri, options = { networkCache: 1000 }) => {
+  createPlayerEndpoint = async (uri, options = { networkCache: 1000 }) => {
     if (!this.playerEndpoints[uri]) {
       console.log(`creating player endpoint: ${uri}`);
       const playerEndpoint = await this.pipeline.create("PlayerEndpoint", {
@@ -100,7 +102,7 @@ class KurentoClientModel {
   deleteSession = (sessionId) => {
     console.log(`delete session: ${sessionId}`);
     const { webRtcEndpoint } = this.getSessionById(sessionId);
-    webRtcEndpoint.release();
+    if (webRtcEndpoint) webRtcEndpoint.release();
     delete this.sessions[sessionId];
     console.log("all sessions ", this.sessions);
   };

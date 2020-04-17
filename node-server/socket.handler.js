@@ -22,8 +22,8 @@ module.exports = async function (server) {
     socket.on("candidate", ({ candidate, _id }) =>
       onRecieveIceCandaite(candidate, _id)
     );
-    socket.on("startRecord", ({ _id, uri }) => startRecord(_id, uri));
-    socket.on("stopRecord", ({ _id }) => stopRecord(_id, socket));
+    socket.on("startRecord", ({ _id }) => startRecord(_id));
+    socket.on("stopRecord", ({ _id }) => stopRecord(_id));
     socket.on("disconnect", () => onUserDesconnected(id));
     socket.on("deleteSession", ({ id }) => onDeleteSession(id));
   });

@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { camera, startRecordIcon, stopRecordIcon } from "../../../../assets";
+import { camera } from "../../../../assets";
 import stores from "../../../../stores";
+import Record from "./record";
 
 const { sourceStore, videoStore } = stores;
 @observer
@@ -24,23 +25,16 @@ class SourceList extends React.Component {
   };
 
   renderRecord = (video) => {
-    const { isRecording, _id, uri } = video;
-    const { startRecord, stopRecord } = videoStore;
+    const { isRecording, _id, uri, name } = video;
+    const { toggleRecord } = videoStore;
     return (
-      <div className="item-list no-border" key={_id}>
-        <img
-          className="record-img"
-          alt="record"
-          src={isRecording ? stopRecordIcon : startRecordIcon}
-          onClick={() =>
-            isRecording ? stopRecord(_id) : startRecord(_id, uri)
-          }
-        />
-        <div className="source-details">
-          <div className="source-name">{video.name}</div>
-          <div className="source-uri">{video.uri}</div>
-        </div>
-      </div>
+      <Record
+        key={_id}
+        isRecording={isRecording}
+        name={name}
+        uri={uri}
+        onClick={() => toggleRecord(video)}
+      />
     );
   };
 

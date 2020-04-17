@@ -5,8 +5,7 @@ const logout = require("./logout.svg");
 const tiger = require("./tiger.svg");
 const deleteIcon = require("./deleteIcon.svg");
 const editIcon = require("./editIcon.svg");
-const startRecordIcon = require("./startRecordIcon.svg");
-const stopRecordIcon = require("./stopRecordIcon.svg");
+const recordIcon = require("./recordIcon.svg");
 
 export {
   sidebarIcon,
@@ -16,6 +15,5 @@ export {
   tiger,
   deleteIcon,
   editIcon,
-  startRecordIcon,
-  stopRecordIcon
+  recordIcon,
 };

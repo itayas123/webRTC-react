@@ -16,6 +16,9 @@
   cursor: pointer;
   display: flex;
 }
+.item-list.record {
+  cursor: initial;
+}
 .disabled {
   opacity: 0.5;
   cursor: initial;
@@ -46,4 +49,8 @@
 .record-img {
   cursor: pointer;
   width: 45px;
+  transition: all 0.5s;
+}
+.record-img.opac {
+  opacity: 0.4;
 }
