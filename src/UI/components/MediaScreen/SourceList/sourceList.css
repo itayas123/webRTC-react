@@ -1,9 +1,10 @@
-.control-panel {
+.source-list {
   height: 95%;
   margin: auto;
   width: 90%;
 }
-.source-list {
+.alive-source-list,
+.record-list {
   max-height: 250px;
   width: 90%;
   margin: 30px auto 0;

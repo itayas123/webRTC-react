@@ -1,7 +1,7 @@
 import React from "react";
-import "./sidebar.css";
-import ControlPanel from "../MediaScreen/ControlPanel/controlPanel";
 import { xButton } from "../../../assets";
+import SourceList from "../MediaScreen/SourceList/sourceList";
+import "./sidebar.css";
 
 const sidebar = ({ show, hideSidebar }) => {
   return (
@@ -14,7 +14,7 @@ const sidebar = ({ show, hideSidebar }) => {
           src={xButton}
         />
       </div>
-      <ControlPanel />
+      <SourceList />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "./input.css";
+import "./form.css";
 
 const Checkbox = (values) => {
   const { placeholder } = values;
