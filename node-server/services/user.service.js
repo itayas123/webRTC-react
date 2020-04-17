@@ -45,11 +45,19 @@ class UserService extends CRUDService {
     try {
       const { email, password } = req.body;
       const user = await this.model.findOne({ email });
-      if (!user) return next(new ErrorResponse("Invalid email", 404));
-      if (user.password !== password)
-        return next(new ErrorResponse("Invalid password", 404));
-      const token = user.generateAuthToken();
-      return res.send({ data: { ...user.toObject(), token } });
+      if (!user) {
+        return next(new ErrorResponse("Invalid email", 404));
+      }
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) {
+          return next(err);
+        }
+        if (!isMatch) {
+          return next(new ErrorResponse("Invalid password", 404));
+        }
+        const token = user.generateAuthToken();
+        return res.send({ data: { ...user.toObject(), token } });
+      });
     } catch (e) {
       next(e);
     }
