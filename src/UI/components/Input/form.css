@@ -31,3 +31,9 @@
   margin: 0 5px;
   cursor: pointer;
 }
+.form-error {
+  color: red;
+  text-align: start;
+  margin-left: 5px;
+  font-size: 0.8rem;
+}

@@ -47,7 +47,7 @@ const start = async (sdpOffer, uri, id, socket) => {
 
   await playerEndpoint.connect(webRtcEndpoint);
 
-  console.log("player playing and connected", kurentoclient);
+  console.log("player playing and connected");
 };
 
 const startRecord = async (id) => {

@@ -3,21 +3,31 @@ import React from "react";
 import Button from "../Button/button";
 import Checkbox from "../Input/checkbox";
 import Modal from "../Modal/modal";
+import { validateUri } from "../../../utils";
+import FormError from "../Input/formError";
+
+const validate = (values) => {
+  const errors = {};
+  if (!values.name) {
+    errors.name = "Required";
+  }
+  if (!values.uri) {
+    errors.uri = "Required";
+  } else if (!validateUri(values.uri)) {
+    errors.uri = "Invalid uri address";
+  }
+  return errors;
+};
 
 const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
   return (
     <Modal show={show} handleClose={onClose} title="Add/Edit Source">
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          /* and other goodies */
-        }) => (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validate={validate}
+      >
+        {({ values, handleChange, handleBlur, handleSubmit }) => (
           <Form className="form" onSubmit={handleSubmit}>
             <input
               type="text"
@@ -28,6 +38,7 @@ const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
               value={values.name}
               autoComplete="off"
             />
+            <FormError name="name" />
             <input
               type="text"
               name="uri"
@@ -37,6 +48,7 @@ const AddSource = ({ show, onClose, initialValues, onSubmit }) => {
               value={values.uri}
               autoComplete="off"
             />
+            <FormError name="uri" />
             {values.users && (
               <>
                 <h3>users</h3>

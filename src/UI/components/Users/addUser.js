@@ -3,21 +3,36 @@ import React from "react";
 import Button from "../Button/button";
 import Checkbox from "../Input/checkbox";
 import Modal from "../Modal/modal";
+import { validateEmail } from "../../../utils";
+import FormError from "../Input/formError";
+
+const validate = (values) => {
+  const errors = {};
+  if (!values.email) {
+    errors.email = "Required";
+  } else if (!validateEmail(values.email)) {
+    errors.email = "Invalid email address";
+  }
+  if (!values.password) {
+    errors.password = "Required";
+  } else if (values.password.length < 8) {
+    errors.password = "At least 8 characters";
+  }
+  if (!values.name) {
+    errors.name = "Required";
+  }
+  return errors;
+};
 
 const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
   return (
     <Modal show={show} handleClose={onClose} title="Add/Edit User">
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-          /* and other goodies */
-        }) => (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validate={validate}
+      >
+        {({ values, handleChange, handleBlur, handleSubmit }) => (
           <Form autoComplete="off" className="form" onSubmit={handleSubmit}>
             <input
               type="email"
@@ -28,6 +43,7 @@ const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
               value={values.email}
               autoComplete="off"
             />
+            <FormError name="email" />
             <input
               type="password"
               name="password"
@@ -37,6 +53,7 @@ const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
               value={values.password}
               autoComplete="off"
             />
+            <FormError name="password" />
             <input
               type="text"
               name="name"
@@ -46,6 +63,7 @@ const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
               value={values.name}
               autoComplete="off"
             />
+            <FormError name="name" />
             <Checkbox
               name="admin"
               placeholder="Is Admin ?"

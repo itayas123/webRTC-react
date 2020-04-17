@@ -6,13 +6,14 @@ import stores from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
 import Sidebar from "./UI/components/Sidebar/sidebar";
 
-const { userStore, uiStore } = stores;
+const { userStore } = stores;
 @observer
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
+      showSidebar: false,
     };
   }
 
@@ -27,17 +28,24 @@ class App extends React.Component {
   };
 
   render() {
-    const { showSidebar, setShowSidebar } = uiStore;
+    const { isLoading, showSidebar } = this.state;
     const { getUser, logout } = userStore;
     return (
       <div className="App">
         <Navbar
           user={getUser}
           onLogout={logout}
-          showSidebar={() => setShowSidebar(true)}
+          showSidebar={() => {
+            this.setState({ showSidebar: true });
+          }}
         />
-        <Sidebar show={showSidebar} hideSidebar={() => setShowSidebar(false)} />
-        {this.state.isLoading ? <> loading </> : <Routes />}
+        <Sidebar
+          show={showSidebar}
+          hideSidebar={() => {
+            this.setState({ showSidebar: false });
+          }}
+        />
+        {isLoading ? <> loading </> : <Routes />}
       </div>
     );
   }
