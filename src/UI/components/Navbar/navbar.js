@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 import { sidebarIcon, logout, tiger } from "../../../assets";
-import { ROUTES } from "../../../Routes";
+import { ROUTES } from "../../../Routes/Routes";
 
 const navbar = ({ user, onLogout, showSidebar }) => {
   const { name, admin } = user;

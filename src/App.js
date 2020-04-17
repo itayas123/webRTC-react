@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import "./App.css";
-import Routes from "./Routes";
+import Routes from "./Routes/Routes";
 import stores from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
 import Sidebar from "./UI/components/Sidebar/sidebar";
@@ -12,7 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true
+      isLoading: true,
     };
   }
 

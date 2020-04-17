@@ -1,9 +1,7 @@
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
-import { Redirect } from "react-router-dom";
 import { deleteIcon, editIcon } from "../../../assets";
-import { ROUTES } from "../../../Routes";
 import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
@@ -105,8 +103,8 @@ const Users = () => {
     sourceStore.fetchAll();
   }, []);
 
-  const { list, getUser, isModalshown, selected, setSelected } = userStore;
-  if (!getUser.admin) return <Redirect to={ROUTES.HOME} />;
+  const { list, isModalshown, selected, setSelected } = userStore;
+
   return (
     <div className="users-container">
       <h1>Users Management</h1>
