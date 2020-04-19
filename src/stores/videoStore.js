@@ -105,7 +105,6 @@ export default class VideoStore {
     delete this.webRtcPeers[id];
   };
 
-  @action
   iceconnectionstatechange = (event, id) => {
     const webRtcPeer = this.webRtcPeers[id];
     if (webRtcPeer && webRtcPeer.peerConnection) {
@@ -119,18 +118,16 @@ export default class VideoStore {
     }
   };
 
-  @action
   sendCandidate = (candidate, id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
     this.socket.emit("candidate", candidate, id);
   };
 
-  @action
   toggleRecord = (video) => {
     let { _id, isRecording } = video;
     _id += this.socket.id;
     video.isRecording = !isRecording;
     console.log(`toggler record ${!isRecording} ${_id}`);
-    //this.socket.emit(isRecording ? "stopRecord" : "startRecord", _id);
+    this.socket.emit(isRecording ? "stopRecord" : "startRecord", _id);
   };
 }

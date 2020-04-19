@@ -60,6 +60,7 @@ class KurentoClientModel {
       const webRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
       let session = this.getSessionById(id);
       session = { ...session, webRtcEndpoint, uri };
+      this.sessions[id] = session;
       return session.webRtcEndpoint;
     } catch (error) {
       console.error(error);

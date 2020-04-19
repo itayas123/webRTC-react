@@ -49,8 +49,10 @@
 }
 .record-img {
   cursor: pointer;
-  width: 45px;
-  transition: all 0.5s;
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  transition: all 0.35s;
 }
 .record-img.opac {
   opacity: 0.4;

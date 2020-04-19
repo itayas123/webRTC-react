@@ -60,7 +60,7 @@ const startRecord = async (id) => {
   //await webRtcEndpoint.connect(webRtcEndpoint);
   await playerEndpoint.connect(recordEndpoint);
   await recordEndpoint.record();
-  console.log("recording");
+  console.log("recording", uri);
 };
 
 const stopRecord = async (id) => {

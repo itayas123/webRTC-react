@@ -63,5 +63,5 @@ class UserService extends CRUDService {
     }
   }
 }
-const userService = new UserService(expressRouter);
-module.exports = userService.router;
+
+module.exports = new UserService(expressRouter).router;

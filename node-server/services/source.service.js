@@ -54,5 +54,5 @@ class SourceService extends CRUDService {
     }
   }
 }
-const sourceService = new SourceService(expressRouter);
-module.exports = sourceService.router;
+
+module.exports = new SourceService(expressRouter).router;
