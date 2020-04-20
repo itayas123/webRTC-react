@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import Login from "../UI/containers/login/login";
 import MediaScreen from "../UI/containers/MediaScreen/mediaScreen";
-import Users from "../UI/containers/Users/users";
-import Sources from "../UI/containers/Sources/sources";
+import UsersManagement from "../UI/containers/Users/usersManagement";
+import SourcesManagement from "../UI/containers/Sources/sourcesManagement";
 import PrivateRoute from "./privateRoute";
 import AdminRoute from "./adminRoute";
 
@@ -20,8 +20,8 @@ class Routes extends Component {
       <div className="routes">
         <Switch>
           <PrivateRoute exact path={ROUTES.HOME} component={MediaScreen} />
-          <AdminRoute path={ROUTES.USERS} component={Users} />
-          <AdminRoute path={ROUTES.SOURCES} component={Sources} />
+          <AdminRoute path={ROUTES.USERS} component={UsersManagement} />
+          <AdminRoute path={ROUTES.SOURCES} component={SourcesManagement} />
           <Route path={ROUTES.LOGIN} component={Login} />
         </Switch>
       </div>

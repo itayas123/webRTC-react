@@ -8,7 +8,7 @@ const {
   onUserDesconnected,
   sendAliveSources,
   onDeleteSession,
-} = require("./services/kurento");
+} = require("./services/kurento.service");
 module.exports = async function (server) {
   const io = socketIO(server);
   await init(io);

@@ -6,8 +6,8 @@ import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
 import AddUser from "../../components/Users/addUser";
-import { sourceColumns } from "../Sources/sources";
-import "./users.css";
+import { sourceColumns } from "../Sources/sourcesManagement";
+import "./management.css";
 
 const columns = [
   {
@@ -97,7 +97,7 @@ const onSubmit = async (values) => {
   }
 };
 
-const Users = () => {
+const UsersManagement = () => {
   useEffect(() => {
     userStore.fetchAll();
     sourceStore.fetchAll();
@@ -140,4 +140,4 @@ const Users = () => {
   );
 };
 
-export default observer(Users);
+export default observer(UsersManagement);

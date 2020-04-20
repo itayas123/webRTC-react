@@ -6,7 +6,7 @@ import stores from "../../../stores";
 import Button from "../../components/Button/button";
 import DataTable from "../../components/DataTable/dataTable";
 import AddSource from "../../components/Sources/addSource";
-import "../Users/users.css";
+import "../Users/management.css";
 
 export const sourceColumns = (actions) => {
   const columns = [
@@ -80,7 +80,7 @@ const onSubmit = async (values) => {
   }
 };
 
-const Sources = () => {
+const SourcesManagement = () => {
   useEffect(() => {
     sourceStore.fetchAll();
     userStore.fetchAll();
@@ -112,4 +112,4 @@ const Sources = () => {
   );
 };
 
-export default observer(Sources);
+export default observer(SourcesManagement);
