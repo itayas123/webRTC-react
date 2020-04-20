@@ -14,12 +14,12 @@ class CRUDService {
       },
       {
         method: "put",
-        path: "/:_id",
+        path: "/:id",
         handler: this.update.bind(this),
       },
       {
         method: "delete",
-        path: "/:_id",
+        path: "/:id",
         handler: this.delete.bind(this),
       },
       {
@@ -45,7 +45,7 @@ class CRUDService {
 
   async update(req, res, next) {
     try {
-      const { _id } = req.params;
+      const _id = req.params.id;
       await this.model.updateOne({ _id }, req.body);
       const newUser = await this.model.findById(_id);
       return res.send({
@@ -59,7 +59,7 @@ class CRUDService {
 
   async delete(req, res, next) {
     try {
-      const { _id } = req.params;
+      const _id = req.params.id;
       await this.model.deleteOne({ _id });
       return res.send({
         data: req.body,

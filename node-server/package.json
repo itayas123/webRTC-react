@@ -2,10 +2,10 @@
   "name": "vidly",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest --watchAll --verbose",
-    "start": "nodemon index"
+    "start": "nodemon server"
   },
   "keywords": [],
   "author": "",
