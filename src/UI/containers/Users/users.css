@@ -1,8 +1,12 @@
 .users-container {
   padding: 20px;
 }
-.add-user {
+.add-user,
+.add-source {
   margin: 30px auto;
+}
+.sources-title {
+  margin-top: 0px;
 }
 .admin-checkbox {
   width: fit-content;
@@ -17,6 +21,6 @@
   max-height: 150px;
   overflow: auto;
 }
-.user-sources {
+.user-sources-tabel {
   padding: 10px 50px 35px;
 }

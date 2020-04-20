@@ -47,7 +47,7 @@ const start = async (sdpOffer, uri, id, socket) => {
 
   await playerEndpoint.connect(webRtcEndpoint);
 
-  console.log("player playing and connected");
+  console.log("player playing and connected", webRtcEndpoint);
 };
 
 const startRecord = async (id) => {

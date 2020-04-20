@@ -74,7 +74,7 @@ class UserService extends CRUDService {
   }
 }
 
-new UserService(expressRouter).routes.forEach((route) => {
+new UserService().routes.forEach((route) => {
   const { method, path, handler } = route;
   console.log(method + " " + path);
   expressRouter[method](path, handler);

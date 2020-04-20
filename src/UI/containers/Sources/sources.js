@@ -93,7 +93,7 @@ const Sources = () => {
     <div className="users-container">
       <h1>Sources Management</h1>
       <Button
-        className="add-user"
+        className="add-source"
         onClick={() => {
           toggleModal();
           setSelected({ name: "", uri: "", users: allUsers });

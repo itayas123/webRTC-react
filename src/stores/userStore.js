@@ -20,13 +20,12 @@ class UserStore extends CRUDStore {
   @action
   setSelected = (user) => {
     const allSources = this.stores.sourceStore.list;
+    const userSources = user.sources.map((userSource) => userSource._id);
     this.selected = {
       ...user,
       sources: allSources.map((source) => ({
         ...source,
-        isActive: user.sources
-          .map((userSource) => userSource._id)
-          .includes(source._id),
+        isActive: userSources.includes(source._id),
       })),
     };
     console.log(this.selected, allSources);

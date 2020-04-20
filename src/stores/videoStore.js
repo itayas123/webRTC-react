@@ -17,10 +17,10 @@ export default class VideoStore {
   @action
   setUpSocket = (socket) => {
     socket.on("connect", () => {
-      console.log("connected");
+      console.log("connected", socket.id);
     });
 
-    this.socket.on("aliveSources", (sources) => {
+    socket.on("aliveSources", (sources) => {
       console.log("aliveSources", sources);
       this.stores.sourceStore.setAliveSources(sources);
     });

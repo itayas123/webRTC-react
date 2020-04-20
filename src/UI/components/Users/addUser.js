@@ -73,7 +73,7 @@ const AddUser = ({ show, onClose, initialValues, onSubmit }) => {
             />
             {values.sources && (
               <>
-                <h3>sources</h3>
+                <h3 className="sources-title">sources</h3>
                 <div className="sources">
                   <FieldArray name="sources">
                     {({ form }) => (

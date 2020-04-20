@@ -123,7 +123,7 @@ const Users = () => {
         SubComponent={(row) => {
           const { sources, name } = row.original;
           return (
-            <div className="user-sources">
+            <div className="user-sources-tabel">
               <h3>{`${name} allowed sources`}</h3>
               <DataTable data={sources} columns={sourceColumns()} minRows={3} />
             </div>
