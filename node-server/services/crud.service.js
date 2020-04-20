@@ -1,15 +1,33 @@
 class CRUDService {
   constructor(model, router) {
     this.model = model;
-    this.router = router;
+    this.routes = [];
     this.setupRoutes();
   }
 
   setupRoutes() {
-    this.router.post("/", this.create.bind(this));
-    this.router.put("/:_id", this.update.bind(this));
-    this.router.delete("/:_id", this.delete.bind(this));
-    this.router.get("/", this.getAll.bind(this));
+    this.routes.push(
+      {
+        method: "post",
+        path: "/",
+        handler: this.create.bind(this),
+      },
+      {
+        method: "put",
+        path: "/:_id",
+        handler: this.update.bind(this),
+      },
+      {
+        method: "delete",
+        path: "/:_id",
+        handler: this.delete.bind(this),
+      },
+      {
+        method: "get",
+        path: "/",
+        handler: this.getAll.bind(this),
+      }
+    );
   }
 
   async create(req, res, next) {

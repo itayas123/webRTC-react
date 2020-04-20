@@ -6,14 +6,24 @@ const CRUDService = require("./crud.service");
 const User = require("../models/user");
 
 class UserService extends CRUDService {
-  constructor(router) {
-    super(User, router);
+  constructor() {
+    super(User);
   }
 
   setupRoutes() {
-    this.router.put("/login", this.login.bind(this));
-    this.router.get("/getCurrentUser", this.getCurrentUser.bind(this));
     super.setupRoutes();
+    this.routes.push(
+      {
+        method: "put",
+        path: "/login",
+        handler: this.login.bind(this),
+      },
+      {
+        method: "get",
+        path: "/getCurrentUser",
+        handler: this.getCurrentUser.bind(this),
+      }
+    );
   }
 
   async getAll(req, res, next) {
@@ -64,4 +74,9 @@ class UserService extends CRUDService {
   }
 }
 
-module.exports = new UserService(expressRouter).router;
+new UserService(expressRouter).routes.forEach((route) => {
+  const { method, path, handler } = route;
+  expressRouter[method](path, handler);
+});
+
+module.exports = expressRouter;

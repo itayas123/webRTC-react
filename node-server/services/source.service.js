@@ -7,13 +7,17 @@ const Source = require("../models/source");
 const User = require("../models/user");
 
 class SourceService extends CRUDService {
-  constructor(router) {
-    super(Source, router);
+  constructor() {
+    super(Source);
   }
 
   setupRoutes() {
-    this.router.get("/sourcesByUser", this.sourcesByUser.bind(this));
     super.setupRoutes();
+    this.routes.push({
+      method: "get",
+      path: "/sourcesByUser",
+      handler: this.sourcesByUser.bind(this),
+    });
   }
 
   async sourcesByUser(req, res, next) {
@@ -55,4 +59,9 @@ class SourceService extends CRUDService {
   }
 }
 
-module.exports = new SourceService(expressRouter).router;
+new SourceService(expressRouter).routes.forEach((route) => {
+  const { method, path, handler } = route;
+  expressRouter[method](path, handler);
+});
+
+module.exports = expressRouter;
