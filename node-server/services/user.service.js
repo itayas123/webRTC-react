@@ -14,7 +14,7 @@ class UserService extends CRUDService {
     super.setupRoutes();
     this.routes.push(
       {
-        method: "put",
+        method: "post",
         path: "/login",
         handler: this.login.bind(this),
       },
@@ -76,6 +76,7 @@ class UserService extends CRUDService {
 
 new UserService(expressRouter).routes.forEach((route) => {
   const { method, path, handler } = route;
+  console.log(method + " " + path);
   expressRouter[method](path, handler);
 });
 

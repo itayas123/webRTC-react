@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { observer } from "mobx-react";
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { ROUTES } from "../../../Routes/Routes";
 import stores from "../../../stores";
 import { validateEmail } from "../../../utils";
@@ -38,7 +38,8 @@ const handleSubmit = async (values, history) => {
   }
 };
 
-const Login = ({ history }) => {
+const Login = () => {
+  const history = useHistory();
   return (
     <div className="login">
       <h1>Sign in</h1>
@@ -75,4 +76,4 @@ const Login = ({ history }) => {
   );
 };
 
-export default withRouter(observer(Login));
+export default observer(Login);

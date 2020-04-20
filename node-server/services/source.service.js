@@ -61,6 +61,7 @@ class SourceService extends CRUDService {
 
 new SourceService(expressRouter).routes.forEach((route) => {
   const { method, path, handler } = route;
+  console.log(method + " " + path);
   expressRouter[method](path, handler);
 });
 

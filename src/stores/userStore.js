@@ -41,7 +41,7 @@ class UserStore extends CRUDStore {
   @action
   login = async (email, password) => {
     try {
-      const user = await API.put("/users/login", { email, password });
+      const user = await API.post("/users/login", { email, password });
       localStorage.setItem(TOKEN, user.token);
       this.setCurrentUser(user);
       return user;
