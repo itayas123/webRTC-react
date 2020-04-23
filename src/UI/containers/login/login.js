@@ -2,6 +2,7 @@ import { Form, Formik } from "formik";
 import { observer } from "mobx-react";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import { ROUTES } from "../../../Routes/Routes";
 import stores from "../../../stores";
 import { validateEmail } from "../../../utils";
@@ -32,9 +33,10 @@ const handleSubmit = async (values, history) => {
 
   try {
     await login(email, password);
+    toast("Welcome to Namer");
     history.push(ROUTES.HOME);
-  } catch (e) {
-    alert(e.message);
+  } catch (err) {
+    toast.error(err.message);
   }
 };
 

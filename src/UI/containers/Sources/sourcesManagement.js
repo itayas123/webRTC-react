@@ -1,6 +1,7 @@
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 import { deleteIcon, editIcon } from "../../../assets";
 import stores from "../../../stores";
 import Button from "../../components/Button/button";
@@ -30,8 +31,12 @@ export const sourceColumns = (actions) => {
             src={deleteIcon}
             alt="delete"
             onClick={() => {
-              if (window.confirm("Are you sure?"))
-                sourceStore.delete(row._original._id);
+              if (window.confirm("Are you sure?")) {
+                sourceStore
+                  .delete(row._original._id)
+                  .then(() => toast.success("Source successfully deleted"))
+                  .catch((err) => toast.error(err.message));
+              }
             }}
           />
           <img
@@ -61,11 +66,14 @@ const toggleModal = () => {
 };
 
 const onSubmit = async (values) => {
-  const { create, update } = sourceStore;
   try {
+    const { create, update } = sourceStore;
+    let message;
     if (values._id) {
+      message = "Source successfully updated";
       await update(values);
     } else {
+      message = "Source successfully created";
       const source = {
         source: values,
         users: values.users
@@ -75,8 +83,9 @@ const onSubmit = async (values) => {
       await create(source);
     }
     toggleModal();
+    toast.success(message);
   } catch (err) {
-    alert(err);
+    toast.error(err.message);
   }
 };
 

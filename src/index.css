@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
+@import "~react-toastify/dist/ReactToastify.min.css";
 
 body {
   margin: 0;
@@ -39,6 +40,9 @@ code {
   margin-top: 70px;
   width: 100%;
   height: 100%;
+}
+.toast-container {
+  text-align: start;
 }
 .disabled {
   opacity: 0.5;

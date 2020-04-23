@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "./App.css";
 import Routes from "./Routes/Routes";
 import stores from "./stores";
@@ -20,8 +21,8 @@ class App extends React.Component {
   componentDidMount = async () => {
     try {
       await userStore.fetchCurrentUser();
-    } catch (e) {
-      alert(e);
+    } catch (err) {
+      toast.error(err.message);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -46,6 +47,7 @@ class App extends React.Component {
           }}
         />
         {isLoading ? <> loading </> : <Routes />}
+        <ToastContainer className="toast-container" />
       </div>
     );
   }
