@@ -1,16 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import "./navbar.css";
-import { sidebarIcon, logout, tiger } from "../../../assets";
+import { Link, useLocation } from "react-router-dom";
+import { logout, sidebarIcon, tiger } from "../../../assets";
 import { ROUTES } from "../../../Routes/Routes";
+import "./navbar.css";
 
-const navbar = ({ user, onLogout, showSidebar }) => {
+const Navbar = ({ user, onLogout, showSidebar }) => {
   const { name, admin } = user;
+  const location = useLocation();
+  const isHomePage = location.pathname === ROUTES.HOME;
   return (
     <div className="navbar">
       <img
-        className={`sidebar-icon ${name ? "" : "disabled"}`}
-        onClick={name ? showSidebar : () => {}}
+        className={`sidebar-icon ${isHomePage ? "" : "disabled"}`}
+        onClick={showSidebar}
         src={sidebarIcon}
         alt="sidebar"
       />
@@ -50,4 +52,4 @@ const navbar = ({ user, onLogout, showSidebar }) => {
   );
 };
 
-export default navbar;
+export default Navbar;

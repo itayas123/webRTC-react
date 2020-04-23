@@ -13,7 +13,7 @@ class SourceList extends React.Component {
     return (
       <div
         className={`item-list ${isDisabled ? "disabled" : ""}`}
-        onClick={() => (isDisabled ? {} : videoStore.addVideo(source))}
+        onClick={() => videoStore.addVideo(source)}
         key={source._id}
       >
         <img className="camera-img" src={camera} alt="camera" />

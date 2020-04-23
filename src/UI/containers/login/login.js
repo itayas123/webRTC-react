@@ -34,7 +34,7 @@ const handleSubmit = async (values, history) => {
     await login(email, password);
     history.push(ROUTES.HOME);
   } catch (e) {
-    alert(e);
+    alert(e.message);
   }
 };
 

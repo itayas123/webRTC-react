@@ -20,10 +20,6 @@
 .item-list.record {
   cursor: initial;
 }
-.disabled {
-  opacity: 0.5;
-  cursor: initial;
-}
 .disabled:hover,
 .no-border {
   border: none !important;
