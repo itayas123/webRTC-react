@@ -45,8 +45,20 @@ export default class VideoStore {
       console.log("stopRecord", uri);
       toast.info(`Recording saved in: ${uri}`, {
         autoClose: 10000,
-        bodyClassName: "record-toast",
+        bodyClassName: "uri-toast",
       });
+    });
+
+    socket.on("deletedSource", (uri) => {
+      const index = this.videoArray.findIndex((video) => video.uri === uri);
+      if (index !== -1) {
+        const video = this.videoArray[index];
+        this.videoArray.splice(index);
+        this.handleDeleteVideo(video);
+        toast.warn(`Source ${uri} disconnected`, {
+          bodyClassName: "uri-toast",
+        });
+      }
     });
   };
 

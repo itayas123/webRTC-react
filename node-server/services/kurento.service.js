@@ -11,7 +11,9 @@ const init = async (socket) => {
 };
 
 const sendAliveSources = async (socket) => {
-  const sources = await kurentoclient.getAliveSources();
+  const sources = await kurentoclient.getAliveSources((deletedUri) => {
+    socket.emit("deletedSource", deletedUri);
+  });
   socket.emit("aliveSources", sources);
 };
 
@@ -48,7 +50,7 @@ const start = async (sdpOffer, uri, id, socket) => {
 
   await playerEndpoint.connect(webRtcEndpoint);
 
-  console.log("player playing and connected", webRtcEndpoint);
+  console.log("player playing and connected");
 };
 
 const startRecord = async (id) => {

@@ -6,7 +6,6 @@ const {
   startRecord,
   stopRecord,
   onUserDisconnected,
-  sendAliveSources,
   onDeleteSession,
 } = require("./services/kurento.service");
 module.exports = async function (server) {
@@ -15,7 +14,6 @@ module.exports = async function (server) {
   io.on("connection", async (socket) => {
     const { id } = socket;
     console.log("socket connected ", id);
-    sendAliveSources(socket);
     // TODO: check another option
     socket.on("start", (...args) => start(args[0], args[1], args[2], socket));
     socket.on("candidate", onRecieveIceCandaite);
