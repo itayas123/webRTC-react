@@ -1,9 +1,12 @@
-// @ts-check
 const KurentoClientModel = require("../models/kurentoClientModel");
 const config = require("../config");
-const { ipRegex } = require("../utils");
+const { asyncForEach } = require("../utils");
+const ping = require("ping");
+const Source = require("../models/source");
 
 const kurentoclient = new KurentoClientModel();
+
+const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
 const init = async (socket) => {
   setInterval(() => sendAliveSources(socket), config.ALIVE_SOURCES_TIME);
@@ -11,10 +14,25 @@ const init = async (socket) => {
 };
 
 const sendAliveSources = async (socket) => {
-  const sources = await kurentoclient.getAliveSources((deletedUri) => {
-    socket.emit("deletedSource", deletedUri);
+  const sources = await Source.find({});
+  const alives = [];
+  const uris = sources.map((source) => source.uri);
+
+  await asyncForEach(uris, async (uri) => {
+    const ip = uri.match(ipRegex) || [];
+    if (ip.length) {
+      const res = await ping.promise.probe(ip[0], { timeout: 2 });
+      if (res.alive) {
+        await kurentoclient.getPlayerEndpoint(uri);
+        alives.push(uri);
+      } else if (kurentoclient.playerEndpoints[uri]) {
+        socket.emit("deletedSource", uri);
+        kurentoclient.deletePlayer(uri);
+      }
+    }
   });
-  socket.emit("aliveSources", sources);
+
+  socket.emit("aliveSources", alives);
 };
 
 const onSendIceCandidate = (event, id, socket) => {

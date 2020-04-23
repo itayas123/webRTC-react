@@ -1,7 +1,5 @@
 const kurentoClient = require("kurento-client");
-const ping = require("ping");
-const { asyncForEach, ipRegex } = require("../utils");
-const Source = require("../models/source");
+const { asyncForEach } = require("../utils");
 
 class KurentoClientModel {
   constructor() {
@@ -23,30 +21,6 @@ class KurentoClientModel {
       recordEndpoint: undefined,
       uri: "",
     });
-  };
-
-  getAliveSources = async (deleteCallBack) => {
-    const sources = await Source.find({});
-    const alives = [];
-    const uris = sources.map((source) => source.uri);
-
-    await asyncForEach(uris, async (uri) => {
-      const ip = uri.match(ipRegex) || [];
-      if (ip.length) {
-        const res = await ping.promise.probe(ip[0], { timeout: 2 });
-        if (res.alive) {
-          await this.getPlayerEndpoint(uri);
-          alives.push(uri);
-        } else {
-          console.log("no ping to ", uri);
-          const isDeleted = await this.deletePlayer(uri);
-          if (isDeleted) {
-            deleteCallBack(uri);
-          }
-        }
-      }
-    });
-    return alives;
   };
 
   onRecieveIceCandidate = (_candidate, id) => {

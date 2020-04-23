@@ -54,7 +54,7 @@ export default class VideoStore {
       if (index !== -1) {
         const video = this.videoArray[index];
         this.videoArray.splice(index);
-        this.handleDeleteVideo(video);
+        this.handleDeleteVideo(video._id);
         toast.warn(`Source ${uri} disconnected`, {
           bodyClassName: "uri-toast",
         });
