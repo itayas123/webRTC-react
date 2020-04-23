@@ -8,7 +8,7 @@ const users = require("./services/user.service");
 const sources = require("./services/source.service");
 const config = require("./config");
 
-app.use(cors());
+app.use(cors({ origin: config.ALLOWED_ORIGINS }));
 app.use(bodyParser.json());
 
 /**
