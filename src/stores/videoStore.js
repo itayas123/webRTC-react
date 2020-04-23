@@ -1,7 +1,8 @@
 // @ts-check
-import { observable, action } from "mobx";
-import io from "socket.io-client";
 import kurentoUtils from "kurento-utils";
+import { action, observable } from "mobx";
+import { toast } from "react-toastify";
+import io from "socket.io-client";
 import { sleep } from "../utils";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
@@ -42,7 +43,10 @@ export default class VideoStore {
 
     socket.on("stopRecord", (uri) => {
       console.log("stopRecord", uri);
-      this.addVideo({ uri, _id: uri, name: uri });
+      toast.info(`Recording saved in: ${uri}`, {
+        autoClose: 10000,
+        bodyClassName: "record-toast",
+      });
     });
   };
 

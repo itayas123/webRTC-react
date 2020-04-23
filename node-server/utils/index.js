@@ -11,4 +11,6 @@ async function asyncForEach(array, callback) {
   }
 }
 
-module.exports = { asyncForEach, getUserIdByToken };
+const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+
+module.exports = { asyncForEach, getUserIdByToken, ipRegex };

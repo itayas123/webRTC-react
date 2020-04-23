@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
 import { recordIcon } from "../../../../assets";
 import { timeFormat } from "../../../../utils";
 
@@ -19,8 +18,6 @@ const Record = ({ isRecording, name, onClick }) => {
       clearInterval(timer);
       timer = undefined;
       setTime(0);
-      // TODO: find a way to get the record path
-      toast.info("Recording saved in Desktop/Namer-Records");
     }
   }, [isRecording]);
 

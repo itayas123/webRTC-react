@@ -15,7 +15,7 @@
       "name": "start LOCALHOST",
       "type": "node",
       "request": "launch",
-      "args": ["${workspaceRoot}/node-server/index.js"],
+      "args": ["${workspaceRoot}/node-server/server.js"],
       "cwd": "${workspaceRoot}/node-server",
       "protocol": "inspector",
       "internalConsoleOptions": "openOnSessionStart"

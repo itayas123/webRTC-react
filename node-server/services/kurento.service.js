@@ -1,6 +1,7 @@
 // @ts-check
 const KurentoClientModel = require("../models/kurentoClientModel");
 const config = require("../config");
+const { ipRegex } = require("../utils");
 
 const kurentoclient = new KurentoClientModel();
 
@@ -51,40 +52,57 @@ const start = async (sdpOffer, uri, id, socket) => {
 };
 
 const startRecord = async (id) => {
-  const recordEndpoint = await kurentoclient.createRecorderEndpoint(
-    id,
-    config.RECORD_FILE_URI.replace("{id}", id)
-  );
   const { uri } = kurentoclient.getSessionById(id);
+  const now = new Date();
+  const date = now.toLocaleDateString();
+  const time = now.toLocaleTimeString();
+  const ip = (uri.match(ipRegex) || [])[0] || "ip"; // just for safe
+  const fileUri = config.RECORD_FILE_URI.replace(
+    "{id}",
+    `${ip}/${date}/${time}`
+  );
+  const recordEndpoint = await kurentoclient.getRecorderEndpoint(id, fileUri);
   const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
   await playerEndpoint.connect(recordEndpoint);
   await recordEndpoint.record();
   console.log("recording", uri);
 };
 
-const stopRecord = async (id) => {
+const stopRecord = async (id, socket) => {
   try {
     const session = kurentoclient.getSessionById(id);
-    const { recordEndpoint } = session;
-    // disconnect from playerEndpoint
+    const { recordEndpoint, uri } = session;
     await recordEndpoint.stop();
-    const uri = await recordEndpoint.getUri();
-    console.log(" stop recording ", uri, recordEndpoint);
+    const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
+    await playerEndpoint.disconnect(recordEndpoint);
+    const fileUri = await recordEndpoint.getUri();
+    socket.emit(
+      "stopRecord",
+      fileUri.replace(config.DOCKER_FOLDER, config.LOCAL_FOLDER)
+    );
+    console.log("stopRecord", fileUri);
     session.recordEndpoint = undefined;
   } catch (err) {
     console.error(err);
   }
 };
 
+const onUserDisconnected = (userId) => {
+  Object.keys(kurentoclient.sessions).forEach((sessionId) => {
+    if (sessionId.includes(userId)) {
+      kurentoclient.deleteSession(sessionId);
+    }
+  });
+};
+
 const onRecieveIceCandaite = kurentoclient.onRecieveIceCandidate;
-const onUserDesconnected = kurentoclient.onUserDesconnected;
 const onDeleteSession = kurentoclient.deleteSession;
 
 module.exports = {
   init,
   start,
   onRecieveIceCandaite,
-  onUserDesconnected,
+  onUserDisconnected,
   startRecord,
   stopRecord,
   sendAliveSources,

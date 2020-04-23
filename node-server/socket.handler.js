@@ -5,7 +5,7 @@ const {
   onRecieveIceCandaite,
   startRecord,
   stopRecord,
-  onUserDesconnected,
+  onUserDisconnected,
   sendAliveSources,
   onDeleteSession,
 } = require("./services/kurento.service");
@@ -20,8 +20,8 @@ module.exports = async function (server) {
     socket.on("start", (...args) => start(args[0], args[1], args[2], socket));
     socket.on("candidate", onRecieveIceCandaite);
     socket.on("startRecord", startRecord);
-    socket.on("stopRecord", stopRecord);
+    socket.on("stopRecord", (id) => stopRecord(id, socket));
     socket.on("deleteSession", onDeleteSession);
-    socket.on("disconnect", () => onUserDesconnected(id));
+    socket.on("disconnect", () => onUserDisconnected(id));
   });
 };

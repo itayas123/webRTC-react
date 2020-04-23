@@ -43,6 +43,9 @@
   font-size: 0.75rem;
   margin-top: 2px;
 }
+.record .source-uri {
+  font-size: 1rem;
+}
 .record-img {
   cursor: pointer;
   width: 30px;
@@ -51,4 +54,7 @@
 }
 .record-img.opac {
   opacity: 0.4;
+}
+.record-toast {
+  font-size: 0.85rem;
 }
