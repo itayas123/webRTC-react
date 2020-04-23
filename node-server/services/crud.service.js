@@ -1,3 +1,5 @@
+const ErrorResponse = require("../models/errorResponse");
+
 class CRUDService {
   constructor(model, router) {
     this.model = model;
@@ -39,6 +41,11 @@ class CRUDService {
       return res.send({ data: newObject });
     } catch (e) {
       console.error(e);
+      if (e.code === 11000) {
+        // duplication error - already exists
+        const exists = Object.keys(e.keyPattern)[0];
+        return next(new ErrorResponse(`${exists} already exists`));
+      }
       next(e);
     }
   }
