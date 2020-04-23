@@ -46,9 +46,8 @@ class SourceService extends CRUDService {
     try {
       await newSource.save();
       for (const userId of users) {
-        const user = await User.findById(userId);
         await User.findByIdAndUpdate(userId, {
-          sources: [...user.toObject().sources, newSource._id],
+          $push: { sources: newSource._id },
         });
       }
       return res.send({ data: newSource });

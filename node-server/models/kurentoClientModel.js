@@ -33,7 +33,7 @@ class KurentoClientModel {
     await asyncForEach(uris, async (uri) => {
       const ip = uri.match(ipRegex) || [];
       if (ip.length) {
-        const res = await ping.promise.probe(ip[0]);
+        const res = await ping.promise.probe(ip[0], { timeout: 2 });
         if (res.alive) {
           await this.getPlayerEndpoint(uri);
           alives.push(uri);
@@ -80,10 +80,6 @@ class KurentoClientModel {
       const playerEndpoint = await this.pipeline.create("PlayerEndpoint", {
         uri,
         options,
-      });
-      playerEndpoint.on("Error", (err) => {
-        this.deletePlayer(uri);
-        console.error("deleee", err, this.playerEndpoints);
       });
       await playerEndpoint.play();
       this.playerEndpoints[uri] = playerEndpoint;
