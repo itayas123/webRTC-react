@@ -9,6 +9,7 @@ import Sidebar from "./UI/components/Sidebar/sidebar";
 import { withRouter } from "react-router-dom";
 
 const { userStore } = stores;
+@withRouter
 @observer
 class App extends React.Component {
   constructor(props) {
@@ -62,4 +63,4 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(App);
+export default App;
