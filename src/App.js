@@ -2,10 +2,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "./App.css";
-import Routes from "./Routes/Routes";
+import Routes, { ROUTES } from "./Routes/Routes";
 import stores from "./stores";
 import Navbar from "./UI/components/Navbar/navbar";
 import Sidebar from "./UI/components/Sidebar/sidebar";
+import { withRouter } from "react-router-dom";
 
 const { userStore } = stores;
 @observer
@@ -25,6 +26,14 @@ class App extends React.Component {
       toast.error(err.message);
     } finally {
       this.setState({ isLoading: false });
+    }
+  };
+
+  componentDidUpdate = () => {
+    const { location } = this.props;
+    const { showSidebar } = this.state;
+    if (showSidebar && location.pathname !== ROUTES.HOME) {
+      this.setState({ showSidebar: false });
     }
   };
 
@@ -52,4 +61,5 @@ class App extends React.Component {
     );
   }
 }
-export default App;
+
+export default withRouter(App);
