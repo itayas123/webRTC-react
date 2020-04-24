@@ -12,65 +12,32 @@ export default class VideoStore {
     this.stores = stores;
     // setup socket io client
     this.socket = io("http://localhost:3001");
-    this.setUpSocket(this.socket);
+    this.setUpSocket();
   }
 
   @action
-  setUpSocket = (socket) => {
-    socket.on("connect", () => {
-      console.log("connected", socket.id);
+  setUpSocket = () => {
+    this.socket.on("connect", () => {
+      console.log("connected", this.socket.id);
     });
 
-    socket.on("aliveSources", (sources) => {
-      console.log("aliveSources", sources);
-      this.stores.sourceStore.setAliveSources(sources);
-    });
-
-    socket.on("candidate", (candidate, id) => {
-      console.log("recieve candidate", candidate);
-
-      this.webRtcPeers[id].addIceCandidate(candidate, (error) => {
-        if (error) console.error(error);
-      });
-    });
-
-    socket.on("sdpAnswer", (sdpAnswer, id) => {
-      console.log("sdpAnswer", JSON.stringify(sdpAnswer));
-      this.webRtcPeers[id].processAnswer(sdpAnswer, (error) => {
-        if (error) console.error("sdperrror", error);
-      });
-    });
-
-    socket.on("stopRecord", (uri) => {
-      console.log("stopRecord", uri);
-      toast.info(`Recording saved in: ${uri}`, {
-        autoClose: 10000,
-        bodyClassName: "uri-toast",
-      });
-    });
-
-    socket.on("deletedSource", (uri) => {
-      const index = this.videoArray.findIndex((video) => video.uri === uri);
-      if (index !== -1) {
-        const video = this.videoArray[index];
-        this.videoArray.splice(index);
-        this.handleDeleteVideo(video._id);
-        toast.warn(`Source ${uri} disconnected`, {
-          bodyClassName: "uri-toast",
-        });
-      }
-    });
+    this.socket.on("aliveSources", this.stores.sourceStore.setAliveSources);
+    this.socket.on("candidate", this.onCandidate);
+    this.socket.on("sdpAnswer", this.onSdpAnswer);
+    this.socket.on("stopRecord", this.onStopRecord);
+    this.socket.on("deletedSource", this.onDeletedSource);
   };
 
   @action
-  addVideo = async (video) => {
+  addVideo = (video) => {
     this.videoArray.push(video);
-    await sleep(100);
     const { _id, uri } = video;
     this.handleAddVideo(_id, uri);
   };
 
-  handleAddVideo = (id, uri) => {
+  handleAddVideo = async (id, uri) => {
+    // await 10 msec for the video to be render
+    await sleep(10);
     const videoOutput = document.getElementById(id);
     console.log(videoOutput, id);
     if (!videoOutput) return false;
@@ -95,7 +62,7 @@ export default class VideoStore {
           }
           this.socket.emit("start", sdpOffer, uri, sessionId);
         });
-        // listen to iceconnectionstatechange in order to know the state of the stream
+        // listen to ice connection state change in order to know the state of the stream
         this.webRtcPeers[
           sessionId
         ].peerConnection.addEventListener("iceconnectionstatechange", (event) =>
@@ -103,22 +70,6 @@ export default class VideoStore {
         );
       }
     );
-  };
-
-  @action
-  deleteVideo = (video) => {
-    const { _id } = video;
-    const index = this.videoArray.findIndex((videoObj) => _id === videoObj._id);
-    if (index !== -1) {
-      this.videoArray.splice(index, 1);
-      this.handleDeleteVideo(_id);
-    }
-  };
-
-  handleDeleteVideo = (videoId) => {
-    const id = videoId + this.socket.id;
-    this.socket.emit("deleteSession", id);
-    delete this.webRtcPeers[id];
   };
 
   iceconnectionstatechange = (event, id) => {
@@ -134,6 +85,22 @@ export default class VideoStore {
     }
   };
 
+  @action
+  deleteVideo = (video) => {
+    const { _id } = video;
+    const index = this.videoArray.findIndex((videoObj) => _id === videoObj._id);
+    if (index !== -1) {
+      this.videoArray.splice(index, 1);
+      this.handleDeleteVideo(_id);
+    }
+  };
+
+  handleDeleteVideo = (videoId) => {
+    const sessionId = videoId + this.socket.id;
+    this.socket.emit("deleteSession", sessionId);
+    delete this.webRtcPeers[sessionId];
+  };
+
   sendCandidate = (candidate, id) => {
     console.log("Local icecandidate " + JSON.stringify(candidate));
     this.socket.emit("candidate", candidate, id);
@@ -145,5 +112,40 @@ export default class VideoStore {
     video.isRecording = !isRecording;
     console.log(`toggler record ${!isRecording} ${_id}`);
     this.socket.emit(isRecording ? "stopRecord" : "startRecord", _id);
+  };
+
+  onCandidate = (candidate, id) => {
+    console.log("recieve candidate", candidate);
+    this.webRtcPeers[id].addIceCandidate(candidate, (error) => {
+      if (error) console.error(error);
+    });
+  };
+
+  onSdpAnswer = (sdpAnswer, id) => {
+    console.log("sdpAnswer", JSON.stringify(sdpAnswer));
+    this.webRtcPeers[id].processAnswer(sdpAnswer, (error) => {
+      if (error) console.error("sdperrror", error);
+    });
+  };
+
+  onStopRecord = (uri) => {
+    console.log("stopRecord", uri);
+    toast.info(`Recording saved in: ${uri}`, {
+      autoClose: 10000,
+      bodyClassName: "uri-toast",
+    });
+  };
+
+  @action
+  onDeletedSource = (uri) => {
+    const index = this.videoArray.findIndex((video) => video.uri === uri);
+    if (index !== -1) {
+      const video = this.videoArray[index];
+      this.videoArray.splice(index);
+      this.handleDeleteVideo(video._id);
+      toast.warn(`Source ${uri} disconnected`, {
+        bodyClassName: "uri-toast",
+      });
+    }
   };
 }

@@ -36,6 +36,7 @@ export default class SourceStore extends CRUDStore {
 
   @action
   setAliveSources = (aliveSources) => {
+    console.log("aliveSources", aliveSources);
     this.aliveSources.replace(aliveSources);
   };
 

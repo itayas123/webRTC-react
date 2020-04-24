@@ -68,12 +68,19 @@ class KurentoClientModel {
       if (playerEndpoint) {
         console.log("deleting player:", uri);
         const connections = await playerEndpoint.getSinkConnections();
-        await asyncForEach(connections, async (connection) => {
-          const mediaObj = await this.kurento.getMediaobjectById(
-            connection.sink
-          );
-          await playerEndpoint.disconnect(mediaObj);
-        });
+        await Promise.all(
+          connections.map((connection) =>
+            this.kurento
+              .getMediaobjectById(connection.sink)
+              .then((mediaObj) => playerEndpoint.disconnect(mediaObj))
+          )
+        );
+        // await asyncForEach(connections, async (connection) => {
+        //   const mediaObj = await this.kurento.getMediaobjectById(
+        //     connection.sink
+        //   );
+        //   await playerEndpoint.disconnect(mediaObj);
+        // });
         await playerEndpoint.release();
         delete this.playerEndpoints[uri];
         return true;
