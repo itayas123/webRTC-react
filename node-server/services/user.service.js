@@ -28,7 +28,7 @@ class UserService extends CRUDService {
   async getAll(req, res, next) {
     try {
       const results = await User.find({}).populate("sources");
-      return res.send({ data: results });
+      return res.send(results);
     } catch (e) {
       console.log(e);
       next(e);
@@ -37,7 +37,7 @@ class UserService extends CRUDService {
 
   async getCurrentUser(req, res, next) {
     try {
-      return res.send({ data: req.user });
+      return res.send(req.user);
     } catch (e) {
       console.log(e);
       next(e);
@@ -59,7 +59,7 @@ class UserService extends CRUDService {
           return next(new ErrorResponse("Invalid password", 404));
         }
         const token = user.generateAuthToken();
-        return res.send({ data: { ...user.toObject(), token } });
+        return res.send({ ...user.toObject(), token });
       });
     } catch (e) {
       next(e);

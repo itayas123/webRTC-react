@@ -24,9 +24,9 @@ class SourceService extends CRUDService {
       const { user } = req;
       if (user.admin) {
         const allSources = await this.model.find({});
-        return res.send({ data: allSources });
+        return res.send(allSources);
       }
-      return res.send({ data: user.sources });
+      return res.send(user.sources);
     } catch (e) {
       next(e);
     }
@@ -42,7 +42,7 @@ class SourceService extends CRUDService {
           $push: { sources: newSource._id },
         });
       }
-      return res.send({ data: newSource });
+      return res.send(newSource);
     } catch (e) {
       next(e);
     }

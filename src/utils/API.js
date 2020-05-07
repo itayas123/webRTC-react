@@ -16,10 +16,8 @@ API.interceptors.request.use((config) => {
 
 API.interceptors.response.use(
   (response) => {
-    if (response.data.error) {
-      throw new Error(response.data.error);
-    } else if (response.data.data) {
-      return response.data.data;
+    if (response.data) {
+      return response.data;
     }
     return response;
   },

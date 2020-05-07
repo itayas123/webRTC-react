@@ -52,7 +52,7 @@ class CRUDService {
       delete body._id;
       const newObject = new this.model({ ...body });
       await newObject.save();
-      return res.send({ data: newObject });
+      return res.send(newObject);
     } catch (e) {
       console.error(e);
       if (e.code === 11000) {
@@ -69,9 +69,7 @@ class CRUDService {
       const _id = req.params.id;
       await this.model.updateOne({ _id }, req.body);
       const newUser = await this.model.findById(_id);
-      return res.send({
-        data: newUser,
-      });
+      return res.send(newUser);
     } catch (e) {
       console.error(e);
       next(e);
@@ -82,9 +80,7 @@ class CRUDService {
     try {
       const _id = req.params.id;
       await this.model.deleteOne({ _id });
-      return res.send({
-        data: req.body,
-      });
+      return res.send(req.body);
     } catch (e) {
       console.log(e);
       next(e);
@@ -94,7 +90,7 @@ class CRUDService {
   async getAll(req, res, next) {
     try {
       const results = await this.model.find({});
-      return res.send({ data: results });
+      return res.send(results);
     } catch (e) {
       console.log(e);
       next(e);
