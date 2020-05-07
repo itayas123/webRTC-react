@@ -24,7 +24,7 @@ API.interceptors.response.use(
   (error) => {
     const errorMessage = error.response.data;
     if (errorMessage) {
-      console.log(errorMessage);
+      console.error(errorMessage);
       throw new Error(errorMessage.error);
     }
     throw error;

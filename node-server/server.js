@@ -64,7 +64,7 @@ mongoose
     console.log(`Connected to ${db}...`);
 
     server.listen(port, () => console.log(`Listening on port ${port}...`));
-    // require("./socket.handler")(server);
+    require("./socket.handler")(server);
   })
   .catch((error) => {
     console.error(`Not connected to ${db}... ${error}`);

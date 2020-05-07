@@ -25,8 +25,9 @@ export default class CRUDStore {
   @action
   create = async (object) => {
     try {
-      await API.post(this.baseRoute, object);
+      const created = await API.post(this.baseRoute, object);
       await this.fetchAll();
+      return created;
     } catch (err) {
       throw err;
     }
@@ -35,8 +36,9 @@ export default class CRUDStore {
   @action
   update = async (object) => {
     try {
-      await API.put(`${this.baseRoute}/${object._id}`, object);
+      const updated = await API.put(`${this.baseRoute}/${object._id}`, object);
       await this.fetchAll();
+      return updated;
     } catch (err) {
       throw err;
     }
@@ -45,8 +47,9 @@ export default class CRUDStore {
   @action
   delete = async (id) => {
     try {
-      await API.delete(`${this.baseRoute}/${id}`);
+      const deleted = await API.delete(`${this.baseRoute}/${id}`);
       await this.fetchAll();
+      return deleted;
     } catch (err) {
       throw err;
     }

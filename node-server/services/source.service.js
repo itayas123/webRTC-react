@@ -12,11 +12,18 @@ class SourceService extends CRUDService {
 
   setupRoutes() {
     super.setupRoutes();
-    this.routes.push({
-      method: "get",
-      path: "/sourcesByUser",
-      handlers: [this.checkUser, this.sourcesByUser.bind(this)],
-    });
+    this.routes.push(
+      {
+        method: "get",
+        path: "/sourcesByUser",
+        handlers: [this.checkUser, this.sourcesByUser.bind(this)],
+      },
+      {
+        method: "post",
+        path: "/addSourceToUsers",
+        handlers: [this.checkAdmin, this.addSourceToUsers],
+      }
+    );
   }
 
   async sourcesByUser(req, res, next) {
@@ -32,17 +39,15 @@ class SourceService extends CRUDService {
     }
   }
 
-  async create(req, res, next) {
-    const { source, users } = req.body;
-    const newSource = new this.model(source);
+  async addSourceToUsers(req, res, next) {
     try {
-      await newSource.save();
+      const { source, users } = req.body;
       for (const userId of users) {
         await User.findByIdAndUpdate(userId, {
-          $push: { sources: newSource._id },
+          $push: { sources: source._id },
         });
       }
-      return res.send(newSource);
+      return res.send(source);
     } catch (e) {
       next(e);
     }

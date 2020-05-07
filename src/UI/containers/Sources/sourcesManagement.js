@@ -67,20 +67,18 @@ const toggleModal = () => {
 
 const onSubmit = async (values) => {
   try {
-    const { create, update } = sourceStore;
+    const { create, update, addSourceToUsers } = sourceStore;
     let message;
     if (values._id) {
       message = "Source successfully updated";
       await update(values);
     } else {
       message = "Source successfully created";
-      const source = {
-        source: values,
-        users: values.users
-          .filter((user) => user.isActive)
-          .map((user) => user._id),
-      };
-      await create(source);
+      const users = values.users
+        .filter((user) => user.isActive)
+        .map((user) => user._id);
+      const newSource = await create(values);
+      await addSourceToUsers(newSource, users);
     }
     toggleModal();
     toast.success(message);
