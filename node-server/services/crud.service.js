@@ -12,24 +12,38 @@ class CRUDService {
       {
         method: "post",
         path: "/",
-        handler: this.create.bind(this),
+        handlers: [this.checkAdmin, this.create.bind(this)],
       },
       {
         method: "put",
         path: "/:id",
-        handler: this.update.bind(this),
+        handlers: [this.checkAdmin, this.update.bind(this)],
       },
       {
         method: "delete",
         path: "/:id",
-        handler: this.delete.bind(this),
+        handlers: [this.checkAdmin, this.delete.bind(this)],
       },
       {
         method: "get",
         path: "/",
-        handler: this.getAll.bind(this),
+        handlers: [this.checkAdmin, this.getAll.bind(this)],
       }
     );
+  }
+
+  checkUser(req, res, next) {
+    if (!req.user) {
+      return next(new ErrorResponse("Invalid token", 401));
+    }
+    return next();
+  }
+
+  checkAdmin(req, res, next) {
+    if (!req.user || !req.user.admin) {
+      return next(new ErrorResponse("Invalid token - User isn't Admin", 401));
+    }
+    return next();
   }
 
   async create(req, res, next) {

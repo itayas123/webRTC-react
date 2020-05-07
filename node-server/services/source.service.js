@@ -1,6 +1,5 @@
 const express = require("express");
 const expressRouter = express.Router({ mergeParams: true });
-const { getUserIdByToken } = require("../utils");
 const ErrorResponse = require("../models/errorResponse");
 const CRUDService = require("./crud.service");
 const Source = require("../models/source");
@@ -16,25 +15,18 @@ class SourceService extends CRUDService {
     this.routes.push({
       method: "get",
       path: "/sourcesByUser",
-      handler: this.sourcesByUser.bind(this),
+      handlers: [this.checkUser, this.sourcesByUser.bind(this)],
     });
   }
 
   async sourcesByUser(req, res, next) {
-    let user = null;
     try {
-      const { token } = req.headers;
-      const _id = getUserIdByToken(token);
-      user = await User.findById(_id).populate("sources");
-      if (user) {
-        if (user.admin) {
-          const allSources = await this.model.find({});
-          return res.send({ data: allSources });
-        }
-        return res.send({ data: user.sources });
-      } else {
-        return next(new ErrorResponse("Invalid token", 401));
+      const { user } = req;
+      if (user.admin) {
+        const allSources = await this.model.find({});
+        return res.send({ data: allSources });
       }
+      return res.send({ data: user.sources });
     } catch (e) {
       next(e);
     }
@@ -58,9 +50,9 @@ class SourceService extends CRUDService {
 }
 
 new SourceService().routes.forEach((route) => {
-  const { method, path, handler } = route;
+  const { method, path, handlers } = route;
   console.log(method + " " + path);
-  expressRouter[method](path, handler);
+  expressRouter[method](path, handlers);
 });
 
 module.exports = expressRouter;

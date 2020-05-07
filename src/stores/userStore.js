@@ -2,7 +2,7 @@ import { observable, action, computed, toJS } from "mobx";
 import API from "./../utils/API";
 import CRUDStore from "./crudStore";
 
-export const TOKEN = "token";
+export const TOKEN = "authorization";
 
 class UserStore extends CRUDStore {
   @observable currentUser = {};

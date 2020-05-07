@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const users = require("./services/user.service");
 const sources = require("./services/source.service");
 const config = require("./config");
+const User = require("./models/user");
+const { getUserIdByToken } = require("./utils");
 
 app.use(cors({ origin: config.ALLOWED_ORIGINS }));
 app.use(bodyParser.json());
@@ -18,11 +20,18 @@ app.use(bodyParser.json());
  */
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(async function (req, res, next) {
+  const id = getUserIdByToken(req.headers.authorization);
+  if (id) {
+    req.user = await User.findById(id);
+  }
+  next();
+});
+
 const router = express.Router();
 
 router.use("/users", users);
 router.use("/sources", sources);
-
 app.use("/api", router);
 
 app.use(function (err, req, res, next) {

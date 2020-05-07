@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 
 function getUserIdByToken(token) {
-  const { _id = "" } = jwt.decode(token);
-  return _id;
+  const decoded = (token && jwt.decode(token)) || {};
+  return decoded._id || "";
 }
 
 async function asyncForEach(array, callback) {

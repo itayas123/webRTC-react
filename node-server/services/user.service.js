@@ -1,6 +1,5 @@
 const express = require("express");
 const expressRouter = express.Router({ mergeParams: true });
-const { getUserIdByToken } = require("../utils");
 const ErrorResponse = require("../models/errorResponse");
 const CRUDService = require("./crud.service");
 const User = require("../models/user");
@@ -16,12 +15,12 @@ class UserService extends CRUDService {
       {
         method: "post",
         path: "/login",
-        handler: this.login.bind(this),
+        handlers: this.login.bind(this),
       },
       {
         method: "get",
         path: "/getCurrentUser",
-        handler: this.getCurrentUser.bind(this),
+        handlers: [this.checkUser, this.getCurrentUser.bind(this)],
       }
     );
   }
@@ -38,13 +37,7 @@ class UserService extends CRUDService {
 
   async getCurrentUser(req, res, next) {
     try {
-      const { token } = req.headers;
-      if (token) {
-        const _id = getUserIdByToken(token);
-        const user = await this.model.findById(_id);
-        return res.send({ data: user });
-      }
-      return next(new ErrorResponse("Invalid token", 404));
+      return res.send({ data: req.user });
     } catch (e) {
       console.log(e);
       next(e);
@@ -75,9 +68,9 @@ class UserService extends CRUDService {
 }
 
 new UserService().routes.forEach((route) => {
-  const { method, path, handler } = route;
+  const { method, path, handlers } = route;
   console.log(method + " " + path);
-  expressRouter[method](path, handler);
+  expressRouter[method](path, handlers);
 });
 
 module.exports = expressRouter;
