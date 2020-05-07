@@ -34,6 +34,7 @@ class UserStore extends CRUDStore {
   @action
   setCurrentUser = (user) => {
     this.currentUser = user;
+    this.stores.videoStore.setUpSocket(user.token);
     this.stores.sourceStore.fetchUserSources();
   };
 
@@ -62,7 +63,7 @@ class UserStore extends CRUDStore {
       const token = localStorage.getItem(TOKEN);
       if (token && token !== "undefined") {
         const user = await API.get("/users/getCurrentUser");
-        this.setCurrentUser(user);
+        this.setCurrentUser({ ...user, token });
         return user;
       }
     } catch (e) {

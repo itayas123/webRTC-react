@@ -8,9 +8,25 @@ const {
   onUserDisconnected,
   onDeleteSession,
 } = require("./services/kurento.service");
+const User = require("./models/user");
+const { getUserIdByToken } = require("./utils");
+
 module.exports = async function (server) {
   const io = socketIO(server);
   await init(io);
+  io.use(async (socket, next) => {
+    const id = getUserIdByToken(socket.handshake.query.authorization);
+    if (id) {
+      const user = await User.findById(id);
+      if (user) {
+        next();
+      } else {
+        next(new Error("Invalid authorization token"));
+      }
+    } else {
+      next(new Error("No authorization token"));
+    }
+  });
   io.on("connection", async (socket) => {
     const { id } = socket;
     console.log("socket connected ", id);

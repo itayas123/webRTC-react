@@ -4,19 +4,23 @@ import { action, observable } from "mobx";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { sleep } from "../utils";
+import { TOKEN } from "./userStore";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
 
   constructor(stores) {
     this.webRtcPeers = {};
     this.stores = stores;
-    // setup socket io client
-    this.socket = io("http://localhost:3001");
-    this.setUpSocket();
   }
 
   @action
-  setUpSocket = () => {
+  setUpSocket = (token) => {
+    // setup socket io client
+    this.socket = io("http://localhost:3001", {
+      query: {
+        [TOKEN]: token,
+      },
+    });
     this.socket.on("connect", () => {
       console.log("connected", this.socket.id);
     });
