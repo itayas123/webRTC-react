@@ -124,7 +124,7 @@ const UsersManagement = () => {
         className="add-user"
         onClick={() => {
           toggleModal();
-          setSelected({ sources: [] });
+          setSelected({ email: '', password: '', name: '', sources: [] });
         }}
       >
         Add User

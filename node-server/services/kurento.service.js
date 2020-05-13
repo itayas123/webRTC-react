@@ -14,24 +14,29 @@ const init = async (socket) => {
 };
 
 const sendAliveSources = async (socket) => {
-  const sources = await Source.find({});
   const alives = [];
+  const sources = await Source.find({});
   const uris = sources.map((source) => source.uri);
 
   await asyncForEach(uris, async (uri) => {
+    // find IP from URI
     const ip = uri.match(ipRegex) || [];
+    // check if there IP
     if (ip.length) {
+      // ping to IP
       const res = await ping.promise.probe(ip[0], { timeout: 2 });
       if (res.alive) {
+        // create/ get URI's playerEndpoint
         await kurentoclient.getPlayerEndpoint(uri);
         alives.push(uri);
+        // if not alive and in players list - delete and emit everyone
       } else if (kurentoclient.playerEndpoints[uri]) {
         socket.emit("deletedSource", uri);
         kurentoclient.deletePlayer(uri);
       }
     }
   });
-
+  // send the alive sources list
   socket.emit("aliveSources", alives);
 };
 
@@ -45,27 +50,34 @@ const onSendIceCandidate = (event, id, socket) => {
 const start = async (sdpOffer, uri, id, socket) => {
   console.log(uri, sdpOffer, id);
 
+  // get the URI's playerEndpoint
   const playerEndpoint = await kurentoclient.getPlayerEndpoint(uri);
 
+  // create webRtcEndpoint
   const webRtcEndpoint = await kurentoclient.createWebRtcEndpoint(id, uri);
+  // share ice candidate
   webRtcEndpoint.on("OnIceCandidate", (event) =>
     onSendIceCandidate(event, id, socket)
   );
   const { iceCandidatesQueue } = kurentoclient.getSessionById(id);
+  // add all ice candidates of this session that recived before
   while (iceCandidatesQueue.length)
     webRtcEndpoint.addIceCandidate(iceCandidatesQueue.shift());
 
-  // Start the WebRtcEndpoint
+  // process the sdp offer from client - data about the stream
   const sdpAnswer = await webRtcEndpoint.processOffer(sdpOffer);
 
+  // gather all candidates - connect webRtc peer-to-peer
   webRtcEndpoint.gatherCandidates((err) => {
     if (err) {
       console.error("ERROR:", err);
     }
   });
+  // send the sdp answer to client
   console.log("SDP Answer from KMS to App:\n%s", sdpAnswer);
   socket.emit("sdpAnswer", sdpAnswer, id);
 
+  // connect the webRtc to the playerEndpoint in order to see its stream 
   await playerEndpoint.connect(webRtcEndpoint);
 
   console.log("player playing and connected");

@@ -13,14 +13,14 @@ export default class CRUDStore {
   }
 
   @action
-  fetchAll = async () => {
+  async fetchAll() {
     try {
       const list = await API.get(this.baseRoute);
       this.list.replace(list);
     } catch (err) {
       throw err;
     }
-  };
+  }
 
   @action
   create = async (object) => {
