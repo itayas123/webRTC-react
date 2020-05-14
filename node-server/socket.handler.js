@@ -28,6 +28,7 @@ module.exports = async function (server) {
     }
   });
   io.on("connection", async (socket) => {
+    // sddsd
     const { id } = socket;
     console.log("socket connected ", id);
     // TODO: check another option

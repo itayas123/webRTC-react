@@ -1,5 +1,4 @@
 const kurentoClient = require("kurento-client");
-const { asyncForEach } = require("../utils");
 
 class KurentoClientModel {
   constructor() {
@@ -37,15 +36,17 @@ class KurentoClientModel {
   };
 
   createWebRtcEndpoint = async (id, uri) => {
-    try {
-      const webRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
-      let session = this.getSessionById(id);
-      session = { ...session, webRtcEndpoint, uri };
-      this.sessions[id] = session;
-      return webRtcEndpoint;
-    } catch (error) {
-      console.error(error);
+    const session = this.getSessionById(id);
+    if (!session.webRtcEndpoint) {
+      try {
+        const webRtcEndpoint = await this.pipeline.create("WebRtcEndpoint");
+        session.webRtcEndpoint = webRtcEndpoint;
+        session.uri = uri;
+      } catch (error) {
+        console.error(error);
+      }
     }
+    return session.webRtcEndpoint;
   };
 
   getPlayerEndpoint = async (uri, options = { networkCache: 1000 }) => {
@@ -58,8 +59,23 @@ class KurentoClientModel {
       await playerEndpoint.play();
       this.playerEndpoints[uri] = playerEndpoint;
     }
-
     return this.playerEndpoints[uri];
+  };
+
+  getRecorderEndpoint = async (id, uri) => {
+    const session = this.getSessionById(id);
+    if (!session.recordEndpoint) {
+      try {
+        const recordEndpoint = await this.pipeline.create("RecorderEndpoint", {
+          uri,
+          stopOnEndOfStream: true,
+        });
+        session.recordEndpoint = recordEndpoint;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return session.recordEndpoint;
   };
 
   deletePlayer = async (uri) => {
@@ -86,23 +102,6 @@ class KurentoClientModel {
         return true;
       }
       return false;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  getRecorderEndpoint = async (id, uri) => {
-    try {
-      const session = this.getSessionById(id);
-      if (!session.recordEndpoint) {
-        const recordEndpoint = await this.pipeline.create("RecorderEndpoint", {
-          uri,
-          //uri: `${uri}${id}.webm`,
-          stopOnEndOfStream: true,
-        });
-        session.recordEndpoint = recordEndpoint;
-      }
-      return session.recordEndpoint;
     } catch (error) {
       console.error(error);
     }
