@@ -6,6 +6,6 @@ const config = {
   DOCKER_FOLDER: "/var/lib/kurento",
   LOCAL_FOLDER: "/Desktop/Namer-Records",
   RECORD_FILE_URI: "file:///var/lib/kurento/{id}.webm",
-  ALIVE_SOURCES_TIME: 10000,
+  ALIVE_SOURCES_TIME: 20000,
 };
 module.exports = config;

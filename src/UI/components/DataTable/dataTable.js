@@ -10,7 +10,7 @@ class DataTable extends Component {
       <ReactTable
         data={data}
         columns={columns}
-        defaultPageSize={defaultPageSize || 10}
+        defaultPageSize={defaultPageSize || 5}
         className="-striped -highlight"
         filterable
         defaultFilterMethod={(filter, row) =>

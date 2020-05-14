@@ -1,7 +1,7 @@
+const ping = require("ping");
 const KurentoClientModel = require("../models/kurentoClientModel");
 const config = require("../config");
 const { asyncForEach } = require("../utils");
-const ping = require("ping");
 const Source = require("../models/source");
 
 const kurentoclient = new KurentoClientModel();
@@ -11,6 +11,7 @@ const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 const init = async (socket) => {
   setInterval(() => sendAliveSources(socket), config.ALIVE_SOURCES_TIME);
   await kurentoclient.init(config.WS_URI);
+  sendAliveSources(socket);
 };
 
 const sendAliveSources = async (socket) => {
@@ -26,7 +27,7 @@ const sendAliveSources = async (socket) => {
       //* ping to IP
       const res = await ping.promise.probe(ip[0], { timeout: 2 });
       if (res.alive) {
-        //* create/ get URI's playerEndpoint
+        //* create/get URI's playerEndpoint
         await kurentoclient.getPlayerEndpoint(uri);
         alives.push(uri);
         //* if not alive and in players list - delete and emit everyone

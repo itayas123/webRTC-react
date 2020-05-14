@@ -49,12 +49,12 @@ class KurentoClientModel {
     return session.webRtcEndpoint;
   };
 
-  getPlayerEndpoint = async (uri, options = { networkCache: 1000 }) => {
+  getPlayerEndpoint = async (uri, options = { networkCache: 0 }) => {
     if (!this.playerEndpoints[uri]) {
       console.log(`creating player endpoint: ${uri}`);
       const playerEndpoint = await this.pipeline.create("PlayerEndpoint", {
         uri,
-        options,
+        ...options,
       });
       await playerEndpoint.play();
       this.playerEndpoints[uri] = playerEndpoint;
