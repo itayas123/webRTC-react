@@ -3,7 +3,6 @@ import kurentoUtils from "kurento-utils";
 import { action, observable } from "mobx";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
-import { sleep } from "../utils";
 import { TOKEN } from "./userStore";
 export default class VideoStore {
   @observable videoArray = observable.array([]);
@@ -35,16 +34,9 @@ export default class VideoStore {
   @action
   addVideo = (video) => {
     this.videoArray.push(video);
-    const { _id, uri } = video;
-    this.handleAddVideo(_id, uri);
   };
 
-  handleAddVideo = async (id, uri) => {
-    // await 10 msec for the video to be render
-    await sleep(10);
-    const videoOutput = document.getElementById(id);
-    console.log(videoOutput, id);
-    if (!videoOutput) return false;
+  handleAddVideo = async (videoOutput, id, uri) => {
     // set unique Id
     const sessionId = id + this.socket.id;
     // options with video element and onIceCandidate callback
@@ -95,7 +87,6 @@ export default class VideoStore {
     const index = this.videoArray.findIndex((videoObj) => _id === videoObj._id);
     if (index !== -1) {
       this.videoArray.splice(index, 1);
-      this.handleDeleteVideo(_id);
     }
   };
 

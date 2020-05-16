@@ -1,38 +1,50 @@
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import React from "react";
+import { Responsive, WidthProvider } from "react-grid-layout";
 import stores from "../../../stores";
-import VideoPanel from "../../components/MediaScreen/VideoPanel/videoPanel";
+import VideoSession from "../../components/MediaScreen/VideoSession/videoSession";
 import "./mediaScreen.css";
 
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
+const COLS = 12;
+const SIZE_H = 5;
+const SIZE_W = 4;
 const { videoStore } = stores;
 
 const MediaScreen = () => {
-  useEffect(() => {
-    const {
-      videoArray,
-      handleDeleteVideo,
-      handleAddVideo,
-      toggleRecord,
-    } = videoStore;
-    // if we get in to the page and we have liveStreams we need to reconnect them
-    videoArray.forEach((video) => handleAddVideo(video._id, video.uri));
-    return () =>
-      videoArray.forEach((video) => {
-        const { _id, isRecording } = video;
-        handleDeleteVideo(_id);
-        if (isRecording) {
-          toggleRecord(video);
-        }
-      });
-  }, []);
-
+  const videos = toJS(videoStore.videoArray);
   return (
     <div className="media-screen">
-      <VideoPanel
-        videoArray={toJS(videoStore.videoArray)}
-        deleteVideo={videoStore.deleteVideo}
-      />
+      {videos.length ? (
+        <ResponsiveReactGridLayout
+          className="layout"
+          cols={{ lg: COLS, md: COLS, sm: COLS, xs: COLS, xxs: COLS }}
+          rowHeight={100}
+        >
+          {videos.map((video, index) => (
+            <div
+              data-grid={{
+                i: index.toString(),
+                x: (index * SIZE_W) % COLS,
+                y: 0,
+                w: SIZE_W,
+                h: SIZE_H,
+              }}
+              key={video._id}
+            >
+              <VideoSession
+                video={video}
+                onDelete={videoStore.deleteVideo}
+                onMount={videoStore.handleAddVideo}
+                onUnMount={videoStore.handleDeleteVideo}
+              />
+            </div>
+          ))}
+        </ResponsiveReactGridLayout>
+      ) : (
+        <h1 className="add-title">Add a video</h1>
+      )}
     </div>
   );
 };
