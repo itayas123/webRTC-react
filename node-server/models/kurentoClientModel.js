@@ -56,6 +56,11 @@ class KurentoClientModel {
         uri,
         ...options,
       });
+      playerEndpoint.on("Error", async (err) => {
+        console.error(`player error ${uri}: `, err);
+        // the player will be True for SendAliveSources to notify the client
+        this.playerEndpoints[uri] = await this.deletePlayer(uri);
+      });
       await playerEndpoint.play();
       this.playerEndpoints[uri] = playerEndpoint;
     }
@@ -81,7 +86,7 @@ class KurentoClientModel {
   deletePlayer = async (uri) => {
     try {
       const playerEndpoint = this.playerEndpoints[uri];
-      if (playerEndpoint) {
+      if (playerEndpoint && typeof playerEndpoint === "object") {
         console.log("deleting player:", uri);
         const connections = await playerEndpoint.getSinkConnections();
         await Promise.all(
@@ -91,12 +96,6 @@ class KurentoClientModel {
               .then((mediaObj) => playerEndpoint.disconnect(mediaObj))
           )
         );
-        // await asyncForEach(connections, async (connection) => {
-        //   const mediaObj = await this.kurento.getMediaobjectById(
-        //     connection.sink
-        //   );
-        //   await playerEndpoint.disconnect(mediaObj);
-        // });
         await playerEndpoint.release();
         delete this.playerEndpoints[uri];
         return true;

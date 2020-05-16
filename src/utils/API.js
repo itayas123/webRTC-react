@@ -6,6 +6,7 @@ const API = axios.create({
   responseType: "json",
 });
 
+//* add token to request headers
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN);
   if (token) {
@@ -14,6 +15,7 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// * get data from response or message from error
 API.interceptors.response.use(
   (response) => {
     if (response.data) {

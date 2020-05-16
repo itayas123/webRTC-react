@@ -65,8 +65,8 @@ const columns = [
           src={editIcon}
           alt="edit"
           onClick={() => {
-            toggleModal();
             userStore.setSelected(row._original);
+            toggleModal();
           }}
         />
       </div>
@@ -124,7 +124,7 @@ const UsersManagement = () => {
         className="add-user"
         onClick={() => {
           toggleModal();
-          setSelected({ email: '', password: '', name: '', sources: [] });
+          setSelected({ email: "", password: "", name: "", sources: [] });
         }}
       >
         Add User

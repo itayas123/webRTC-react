@@ -9,6 +9,9 @@ const kurentoclient = new KurentoClientModel();
 const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
 const init = async (socket) => {
+  console.log(
+    `check alive sources every: ${config.ALIVE_SOURCES_TIME / 1000} seconds`
+  );
   setInterval(() => sendAliveSources(socket), config.ALIVE_SOURCES_TIME);
   await kurentoclient.init(config.WS_URI);
   sendAliveSources(socket);
@@ -49,11 +52,11 @@ const onSendIceCandidate = (event, id, socket) => {
 };
 
 /**
- * 
- * @param {string} sdpOffer 
- * @param {string} uri 
- * @param {string} id 
- * @param {SocketIO} socket 
+ *
+ * @param {string} sdpOffer
+ * @param {string} uri
+ * @param {string} id
+ * @param {SocketIO} socket
  */
 const start = async (sdpOffer, uri, id, socket) => {
   console.log(uri, sdpOffer, id);
@@ -85,7 +88,7 @@ const start = async (sdpOffer, uri, id, socket) => {
   console.log("SDP Answer from KMS to App:\n%s", sdpAnswer);
   socket.emit("sdpAnswer", sdpAnswer, id);
 
-  //* connect the webRtc to the playerEndpoint in order to see its stream 
+  //* connect the webRtc to the playerEndpoint in order to see its stream
   await playerEndpoint.connect(webRtcEndpoint);
 
   console.log("player playing and connected");

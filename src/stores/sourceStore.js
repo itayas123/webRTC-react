@@ -34,7 +34,7 @@ export default class SourceStore extends CRUDStore {
   };
 
   @computed
-  get getUserAliveSources() {
+  get userAliveSources() {
     return this.userSources.filter((source) =>
       this.aliveSources.includes(source.uri)
     );

@@ -43,8 +43,8 @@ export const sourceColumns = (actions) => {
             src={editIcon}
             alt="edit"
             onClick={() => {
-              toggleModal();
               sourceStore.setSelected(row._original);
+              toggleModal();
             }}
           />
         </div>

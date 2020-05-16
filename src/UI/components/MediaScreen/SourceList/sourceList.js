@@ -41,12 +41,12 @@ class SourceList extends React.Component {
 
   render() {
     const { videoArray } = videoStore;
-    const { getUserAliveSources } = sourceStore;
+    const { userAliveSources } = sourceStore;
     return (
       <div className="sources-list">
         <h2>source list</h2>
         <div className="alive-source-list">
-          {getUserAliveSources.map((source) => this.renderSource(source))}
+          {userAliveSources.map((source) => this.renderSource(source))}
         </div>
         {videoArray.length > 0 && (
           <>

@@ -26,6 +26,7 @@ const Record = ({ isRecording, name, onClick }) => {
       <img
         className={`record-img ${time % 2 ? "opac" : ""}`}
         alt="record"
+        title={`${isRecording ? "Stop" : "Start"} record`}
         src={recordIcon}
         onClick={onClick}
       />
