@@ -8,7 +8,7 @@ const VideoSession = ({ video, onDelete, onMount, onUnMount }) => {
 
   useEffect(() => {
     onMount(videoRef.current, videoId, video.uri);
-    return () => onUnMount(videoId);
+    return () => onUnMount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -20,7 +20,17 @@ const VideoSession = ({ video, onDelete, onMount, onUnMount }) => {
         alt="remove"
         onClick={() => onDelete(video)}
       />
-      <video className="video" id={videoId} autoPlay ref={videoRef} />
+      <video
+        className="video"
+        id={videoId}
+        autoPlay
+        ref={videoRef}
+        onDoubleClick={() => {
+          if (videoRef.current) {
+            videoRef.current.requestFullscreen();
+          }
+        }}
+      />
     </>
   );
 };

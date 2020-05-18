@@ -90,10 +90,17 @@ export default class VideoStore {
     }
   };
 
-  handleDeleteVideo = (videoId) => {
-    const sessionId = videoId + this.socket.id;
-    this.socket.emit("deleteSession", sessionId);
-    delete this.webRtcPeers[sessionId];
+  handleDeleteVideo = (video) => {
+    if (video) {
+      let { _id, isRecording } = video;
+      const sessionId = _id + this.socket.id;
+      if (isRecording) {
+        this.socket.emit("stopRecord", sessionId);
+        video.isRecording = !isRecording;
+      }
+      delete this.webRtcPeers[sessionId];
+      this.socket.emit("deleteSession", sessionId);
+    }
   };
 
   sendCandidate = (candidate, id) => {
@@ -101,12 +108,13 @@ export default class VideoStore {
     this.socket.emit("candidate", candidate, id);
   };
 
-  toggleRecord = (video) => {
+  toggleRecord = (index) => {
+    const video = this.videoArray[index];
     let { _id, isRecording } = video;
-    _id += this.socket.id;
+    const sessionId = _id + this.socket.id;
     video.isRecording = !isRecording;
-    console.log(`toggler record ${!isRecording} ${_id}`);
-    this.socket.emit(isRecording ? "stopRecord" : "startRecord", _id);
+    console.log(`toggler record ${!isRecording} ${sessionId}`);
+    this.socket.emit(isRecording ? "stopRecord" : "startRecord", sessionId);
   };
 
   onCandidate = (candidate, id) => {
@@ -135,9 +143,8 @@ export default class VideoStore {
   onDeletedSource = (uri) => {
     const index = this.videoArray.findIndex((video) => video.uri === uri);
     if (index !== -1) {
-      const video = this.videoArray[index];
-      this.videoArray.splice(index);
-      this.handleDeleteVideo(video._id);
+      const video = this.videoArray.splice(index);
+      this.handleDeleteVideo(video[0]);
       toast.warn(`Source ${uri} disconnected`, {
         bodyClassName: "uri-toast",
       });

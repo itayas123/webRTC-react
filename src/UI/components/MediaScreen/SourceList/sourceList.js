@@ -9,7 +9,8 @@ const { sourceStore, videoStore } = stores;
 @observer
 class SourceList extends React.Component {
   renderSource = (source) => {
-    const isDisabled = videoStore.videoArray.includes(source);
+    const isDisabled =
+      videoStore.videoArray.findIndex((src) => src._id === source._id) !== -1;
     return (
       <div
         className={`item-list ${isDisabled ? "disabled" : ""}`}
@@ -25,7 +26,7 @@ class SourceList extends React.Component {
     );
   };
 
-  renderRecord = (video) => {
+  renderRecord = (video, index) => {
     const { isRecording, _id, uri, name } = video;
     const { toggleRecord } = videoStore;
     return (
@@ -34,7 +35,7 @@ class SourceList extends React.Component {
         isRecording={isRecording}
         name={name}
         uri={uri}
-        onClick={() => toggleRecord(video)}
+        onClick={() => toggleRecord(index)}
       />
     );
   };
@@ -46,13 +47,17 @@ class SourceList extends React.Component {
       <div className="sources-list">
         <h2>source list</h2>
         <div className="alive-source-list">
-          {userAliveSources.map((source) => this.renderSource(source))}
+          {userAliveSources.length ? (
+            userAliveSources.map((source) => this.renderSource(source))
+          ) : (
+            <h3>No Alive & Allowed Sources</h3>
+          )}
         </div>
         {videoArray.length > 0 && (
           <>
             <h2>record list</h2>
             <div className="record-list">
-              {videoArray.map((video) => this.renderRecord(video))}
+              {videoArray.map(this.renderRecord)}
             </div>
             {/* {userStore.getUser.admin && <AddSource />} */}
           </>

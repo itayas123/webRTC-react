@@ -58,7 +58,7 @@ class CRUDService {
       if (e.code === 11000) {
         // duplication error - already exists
         const exists = Object.keys(e.keyPattern)[0];
-        return next(new ErrorResponse(`${exists} already exists`));
+        return next(new ErrorResponse(`${exists} already exists`, 400));
       }
       next(e);
     }

@@ -9,8 +9,12 @@ class KurentoClientModel {
   }
 
   init = async (ws_uri, options) => {
-    this.kurento = await kurentoClient(ws_uri, options);
-    this.pipeline = await this.kurento.create("MediaPipeline");
+    try {
+      this.kurento = await kurentoClient(ws_uri, options);
+      this.pipeline = await this.kurento.create("MediaPipeline");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   getSessionById = (id) => {
@@ -51,18 +55,22 @@ class KurentoClientModel {
 
   getPlayerEndpoint = async (uri, options = { networkCache: 0 }) => {
     if (!this.playerEndpoints[uri]) {
-      console.log(`creating player endpoint: ${uri}`);
-      const playerEndpoint = await this.pipeline.create("PlayerEndpoint", {
-        uri,
-        ...options,
-      });
-      playerEndpoint.on("Error", async (err) => {
-        console.error(`player error ${uri}: `, err);
-        // the player will be True for SendAliveSources to notify the client
-        this.playerEndpoints[uri] = await this.deletePlayer(uri);
-      });
-      await playerEndpoint.play();
-      this.playerEndpoints[uri] = playerEndpoint;
+      try {
+        console.log(`creating player endpoint: ${uri}`);
+        const playerEndpoint = await this.pipeline.create("PlayerEndpoint", {
+          uri,
+          ...options,
+        });
+        playerEndpoint.on("Error", async (err) => {
+          console.error(`player error ${uri}: `, err);
+          // the player will be True for SendAliveSources to notify the client
+          this.playerEndpoints[uri] = await this.deletePlayer(uri);
+        });
+        await playerEndpoint.play();
+        this.playerEndpoints[uri] = playerEndpoint;
+      } catch (error) {
+        console.error(error);
+      }
     }
     return this.playerEndpoints[uri];
   };
@@ -94,6 +102,7 @@ class KurentoClientModel {
             this.kurento
               .getMediaobjectById(connection.sink)
               .then((mediaObj) => playerEndpoint.disconnect(mediaObj))
+              .catch((err) => console.error(err))
           )
         );
         await playerEndpoint.release();
@@ -107,23 +116,27 @@ class KurentoClientModel {
   };
 
   deleteSession = async (sessionId) => {
-    console.log(`delete session: ${sessionId}`);
-    const { webRtcEndpoint, uri, recordEndpoint } = this.getSessionById(
-      sessionId
-    );
-    const playerEndpoint = this.playerEndpoints[uri];
-    if (playerEndpoint) {
-      await playerEndpoint.disconnect(webRtcEndpoint);
+    try {
+      console.log(`delete session: ${sessionId}`);
+      const { webRtcEndpoint, uri, recordEndpoint } = this.getSessionById(
+        sessionId
+      );
+      const playerEndpoint = this.playerEndpoints[uri];
+      if (playerEndpoint) {
+        await playerEndpoint.disconnect(webRtcEndpoint);
+      }
+      if (webRtcEndpoint) {
+        await webRtcEndpoint.release();
+      }
+      if (recordEndpoint && playerEndpoint) {
+        await recordEndpoint.stop();
+        await playerEndpoint.disconnect(recordEndpoint);
+      }
+      delete this.sessions[sessionId];
+      console.log("all sessions ", Object.keys(this.sessions));
+    } catch (error) {
+      console.error(error);
     }
-    if (webRtcEndpoint) {
-      await webRtcEndpoint.release();
-    }
-    if (recordEndpoint) {
-      await recordEndpoint.stop();
-      await this.playerEndpoints[uri].disconnect(recordEndpoint);
-    }
-    delete this.sessions[sessionId];
-    console.log("all sessions ", Object.keys(this.sessions));
   };
 }
 module.exports = KurentoClientModel;
