@@ -143,7 +143,7 @@ export default class VideoStore {
   onDeletedSource = (uri) => {
     const index = this.videoArray.findIndex((video) => video.uri === uri);
     if (index !== -1) {
-      const video = this.videoArray.splice(index);
+      const video = this.videoArray.splice(index, 1);
       this.handleDeleteVideo(video[0]);
       toast.warn(`Source ${uri} disconnected`, {
         bodyClassName: "uri-toast",

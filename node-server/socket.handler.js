@@ -7,6 +7,7 @@ const {
   stopRecord,
   onUserDisconnected,
   onDeleteSession,
+  onUserConnected,
 } = require("./services/kurento.service");
 const User = require("./models/user");
 const { getUserIdByToken } = require("./utils");
@@ -28,15 +29,13 @@ module.exports = async function (server) {
     }
   });
   io.on("connection", async (socket) => {
-    // sddsd
-    const { id } = socket;
-    console.log("socket connected ", id);
+    onUserConnected(socket);
     // TODO: check another option
     socket.on("start", (...args) => start(args[0], args[1], args[2], socket));
     socket.on("candidate", onRecieveIceCandaite);
     socket.on("startRecord", startRecord);
     socket.on("stopRecord", (id) => stopRecord(id, socket));
     socket.on("deleteSession", onDeleteSession);
-    socket.on("disconnect", () => onUserDisconnected(id));
+    socket.on("disconnect", () => onUserDisconnected(socket.id));
   });
 };

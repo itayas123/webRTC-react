@@ -5,6 +5,7 @@ const { asyncForEach } = require("../utils");
 const Source = require("../models/source");
 
 const kurentoclient = new KurentoClientModel();
+let alives = [];
 
 const ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
@@ -17,12 +18,16 @@ const init = async (socket) => {
   sendAliveSources(socket);
 };
 
+const onUserConnected = (socket) => {
+  console.log("user connected: ", socket.id);
+  socket.emit("aliveSources", alives);
+};
+
 const sendAliveSources = async (socket) => {
   try {
-    const alives = [];
     const sources = await Source.find({});
     const uris = sources.map((source) => source.uri);
-
+    alives = [];
     await asyncForEach(uris, async (uri) => {
       //* find IP from URI
       const ip = uri.match(ipRegex) || [];
@@ -163,4 +168,5 @@ module.exports = {
   stopRecord,
   sendAliveSources,
   onDeleteSession,
+  onUserConnected,
 };

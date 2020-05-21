@@ -15,8 +15,8 @@ const { videoStore } = stores;
 const MediaScreen = () => {
   const videos = toJS(videoStore.videoArray);
 
-  const onVideoUnMount = (index) =>
-    videoStore.handleDeleteVideo(videoStore.videoArray[index]);
+  const onVideoUnMount = (index, video) =>
+    videoStore.handleDeleteVideo(videoStore.videoArray[index] || video);
 
   return (
     <div className="media-screen">
@@ -41,7 +41,7 @@ const MediaScreen = () => {
                 video={video}
                 onDelete={videoStore.deleteVideo}
                 onMount={videoStore.handleAddVideo}
-                onUnMount={() => onVideoUnMount(index)}
+                onUnMount={() => onVideoUnMount(index, video)}
               />
             </div>
           ))}
